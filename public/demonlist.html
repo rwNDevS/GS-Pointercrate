@@ -370,13 +370,26 @@ function createCard(d, i) {
     const card = document.createElement('div');
     card.className = 'demon-card';
     card.onclick = () => openDetails(d);
+    
+    // Mapeo de dificultades a rutas de imágenes
+    const difficultyImages = {
+        'Easy Demon': '/public/easy.png',
+        'Medium Demon': '/public/medium.png',
+        'Hard Demon': '/public/hard.png',
+        'Insane Demon': '/public/insane.png',
+        'Extreme Demon': '/public/extreme.png'
+    };
+    
+    // Obtener la ruta correcta o usar una por defecto
+    const imgSrc = difficultyImages[d.dificultad] || '/public/extreme.png';
+    
     card.innerHTML = `
         <div class="rank">#${d.posicion}</div>
         <div class="info">
             <div class="title">${d.name}</div>
             <div style="color:var(--text-dim)">Publicado por ${d.creador}</div>
         </div>
-        <img src="${API_BASE}/${d.dificultad}.png" class="diff-icon">
+        <img src="${imgSrc}" class="diff-icon">
     `;
     return card;
 }
