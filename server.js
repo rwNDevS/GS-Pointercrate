@@ -8,7 +8,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.resolve("./public")));
+app.use('/public', express.static(path.resolve("./public")));
 
 // Cambia esta línea - usa el puerto que Render asigna o el que tú definas localmente
 const PORT = process.env.PORT || 8040;
