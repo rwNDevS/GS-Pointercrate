@@ -371,13 +371,14 @@ function createCard(d, i) {
     card.className = 'demon-card';
     card.onclick = () => openDetails(d);
     
-    // Mapeo de dificultades SIN /public/ porque ya están servidos desde la raíz
+    // Solo las 3 dificultades que usas
     const difficultyImages = {
-        'Easy Demon': '/easy.png',
-        'Medium Demon': '/medium.png',
         'Hard Demon': '/hard.png',
+        'Hard': '/hard.png',
         'Insane Demon': '/insane.png',
-        'Extreme Demon': '/extreme.png'
+        'Insane': '/insane.png',
+        'Extreme Demon': '/extreme.png',
+        'Extreme': '/extreme.png'
     };
     
     const imgSrc = difficultyImages[d.dificultad] || '/extreme.png';
@@ -392,6 +393,7 @@ function createCard(d, i) {
     `;
     return card;
 }
+
 
 // ========== FUNCIONES AGREGADAS PARA EL MODAL DE DETALLES ==========
 
