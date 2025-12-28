@@ -43,27 +43,28 @@
             transition: 0.3s ease;
         }
 
-        /* Header igual a la demonlist */
+        /* HEADER - MOBILE FIRST */
         header {
             background: var(--bg-card);
             border-bottom: 1px solid var(--border);
-            padding: 1rem 5%;
+            padding: 1rem 3%;
             display: flex;
-            justify-content: space-between;
+            flex-wrap: wrap;
+            justify-content: center;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 1000;
-            flex-wrap: wrap;
-            gap: 10px;
+            gap: 0.8rem;
         }
 
         .logo {
             font-weight: 800;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: var(--text-main);
             text-decoration: none;
-            margin-right: 20px;
+            width: 100%;
+            text-align: center;
         }
 
         .logo span {
@@ -72,25 +73,31 @@
 
         .nav-group {
             display: flex;
-            gap: 12px;
+            gap: 8px;
             align-items: center;
             flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
         }
 
         .btn {
             background: none;
             border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 0.7rem 1.4rem;
+            padding: 0.6rem 1rem;
             cursor: pointer;
             font-weight: 700;
             border-radius: 4px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-decoration: none;
             transition: 0.2s;
             text-transform: uppercase;
             white-space: nowrap;
             font-family: 'Montserrat', sans-serif;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn:hover {
@@ -100,24 +107,24 @@
 
         .theme-toggle {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: var(--accent);
             border: none;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             cursor: pointer;
             z-index: 5000;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
-        /* Main content */
+        /* MAIN CONTENT - MOBILE FIRST */
         main {
             max-width: 1200px;
-            margin: 3rem auto;
+            margin: 1.5rem auto;
             padding: 0 1rem;
         }
 
@@ -125,24 +132,25 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 2.5rem;
+            padding: 1.5rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
 
         .section-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: var(--accent);
             border-bottom: 3px solid var(--accent);
             padding-bottom: 0.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             text-transform: uppercase;
+            word-wrap: break-word;
         }
 
+        /* TABLA RESPONSIVE - CARDS EN MÓVIL */
         .ranking-table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
+            border-collapse: collapse;
         }
 
         .ranking-table thead {
@@ -159,10 +167,11 @@
             background: rgba(255,255,255,0.02);
             border: 1px solid var(--border);
             border-radius: 8px;
-            display: flex;
-            align-items: center;
-            padding: 1.5rem 2rem;
-            gap: 1.5rem;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 0.8rem;
+            padding: 1rem;
             transition: all 0.3s ease;
             cursor: pointer;
         }
@@ -170,59 +179,92 @@
         .ranking-table tbody tr:hover {
             background: rgba(255,255,255,0.05);
             border-color: var(--accent);
-            transform: translateX(10px);
+            transform: translateX(5px);
         }
 
         .ranking-table tbody td {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--text-main);
             padding: 0;
             display: flex;
             align-items: center;
         }
 
+        /* Grid layout para móvil */
+        .ranking-table tbody td:nth-child(1) {
+            grid-row: 1 / 2;
+            grid-column: 1 / 2;
+        }
+
+        .ranking-table tbody td:nth-child(2) {
+            grid-row: 1 / 2;
+            grid-column: 2 / 3;
+            font-weight: 700;
+            font-size: 1.1rem;
+            word-break: break-word;
+        }
+
+        .ranking-table tbody td:nth-child(3) {
+            grid-row: 2 / 3;
+            grid-column: 1 / 2;
+        }
+
+        .ranking-table tbody td:nth-child(4) {
+            grid-row: 2 / 3;
+            grid-column: 2 / 3;
+        }
+
+        .ranking-table tbody td:nth-child(5) {
+            grid-row: 3 / 4;
+            grid-column: 1 / 3;
+        }
+
         .rank-circle {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             font-weight: 800;
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: var(--bg-body);
             background: var(--text-main);
-            min-width: 50px;
-        }
-
-        .ranking-table tbody td:nth-child(2) {
-            font-weight: 700;
-            font-size: 1.3rem;
-            flex-grow: 1;
+            min-width: 40px;
         }
 
         .records-badge, .points-badge {
             background: rgba(33, 150, 243, 0.1);
             color: var(--accent);
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem;
             border-radius: 4px;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             white-space: nowrap;
+        }
+
+        .records-badge::before {
+            content: '📊 ';
+        }
+
+        .points-badge::before {
+            content: '⭐ ';
         }
 
         .view-records-btn {
             background: var(--accent);
             border: none;
-            padding: 0.75rem 1.5rem;
+            padding: 0.8rem 1.2rem;
             border-radius: 4px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: white;
             transition: all 0.2s ease;
             text-transform: uppercase;
             font-family: 'Montserrat', sans-serif;
+            width: 100%;
+            min-height: 48px;
         }
 
         .view-records-btn:hover {
@@ -230,11 +272,15 @@
             transform: translateY(-2px);
         }
 
-        /* Top 3 styles */
+        .view-records-btn:active {
+            transform: translateY(0);
+        }
+
+        /* TOP 3 STYLES */
         .ranking-table tbody tr.top-1 {
             border: 2px solid var(--gold);
             background: linear-gradient(90deg, rgba(255,215,0,0.05), var(--bg-card));
-            box-shadow: 0 0 20px rgba(255,215,0,0.2);
+            box-shadow: 0 0 15px rgba(255,215,0,0.2);
         }
 
         .ranking-table tbody tr.top-1 .rank-circle {
@@ -255,7 +301,7 @@
         .ranking-table tbody tr.top-2 {
             border: 2px solid var(--silver);
             background: linear-gradient(90deg, rgba(192,192,192,0.05), var(--bg-card));
-            box-shadow: 0 0 15px rgba(192,192,192,0.2);
+            box-shadow: 0 0 12px rgba(192,192,192,0.2);
         }
 
         .ranking-table tbody tr.top-2 .rank-circle {
@@ -294,17 +340,16 @@
             color: var(--bg-body);
         }
 
-        /* Panel lateral */
+        /* PANEL LATERAL - MOBILE FIRST */
         .details-panel {
             position: fixed;
             top: 0;
-            right: -400px;
-            width: 400px;
+            right: -100%;
+            width: 100%;
             height: 100%;
             background: var(--bg-modal);
-            border-left: 1px solid var(--border);
             box-shadow: -5px 0 25px rgba(0,0,0,0.7);
-            padding: 2rem;
+            padding: 1.5rem;
             transition: right 0.4s ease;
             z-index: 2000;
             overflow-y: auto;
@@ -318,28 +363,39 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             padding-bottom: 1rem;
             border-bottom: 2px solid var(--accent);
         }
 
         .details-panel-header h3 {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 800;
             color: var(--accent);
+            word-wrap: break-word;
+            flex: 1;
+            padding-right: 1rem;
         }
 
         .close-btn {
-            background: none;
-            border: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             color: var(--text-dim);
-            font-size: 2rem;
+            font-size: 1.8rem;
             cursor: pointer;
             transition: color 0.2s;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
         .close-btn:hover {
             color: var(--accent);
+            border-color: var(--accent);
         }
 
         .completions-list {
@@ -353,7 +409,7 @@
 
         .completions-list li {
             background: rgba(255,255,255,0.02);
-            padding: 1.5rem;
+            padding: 1rem;
             border-radius: 8px;
             border-left: 4px solid var(--accent);
             transition: all 0.2s ease;
@@ -367,28 +423,30 @@
         .demon-info {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.8rem;
             margin-bottom: 1rem;
         }
 
         .demon-name {
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--accent);
             flex-grow: 1;
+            word-break: break-word;
         }
 
         .difficulty-img {
-            height: 40px;
-            width: 40px;
+            height: 35px;
+            width: 35px;
             object-fit: contain;
+            flex-shrink: 0;
         }
 
         .stats {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-main);
         }
 
@@ -400,108 +458,154 @@
         .loading-text, .empty-list {
             text-align: center;
             color: var(--text-dim);
-            padding: 2rem;
+            padding: 1.5rem;
             font-style: italic;
+            font-size: 0.9rem;
         }
 
-        /* RESPONSIVE MÓVIL */
-        @media (max-width: 768px) {
+        /* TABLETS Y SUPERIORES (768px+) */
+        @media (min-width: 768px) {
             header {
-                padding: 0.8rem 3%;
-                gap: 8px;
-            }
-
-            .nav-group {
-                gap: 6px;
-                width: 100%;
-                justify-content: center;
+                padding: 1rem 5%;
+                justify-content: space-between;
             }
 
             .logo {
-                font-size: 1.2rem;
-                margin-right: 0;
-                width: 100%;
-                text-align: center;
+                font-size: 1.5rem;
+                width: auto;
+                text-align: left;
+            }
+
+            .nav-group {
+                gap: 12px;
+                width: auto;
+                justify-content: flex-start;
             }
 
             .btn {
-                padding: 0.5rem 0.8rem;
-                font-size: 0.7rem;
-            }
-
-            main {
-                margin: 1.5rem auto;
-                padding: 0 0.8rem;
-            }
-
-            .ranking-container {
-                padding: 1.5rem;
-            }
-
-            .section-title {
-                font-size: 1.3rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .ranking-table tbody tr {
-                padding: 1rem;
-                gap: 1rem;
-                flex-wrap: wrap;
-            }
-
-            .rank-circle {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
-                min-width: 40px;
-            }
-
-            .ranking-table tbody td:nth-child(2) {
-                font-size: 1.1rem;
-                flex-basis: 100%;
-            }
-
-            .records-badge, .points-badge {
-                padding: 0.4rem 0.8rem;
+                padding: 0.7rem 1.4rem;
                 font-size: 0.8rem;
             }
 
-            .view-records-btn {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.7rem;
-                margin-top: 0.5rem;
+            main {
+                margin: 3rem auto;
+                padding: 0 2rem;
             }
 
-            .theme-toggle {
+            .ranking-container {
+                padding: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+                margin-bottom: 2rem;
+            }
+
+            /* Tabla tradicional en desktop */
+            .ranking-table tbody tr {
+                display: flex;
+                align-items: center;
+                padding: 1.5rem 2rem;
+                gap: 1.5rem;
+            }
+
+            .ranking-table tbody tr:hover {
+                transform: translateX(10px);
+            }
+
+            .ranking-table tbody td:nth-child(1) {
+                flex: 0 0 auto;
+            }
+
+            .ranking-table tbody td:nth-child(2) {
+                font-size: 1.3rem;
+                flex-grow: 1;
+            }
+
+            .ranking-table tbody td:nth-child(3),
+            .ranking-table tbody td:nth-child(4) {
+                flex: 0 0 auto;
+            }
+
+            .ranking-table tbody td:nth-child(5) {
+                flex: 0 0 auto;
+            }
+
+            .rank-circle {
                 width: 50px;
                 height: 50px;
                 font-size: 1.2rem;
-                bottom: 20px;
-                right: 20px;
+            }
+
+            .records-badge, .points-badge {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .view-records-btn {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.8rem;
+                width: auto;
+            }
+
+            .theme-toggle {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+                bottom: 30px;
+                right: 30px;
             }
 
             .details-panel {
-                width: 100%;
-                right: -100%;
+                width: 400px;
+                right: -400px;
+                padding: 2rem;
+            }
+
+            .details-panel-header h3 {
+                font-size: 1.5rem;
+            }
+
+            .close-btn {
+                font-size: 2rem;
+            }
+
+            .completions-list li {
                 padding: 1.5rem;
             }
 
-            .details-panel.open {
-                right: 0;
+            .demon-name {
+                font-size: 1.2rem;
+            }
+
+            .difficulty-img {
+                height: 40px;
+                width: 40px;
+            }
+
+            .stats {
+                font-size: 0.9rem;
+            }
+
+            .loading-text, .empty-list {
+                padding: 2rem;
+                font-size: 1rem;
             }
         }
 
-        @media (max-width: 480px) {
+        /* PANTALLAS MUY PEQUEÑAS (menos de 360px) */
+        @media (max-width: 359px) {
             .ranking-container {
                 padding: 1rem;
             }
 
             .section-title {
-                font-size: 1.1rem;
+                font-size: 1.2rem;
             }
 
             .ranking-table tbody tr {
                 padding: 0.8rem;
+                gap: 0.6rem;
             }
 
             .rank-circle {
@@ -515,8 +619,18 @@
                 font-size: 1rem;
             }
 
+            .records-badge, .points-badge {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.75rem;
+            }
+
+            .view-records-btn {
+                padding: 0.7rem 1rem;
+                font-size: 0.75rem;
+            }
+
             .demon-name {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
 
             .difficulty-img {
@@ -525,11 +639,11 @@
             }
 
             .stats {
-                font-size: 0.85rem;
+                font-size: 0.8rem;
             }
         }
 
-        /* Scroll personalizado */
+        /* SCROLL PERSONALIZADO */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -550,11 +664,11 @@
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema">🌓</button>
 
     <header>
+        <a href="demonlist.html" class="logo">GDPS <span>LIST</span></a>
         <div class="nav-group">
-            <a href="demonlist.html" class="logo">GDPS <span>LIST</span></a>
             <a href="demonlist.html" class="btn">Demonlist</a>
             <a href="top.html" class="btn">Top</a>
             <a href="reglas.html" class="btn">Reglas</a>
@@ -585,7 +699,7 @@
     <div class="details-panel" id="detailsPanel">
         <div class="details-panel-header">
             <h3 id="detailsTitle">Completaciones</h3>
-            <button id="closeBtn" class="close-btn">&times;</button>
+            <button id="closeBtn" class="close-btn" aria-label="Cerrar">&times;</button>
         </div>
         <ul id="completionsList" class="completions-list">
             <li class="empty-list">Selecciona un jugador para ver sus records.</li>
@@ -599,6 +713,12 @@
 
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+        }
+
+        // Cargar tema guardado
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode');
         }
 
         // Mapa de imágenes para las dificultades
@@ -691,12 +811,10 @@
             userCompletions.forEach(comp => {
                 const demon = demonMap.get(comp.nivel);
 
-                // Obtener los tops y la dificultad
                 const topAlCompletar = comp.posicionAlCompletar ? `#${comp.posicionAlCompletar}` : 'No disponible';
                 const topActual = demon ? `#${demon.posicion}` : 'N/A';
                 const difficulty = demon ? demon.difficulty : 'Unknown';
 
-                // Ahora usamos las rutas de archivo del mapa
                 const difficultyImgSrc = difficultyImages[difficulty] || 'unknown.png';
 
                 const li = document.createElement('li');
@@ -723,8 +841,4 @@
         });
     </script>
 </body>
-
 </html>
-
-
-
