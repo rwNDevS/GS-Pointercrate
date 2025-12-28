@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Redirigiendo...</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Partículas de fondo */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #2196F3;
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(50px);
+            }
+        }
+
+        /* Contenedor principal */
+        .redirect-container {
+            text-align: center;
+            z-index: 10;
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Logo épico */
+        .logo {
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #2196F3, #00D4FF, #2196F3);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite, pulse 2s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(33, 150, 243, 0.5);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Texto de redirección */
+        .redirect-text {
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 2rem;
+            animation: glow 2s ease-in-out infinite;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                text-shadow: 
+                    0 0 10px rgba(33, 150, 243, 0.5),
+                    0 0 20px rgba(33, 150, 243, 0.3),
+                    0 0 30px rgba(33, 150, 243, 0.2);
+            }
+            50% {
+                text-shadow: 
+                    0 0 20px rgba(33, 150, 243, 0.8),
+                    0 0 40px rgba(33, 150, 243, 0.6),
+                    0 0 60px rgba(33, 150, 243, 0.4);
+            }
+        }
+
+        /* Spinner de carga */
+        .spinner {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .spinner-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px solid transparent;
+            border-top-color: #2196F3;
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+        }
+
+        .spinner-ring:nth-child(2) {
+            border-top-color: #00D4FF;
+            animation-delay: -0.5s;
+        }
+
+        .spinner-ring:nth-child(3) {
+            border-top-color: #0066CC;
+            animation-delay: -1s;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Puntos animados */
+        .loading-dots {
+            font-size: 2rem;
+            color: #2196F3;
+            letter-spacing: 0.2em;
+        }
+
+        .loading-dots span {
+            animation: blink 1.4s infinite;
+        }
+
+        .loading-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes blink {
+            0%, 80%, 100% { opacity: 0; }
+            40% { opacity: 1; }
+        }
+
+        /* Efectos de luz */
+        .light-effect {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(33, 150, 243, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: moveLight 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .light-effect:nth-child(1) {
+            top: 10%;
+            left: 10%;
+        }
+
+        .light-effect:nth-child(2) {
+            bottom: 10%;
+            right: 10%;
+            animation-delay: 4s;
+        }
+
+        @keyframes moveLight {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(50px, 50px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .spinner {
+                width: 60px;
+                height: 60px;
+            }
+
+            .redirect-text {
+                font-size: 1.5rem;
+                letter-spacing: 0.05em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 2rem;
+            }
+
+            .redirect-text {
+                font-size: 1.2rem;
+            }
+
+            .spinner {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Efectos de luz -->
+    <div class="light-effect"></div>
+    <div class="light-effect"></div>
+
+    <!-- Partículas -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Contenedor principal -->
+    <div class="redirect-container">
+        <div class="logo">GDPS LIST</div>
+        
+        <div class="spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+        </div>
+
+        <div class="redirect-text">
+            Redirigiendo
+            <div class="loading-dots">
+                <span>.</span><span>.</span><span>.</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Crear partículas dinámicas
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 30;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 6 + 's';
+            particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Redireccionar después de 2 segundos
+        setTimeout(() => {
+            window.location.href = 'demonlist.html';
+        }, 2000);
+
+        // Redirección instantánea si el usuario hace clic
+        document.addEventListener('click', () => {
+            window.location.href = 'demonlist.html';
+        });
+    </script>
+</body>
+</html>
