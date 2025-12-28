@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>(Admin) Aprobar Completaciones</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --surface-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --primary-color: #007bff;
+            --success-color: #2ecc71;
+            --danger-color: #ff6b6b;
+            --border-color: #2a2a2a;
+            --shadow-dark: rgba(0, 0, 0, 0.7);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            line-height: 1.6;
+        }
+
+        .header-container {
+            text-align: center;
+            margin-bottom: 2rem;
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow-dark);
+        }
+        
+        .header-container h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-container p {
+            font-size: 1rem;
+            color: #ccc;
+        }
+
+        /* --- Tabla de Completaciones --- */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        thead th {
+            background: var(--surface-color);
+            color: var(--text-color);
+            font-weight: 700;
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.95rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        tbody tr {
+            background: var(--surface-color);
+            border-radius: 8px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 2px 8px var(--shadow-dark);
+        }
+
+        tbody tr:hover {
+            background: var(--border-color);
+            transform: translateY(-2px);
+        }
+
+        td {
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            vertical-align: middle;
+        }
+
+        td a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+        
+        td a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        /* Botones */
+        .btn {
+            margin: 0 0.25rem;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            color: white;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        .aprobar {
+            background-color: var(--success-color);
+        }
+
+        .rechazar {
+            background-color: var(--danger-color);
+        }
+
+        .btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        /* Mensajes de estado */
+        .status-message {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #888;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-container">
+    <h1>(Admin) Aprobar Completaciones</h1>
+    <p>Revisa y gestiona todas las completaciones pendientes enviadas por los usuarios. 🧐</p>
+</div>
+
+<table id="tablaCompletaciones">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Nivel</th>
+            <th>Prueba</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        </tbody>
+</table>
+
+<script>
+    const API_URL = 'http://localhost:8040/api';
+
+    async function cargarCompletaciones() {
+        try {
+            const res = await fetch(`${API_URL}/completaciones`);
+            const data = await res.json();
+            const tbody = document.querySelector('#tablaCompletaciones tbody');
+            tbody.innerHTML = '';
+
+            const pendientes = data.filter(c => c.estado === 'pendiente');
+
+            if (pendientes.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td colspan="6"><p class="status-message">No hay completaciones pendientes por revisar. 🎉</p></td>`;
+                tbody.appendChild(tr);
+                return;
+            }
+
+            pendientes.forEach(c => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${c.id}</td>
+                    <td>${c.usuario}</td>
+                    <td>${c.nivel}</td>
+                    <td><a href="${c.prueba}" target="_blank" rel="noopener">Ver prueba</a></td>
+                    <td>${c.estado}</td>
+                    <td>
+                        <button class="btn aprobar" onclick="actualizarEstado(${c.id}, 'aprobado')">Aprobar</button>
+                        <button class="btn rechazar" onclick="actualizarEstado(${c.id}, 'rechazado')">Rechazar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (error) {
+            console.error(error);
+            const tbody = document.querySelector('#tablaCompletaciones tbody');
+            tbody.innerHTML = `<tr><td colspan="6"><p class="status-message">Error al cargar las completaciones.</p></td></tr>`;
+        }
+    }
+
+    async function actualizarEstado(id, nuevoEstado) {
+        try {
+            const res = await fetch(`${API_URL}/completaciones/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ estado: nuevoEstado }),
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                alert(`Completación ${id} ha sido ${nuevoEstado}.`);
+                cargarCompletaciones(); // Refresca la lista
+            } else {
+                alert(`No se pudo actualizar la completación: ${data.message || 'Error desconocido'}`);
+            }
+        } catch (error) {
+            alert('Error al actualizar la completación');
+            console.error(error);
+        }
+    }
+
+    // Carga inicial al cargar la página
+    cargarCompletaciones();
+</script>
+
+</body>
+</html>

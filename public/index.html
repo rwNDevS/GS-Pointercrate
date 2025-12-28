@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GDPS Demonlist - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-body: #050505;
+            --bg-card: #111111;
+            --bg-modal: #0d0d0d;
+            --accent: #2196F3;
+            --text-main: #ffffff;
+            --text-dim: #999;
+            --border: #222;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+        }
+
+        .light-mode {
+            --bg-body: #f0f2f5;
+            --bg-card: #ffffff;
+            --bg-modal: #ffffff;
+            --accent: #1976d2;
+            --text-main: #1c1e21;
+            --text-dim: #606770;
+            --border: #ddd;
+            --success: #27ae60;
+            --danger: #c0392b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            transition: 0.3s ease;
+            animation: fadeIn 0.6s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Fondo animado */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(33, 150, 243, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(33, 150, 243, 0.08) 0%, transparent 50%);
+            z-index: -1;
+            pointer-events: none;
+            animation: moveGradient 15s ease infinite;
+        }
+
+        @keyframes moveGradient {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        /* Logo en la esquina */
+        .logo-corner {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--text-main);
+            z-index: 100;
+            user-select: none;
+            animation: slideInLeft 0.8s ease;
+        }
+
+        .logo-corner span {
+            color: var(--accent);
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Botón de tema */
+        .theme-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: 0.3s;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+        }
+
+        /* Contenedor principal - AJUSTADO PARA CABER EN PANTALLA */
+        .login-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 440px;
+            max-height: 95vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: slideInUp 0.8s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 0.3rem;
+            text-shadow: 0 0 20px rgba(33, 150, 243, 0.3);
+        }
+
+        .login-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            font-weight: 400;
+        }
+
+        .features-box {
+            background: rgba(33, 150, 243, 0.05);
+            border: 1px solid rgba(33, 150, 243, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .features-title {
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.7rem;
+            font-size: 0.9rem;
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .features-list li {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .features-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.9rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255,255,255,0.05);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 0.8rem;
+        }
+
+        .btn-submit:hover {
+            filter: brightness(1.2);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .message {
+            padding: 0.9rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            animation: slideDown 0.4s ease;
+        }
+
+        .message.success {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .message.error {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .switch-form {
+            text-align: center;
+            color: var(--accent);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            user-select: none;
+        }
+
+        .switch-form:hover {
+            text-decoration: underline;
+            filter: brightness(1.2);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.2rem 0 1rem;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider::before {
+            margin-right: 1rem;
+        }
+
+        .divider::after {
+            margin-left: 1rem;
+        }
+
+        .btn-guest {
+            width: 100%;
+            padding: 0.9rem;
+            background: none;
+            border: 2px solid var(--border);
+            color: var(--text-main);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-guest:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .footer-text {
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            margin-top: 1.2rem;
+        }
+
+        .footer-text a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 1.5rem;
+            }
+            .login-title {
+                font-size: 1.7rem;
+            }
+            .logo-corner {
+                font-size: 1.2rem;
+                top: 1rem;
+                left: 1rem;
+            }
+            .theme-toggle {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+                top: 1rem;
+                right: 1rem;
+            }
+        }
+
+        /* Scroll personalizado */
+        .login-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .login-container::-webkit-scrollbar-track {
+            background: var(--bg-body);
+        }
+
+        .login-container::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="logo-corner">GDPS <span>LIST</span></div>
+
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+    <div class="login-container">
+        <div class="login-header">
+            <h1 class="login-title">Bienvenido</h1>
+            <p class="login-subtitle">Accede a la Demonlist Oficial</p>
+        </div>
+
+        <div class="features-box">
+            <div class="features-title">📋 Características:</div>
+            <ul class="features-list">
+                <li>Visualiza niveles por dificultad y posición</li>
+                <li>Envía tus completaciones para ser verificadas</li>
+                <li>Consulta el ranking de mejores jugadores</li>
+                <li>Historial de cambios de posición de niveles</li>
+            </ul>
+        </div>
+
+        <form id="authForm">
+            <div class="form-group">
+                <input 
+                    type="text" 
+                    id="usuario" 
+                    class="form-input"
+                    placeholder="Usuario" 
+                    required 
+                    autocomplete="username"
+                />
+            </div>
+
+            <div class="form-group">
+                <input 
+                    type="password" 
+                    id="contraseña" 
+                    class="form-input"
+                    placeholder="Contraseña" 
+                    required 
+                    autocomplete="current-password"
+                />
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+                Iniciar Sesión
+            </button>
+        </form>
+
+        <div id="message" class="hidden"></div>
+
+        <div class="switch-form" id="switchForm">
+            ¿No tienes cuenta? Regístrate aquí
+        </div>
+
+        <div class="divider">O</div>
+
+        <button class="btn-guest" id="continueBtn">
+            Continuar sin iniciar sesión
+        </button>
+
+        <p class="footer-text">
+            Hosteado y hecho por <strong>Koraii/Rw9</strong>
+        </p>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8040/api';
+
+        const authForm = document.getElementById('authForm');
+        const usuarioInput = document.getElementById('usuario');
+        const contraseñaInput = document.getElementById('contraseña');
+        const submitBtn = document.getElementById('submitBtn');
+        const messageDiv = document.getElementById('message');
+        const switchFormDiv = document.getElementById('switchForm');
+        const continueBtn = document.getElementById('continueBtn');
+
+        let isLogin = true;
+
+        function mostrarMensaje(text, error = false) {
+            messageDiv.textContent = text;
+            messageDiv.className = error ? 'message error' : 'message success';
+            messageDiv.classList.remove('hidden');
+        }
+
+        function ocultarMensaje() {
+            messageDiv.classList.add('hidden');
+        }
+
+        function guardarSesion(cuenta) {
+            localStorage.setItem('usuarioLogeado', JSON.stringify(cuenta));
+        }
+
+        function obtenerSesion() {
+            return JSON.parse(localStorage.getItem('usuarioLogeado'));
+        }
+
+        async function loginUsuario(usuario, contraseña) {
+            try {
+                submitBtn.disabled = true;
+                submitBtn.textContent = '⏳ Iniciando...';
+
+                const res = await fetch(`${API_URL}/login`, {
+                    body: JSON.stringify({ username: usuario, password: contraseña }),
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                if (!res.ok) {
+                    if (res.status == 403) {
+                        throw new Error('Usuario o contraseña incorrecto.');
+                    } else {
+                        throw new Error('Error en el servidor.');
+                    }
+                }
+
+                const cuenta = await res.json();
+                guardarSesion(cuenta);
+                mostrarMensaje(`✓ Bienvenido ${cuenta.usuario} (${cuenta.rol})`);
+                setTimeout(() => window.location.href = 'demonlist.html', 1200);
+            } catch (err) {
+                mostrarMensaje(err.message, true);
+                console.error(err);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Iniciar Sesión';
+            }
+        }
+
+        async function registrarUsuario(usuario, contraseña) {
+            try {
+                submitBtn.disabled = true;
+                submitBtn.textContent = '⏳ Registrando...';
+
+                const res = await fetch(`${API_URL}/cuentas`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usuario, contraseña, rol: 'user' })
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    mostrarMensaje('✓ Cuenta creada correctamente. Ahora inicia sesión.');
+                    isLogin = true;
+                    actualizarFormulario();
+                } else {
+                    mostrarMensaje(data.message || 'Error al registrar.', true);
+                }
+            } catch (err) {
+                mostrarMensaje('Error de conexión al registrar.', true);
+                console.error(err);
+            } finally {
+                submitBtn.disabled = false;
+                actualizarFormulario();
+            }
+        }
+
+        function actualizarFormulario() {
+            if (isLogin) {
+                submitBtn.textContent = 'Iniciar Sesión';
+                switchFormDiv.textContent = '¿No tienes cuenta? Regístrate aquí';
+            } else {
+                submitBtn.textContent = 'Crear Cuenta';
+                switchFormDiv.textContent = '¿Ya tienes cuenta? Inicia sesión';
+            }
+            ocultarMensaje();
+            authForm.reset();
+            usuarioInput.focus();
+        }
+
+        switchFormDiv.addEventListener('click', () => {
+            isLogin = !isLogin;
+            actualizarFormulario();
+        });
+
+        authForm.addEventListener('submit', e => {
+            e.preventDefault();
+            const usuario = usuarioInput.value.trim();
+            const contraseña = contraseñaInput.value.trim();
+
+            if (!usuario || !contraseña) {
+                mostrarMensaje('Completa ambos campos.', true);
+                return;
+            }
+
+            if (isLogin) {
+                loginUsuario(usuario, contraseña);
+            } else {
+                registrarUsuario(usuario, contraseña);
+            }
+        });
+
+        continueBtn.addEventListener('click', () => {
+            window.location.href = 'demonlist.html';
+        });
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+        }
+
+        // Cargar tema guardado
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode');
+        }
+
+        // Verificar si ya hay sesión activa
+        window.addEventListener('load', () => {
+            const sesion = obtenerSesion();
+            if (sesion) {
+                mostrarMensaje(`Ya iniciaste sesión como ${sesion.usuario}. Redirigiendo...`);
+                setTimeout(() => window.location.href = 'demonlist.html', 1500);
+            }
+        });
+    </script>
+
+</body>
+</html>

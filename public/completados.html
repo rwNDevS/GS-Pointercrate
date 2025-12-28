@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mis Completaciones | GDPS Demonlist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-body: #050505;
+            --bg-card: #111111;
+            --bg-modal: #0d0d0d;
+            --accent: #2196F3;
+            --text-main: #ffffff;
+            --text-dim: #999;
+            --border: #222;
+            --success: #2ecc71;
+            --warning: #f1c40f;
+            --danger: #e74c3c;
+        }
+
+        .light-mode {
+            --bg-body: #f0f2f5;
+            --bg-card: #ffffff;
+            --bg-modal: #ffffff;
+            --accent: #1976d2;
+            --text-main: #1c1e21;
+            --text-dim: #606770;
+            --border: #ddd;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #c0392b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: 0.3s ease;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-group { 
+            display: flex; 
+            gap: 12px; 
+            align-items: center; 
+        }
+
+        .btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.7rem 1.4rem;
+            cursor: pointer;
+            font-weight: 700;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: 0.2s;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover { 
+            border-color: var(--accent); 
+            color: var(--accent); 
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: 0.3s;
+            z-index: 999;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            font-weight: 400;
+        }
+
+        /* ========== ALERTA DE BANEO ========== */
+        .ban-alert {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.2), rgba(192, 57, 43, 0.2));
+            border: 2px solid var(--danger);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            animation: shake 0.5s ease;
+        }
+
+        .ban-alert-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .ban-alert-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--danger);
+            margin-bottom: 0.5rem;
+        }
+
+        .ban-alert-message {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* ========== LISTA DE COMPLETACIONES ========== */
+        .completaciones-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .completacion-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: 0.2s;
+            animation: fadeInUp 0.5s ease backwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .completacion-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--warning);
+        }
+
+        .completacion-card.aprobado::before {
+            background: var(--success);
+        }
+
+        .completacion-card.rechazado::before {
+            background: var(--danger);
+        }
+
+        .completacion-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .completacion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .completacion-nivel {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .completacion-estado {
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .completacion-estado.pendiente {
+            background: rgba(241, 196, 15, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .completacion-estado.aprobado {
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .completacion-estado.rechazado {
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .completacion-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .completacion-link:hover {
+            color: var(--text-main);
+            text-decoration: underline;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 1.3rem;
+            color: var(--text-dim);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+            color: var(--text-dim);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 2rem; }
+            main { padding: 0 1rem; }
+            .completacion-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+<header>
+    <div class="nav-group">
+        <div style="font-weight:800;font-size:1.5rem">GDPS <span style="color:var(--accent)">LIST</span></div>
+    </div>
+
+    <div class="nav-group">
+        <a href="demonlist.html" class="btn">← Volver a la lista</a>
+        <a href="formulario.html" class="btn">Enviar Run</a>
+    </div>
+</header>
+
+<main>
+    <div class="page-header">
+        <h1 class="page-title">📝 Mis Completaciones</h1>
+        <p class="page-subtitle" id="userSubtitle">Cargando...</p>
+    </div>
+
+    <!-- ========== ALERTA DE BANEO (OCULTA POR DEFECTO) ========== -->
+    <div id="banAlert" class="ban-alert hidden">
+        <div class="ban-alert-icon">🚫</div>
+        <div class="ban-alert-title">Cuenta Suspendida</div>
+        <div class="ban-alert-message">
+            Tu cuenta ha sido baneada por violar las reglas de la Demonlist.<br>
+            No podrás enviar nuevas completaciones. Contacta al administrador para más información.
+        </div>
+    </div>
+
+    <!-- ========== LISTA DE COMPLETACIONES ========== -->
+    <div id="lista">
+        <div class="loading">⏳ Cargando tus completaciones...</div>
+    </div>
+</main>
+
+<script>
+const API = 'http://localhost:8040/api';
+
+// Verificar que el usuario esté logeado
+const usuario = JSON.parse(localStorage.getItem('usuarioLogeado'));
+if (!usuario) {
+    alert('⚠️ Debes iniciar sesión para ver tus completaciones.');
+    window.location.href = 'index.html';
+}
+
+// ========== FUNCIÓN AGREGADA: VERIFICAR SI ESTÁ BANEADO ==========
+async function verificarBan() {
+    try {
+        const res = await fetch(`${API}/cuentas`);
+        if (!res.ok) throw new Error('Error al obtener cuentas');
+        
+        const cuentas = await res.json();
+        const miCuenta = cuentas.find(c => c.usuario === usuario.usuario);
+        
+        if (miCuenta && miCuenta.banned) {
+            // Mostrar alerta de baneo
+            document.getElementById('banAlert').classList.remove('hidden');
+            return true;
+        }
+        return false;
+    } catch (error) {
+        console.error('Error verificando estado de ban:', error);
+        return false;
+    }
+}
+
+async function cargarMisCompletaciones() {
+    const lista = document.getElementById('lista');
+    
+    try {
+        // Verificar estado de ban primero
+        const estaBaneado = await verificarBan();
+        
+        // Actualizar subtítulo con nombre de usuario
+        document.getElementById('userSubtitle').textContent = 
+            `Completaciones de ${usuario.usuario}${estaBaneado ? ' (BANEADO)' : ''}`;
+        
+        // Obtener completaciones
+        const res = await fetch(`${API}/completaciones`);
+        if (!res.ok) throw new Error('Error al cargar completaciones');
+        
+        const todas = await res.json();
+        const misCompletaciones = todas.filter(c => c.usuario === usuario.usuario);
+
+        lista.innerHTML = '';
+
+        if (misCompletaciones.length === 0) {
+            lista.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">📭</div>
+                    <div class="empty-state-text">
+                        No tienes completaciones registradas aún.<br>
+                        <a href="formulario.html" style="color: var(--accent)">¡Envía tu primera run!</a>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        // Ordenar por fecha (más reciente primero)
+        misCompletaciones.sort((a, b) => {
+            const idA = parseInt(a.id) || 0;
+            const idB = parseInt(b.id) || 0;
+            return idB - idA;
+        });
+
+        const grid = document.createElement('div');
+        grid.className = 'completaciones-grid';
+
+        misCompletaciones.forEach((comp, index) => {
+            const card = document.createElement('div');
+            card.className = `completacion-card ${comp.estado}`;
+            card.style.animationDelay = `${index * 0.1}s`;
+            
+            card.innerHTML = `
+                <div class="completacion-header">
+                    <div class="completacion-nivel">${comp.nivel}</div>
+                    <span class="completacion-estado ${comp.estado}">
+                        ${comp.estado === 'pendiente' ? '⏳' : comp.estado === 'aprobado' ? '✓' : '✗'} 
+                        ${comp.estado}
+                    </span>
+                </div>
+                <div>
+                    <a href="${comp.prueba}" target="_blank" class="completacion-link">
+                        🎥 Ver prueba →
+                    </a>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        lista.appendChild(grid);
+
+        // Estadísticas rápidas
+        const aprobadas = misCompletaciones.filter(c => c.estado === 'aprobado').length;
+        const pendientes = misCompletaciones.filter(c => c.estado === 'pendiente').length;
+        const rechazadas = misCompletaciones.filter(c => c.estado === 'rechazado').length;
+
+        const stats = document.createElement('div');
+        stats.style.cssText = 'text-align: center; margin-top: 2rem; padding: 1.5rem; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border);';
+        stats.innerHTML = `
+            <strong>Estadísticas:</strong> 
+            <span style="color: var(--success)">✓ ${aprobadas} aprobadas</span> • 
+            <span style="color: var(--warning)">⏳ ${pendientes} pendientes</span> • 
+            <span style="color: var(--danger)">✗ ${rechazadas} rechazadas</span>
+        `;
+        lista.appendChild(stats);
+
+    } catch (err) {
+        console.error('Error al cargar completaciones:', err);
+        lista.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">⚠️</div>
+                <div class="empty-state-text">
+                    Hubo un problema al cargar tus completaciones.<br>
+                    <span style="color: var(--text-dim); font-size: 0.9rem;">Intenta recargar la página</span>
+                </div>
+            </div>
+        `;
+    }
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('light-mode');
+    localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+}
+
+// Cargar tema guardado
+if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light-mode');
+}
+
+// Inicializar
+cargarMisCompletaciones();
+</script>
+
+</body>
+</html>

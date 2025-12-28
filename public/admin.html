@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - GDPS Demonlist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #050505;
+            --bg-card: #111111;
+            --bg-modal: #0d0d0d;
+            --accent: #2196F3;
+            --text-main: #ffffff;
+            --text-dim: #999;
+            --border: #222;
+            --success: #2ecc71;
+            --danger: #ff6b6b;
+            --warning: #f39c12;
+        }
+
+        .light-mode {
+            --bg-body: #f0f2f5;
+            --bg-card: #ffffff;
+            --bg-modal: #ffffff;
+            --accent: #1976d2;
+            --text-main: #1c1e21;
+            --text-dim: #606770;
+            --border: #ddd;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #e67e22;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+            transition: 0.3s ease;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .header h1 {
+            color: var(--accent);
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+
+        .btn-volver {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            margin-top: 1rem;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            border: 1px solid var(--accent);
+        }
+
+        .btn-volver:hover {
+            filter: brightness(1.2);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 5000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .admin-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .admin-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .admin-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .admin-card h2 {
+            color: var(--accent);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .btn {
+            background: var(--accent);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            color: white;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+            margin: 0.25rem;
+            text-decoration: none;
+            display: inline-block;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn:hover {
+            filter: brightness(1.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-success { background-color: var(--success); }
+        .btn-danger { background-color: var(--danger); }
+        .btn-warning { background-color: var(--warning); }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 1rem;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        thead th {
+            background: rgba(33, 150, 243, 0.1);
+            color: var(--accent);
+            font-weight: 800;
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.85rem;
+            border-bottom: 2px solid var(--accent);
+            text-transform: uppercase;
+        }
+
+        tbody tr {
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:hover {
+            background: rgba(33, 150, 243, 0.1);
+            transform: translateX(5px);
+        }
+
+        td {
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        /* Mejora para los botones en tabla (Desktop) */
+        td .btn {
+            white-space: nowrap;
+            min-width: 100px;
+            display: inline-block;
+        }
+
+        /* Estilos específicos para la tabla de completaciones */
+        #tablaCompletaciones td:last-child {
+            white-space: nowrap;
+        }
+
+        #tablaCompletaciones .btn {
+            padding: 0.6rem 1rem;
+            font-size: 0.75rem;
+            margin: 0.15rem;
+        }
+
+        /* Enlaces en tablas */
+        td a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        td a:hover {
+            color: var(--success);
+            text-decoration: underline;
+        }
+
+        .status-banned {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .status-active {
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .status-message {
+            text-align: center;
+            font-size: 1rem;
+            color: var(--text-dim);
+            padding: 2rem;
+        }
+
+        .actions-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .info-text {
+            margin-top: 1rem;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+        }
+
+        .modal-wrapper {
+            display: flex;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 2rem auto;
+        }
+
+        .modal-content {
+            background-color: var(--bg-modal);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px solid var(--accent);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .modal-sidebar {
+            background-color: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            flex: 0 0 300px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .modal-sidebar h3 {
+            color: var(--accent);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .demon-list-item {
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: rgba(255,255,255,0.02);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
+            font-size: 0.85rem;
+        }
+
+        .demon-list-item strong {
+            color: var(--accent);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .modal-header h2 {
+            color: var(--accent);
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .close-modal {
+            background: var(--danger);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            background-color: rgba(255,255,255,0.05);
+            color: var(--text-main);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background-color: rgba(255,255,255,0.08);
+        }
+
+        /* RESPONSIVE MÓVIL */
+        @media (max-width: 1024px) {
+            .modal-wrapper {
+                flex-direction: column;
+            }
+
+            .modal-sidebar {
+                flex: 1;
+                max-width: 100%;
+                order: 2;
+            }
+
+            .modal-content {
+                max-width: 100%;
+                order: 1;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .admin-sections {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header {
+                padding: 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+            }
+
+            .btn-volver {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.75rem;
+            }
+
+            .admin-sections {
+                gap: 1.5rem;
+                margin-top: 1.5rem;
+            }
+
+            .admin-card {
+                padding: 1.5rem;
+            }
+
+            .admin-card h2 {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+            }
+
+            .theme-toggle {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            /* Tabla responsive */
+            table {
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            thead th {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.7rem;
+                margin: 0.2rem;
+            }
+
+            #tablaCompletaciones .btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.65rem;
+            }
+
+            .actions-group {
+                gap: 0.5rem;
+            }
+
+            .info-text {
+                font-size: 0.85rem;
+                padding: 0.8rem;
+            }
+
+            .modal.active {
+                padding: 1rem;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+            }
+
+            .modal-header h2 {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .header p {
+                font-size: 0.85rem;
+            }
+
+            .admin-card {
+                padding: 1rem;
+            }
+
+            .admin-card h2 {
+                font-size: 1rem;
+            }
+
+            /* Tabla más compacta en móviles pequeños */
+            thead th {
+                padding: 0.5rem 0.3rem;
+                font-size: 0.7rem;
+            }
+
+            td {
+                padding: 0.5rem 0.3rem;
+                font-size: 0.75rem;
+            }
+
+            .btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.65rem;
+            }
+
+            #tablaCompletaciones .btn {
+                padding: 0.35rem 0.6rem;
+                font-size: 0.6rem;
+                min-width: 70px;
+            }
+
+            .theme-toggle {
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Scroll personalizado */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-body);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+    <div class="container">
+        <div class="header">
+            <h1>🛠️ Panel de Administración</h1>
+            <p>Gestiona usuarios, completaciones y demonios desde aquí</p>
+            <a href="demonlist.html" class="btn-volver">← Volver a la Demonlist</a>
+        </div>
+
+        <div class="admin-sections">
+            <!-- Sección de Usuarios -->
+            <div class="admin-card">
+                <h2>👥 Gestión de Usuarios</h2>
+                <div style="overflow-x: auto;">
+                    <table id="tablaCuentas">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Rol</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sección de Completaciones Pendientes -->
+            <div class="admin-card">
+                <h2>✅ Completaciones Pendientes</h2>
+                <div style="overflow-x: auto;">
+                    <table id="tablaCompletaciones">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Nivel</th>
+                                <th>Prueba</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sección de Gestión de Demonios -->
+            <div class="admin-card">
+                <h2>😈 Gestión de Demonios</h2>
+                <div class="actions-group">
+                    <button class="btn" onclick="window.location.href='demonlist.html'">Ver Lista Completa</button>
+                    <button class="btn btn-success" id="btnAgregarDemon">Agregar Demon</button>
+                    <button class="btn btn-warning" id="btnModificarPos">Modificar Posición</button>
+                </div>
+                <p class="info-text">
+                    Agrega, elimina o modifica la posición de los demonios directamente desde aquí.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Demon -->
+    <div id="modalAgregarDemon" class="modal">
+        <div class="modal-wrapper">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>➕ Agregar Demon</h2>
+                    <button class="close-modal" onclick="cerrarModal('modalAgregarDemon')">&times;</button>
+                </div>
+                <form id="formAgregarDemon">
+                    <div class="form-group">
+                        <label>Nombre del Nivel *</label>
+                        <input type="text" id="agregarNombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ID del Nivel *</label>
+                        <input type="text" id="agregarIdNivel" required placeholder="Ej: 12345678">
+                    </div>
+                    <div class="form-group">
+                        <label>Creador *</label>
+                        <input type="text" id="agregarCreador" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Verificador *</label>
+                        <input type="text" id="agregarVerificador" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Posición *</label>
+                        <input type="number" id="agregarPosicion" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Dificultad *</label>
+                        <select id="agregarDificultad" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="Extreme Demon">Extreme Demon</option>
+                            <option value="Insane Demon">Insane Demon</option>
+                            <option value="Hard Demon">Hard Demon</option>
+                            <option value="Medium Demon">Medium Demon</option>
+                            <option value="Easy Demon">Easy Demon</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 1rem;">Agregar Demon</button>
+                </form>
+            </div>
+            <div class="modal-sidebar">
+                <h3>📋 Lista de Niveles</h3>
+                <div id="listaNivelesAgregar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Modificar Posición -->
+    <div id="modalModificarPos" class="modal">
+        <div class="modal-wrapper">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>🔄 Modificar Posición</h2>
+                    <button class="close-modal" onclick="cerrarModal('modalModificarPos')">&times;</button>
+                </div>
+                <form id="formModificarPos">
+                    <div class="form-group">
+                        <label>ID del Nivel a mover *</label>
+                        <input type="text" id="modificarIdNivel" required placeholder="Ej: 12345678">
+                    </div>
+                    <div class="form-group">
+                        <label>Nueva Posición *</label>
+                        <input type="number" id="modificarNuevaPosicion" min="1" required>
+                    </div>
+                    <button type="submit" class="btn btn-warning" style="width: 100%; margin-top: 1rem;">Actualizar Posición</button>
+                </form>
+            </div>
+            <div class="modal-sidebar">
+                <h3>📋 Lista de Niveles</h3>
+                <div id="listaNivelesModificar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8040/api';
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+        }
+
+        // Verificar que el usuario sea admin
+        function verificarAdmin() {
+            const user = localStorage.getItem('usuarioLogeado');
+            if (!user) {
+                alert('Debes iniciar sesión para acceder a esta página.');
+                window.location.href = 'index.html';
+                return null;
+            }
+            const usuario = JSON.parse(user);
+            if (usuario.rol !== 'admin') {
+                alert('No tienes permisos para acceder a esta página.');
+                window.location.href = 'demonlist.html';
+                return null;
+            }
+            return usuario;
+        }
+
+        // Cargar cuentas
+        async function cargarCuentas() {
+            try {
+                const res = await fetch(`${API_URL}/cuentas`);
+                const cuentas = await res.json();
+                const tbody = document.querySelector('#tablaCuentas tbody');
+                tbody.innerHTML = '';
+
+                if (cuentas.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4"><p class="status-message">No hay cuentas registradas.</p></td></tr>';
+                    return;
+                }
+
+                cuentas.forEach(c => {
+                    const tr = document.createElement('tr');
+                    const estadoClass = c.banned ? 'status-banned' : 'status-active';
+                    const estadoTexto = c.banned ? 'Baneado' : 'Activo';
+                    const btnTexto = c.banned ? 'Desbanear' : 'Banear';
+                    const btnClass = c.banned ? 'btn-success' : 'btn-danger';
+
+                    tr.innerHTML = `
+                        <td><strong>${c.usuario}</strong></td>
+                        <td>${c.rol}</td>
+                        <td><span class="${estadoClass}">${estadoTexto}</span></td>
+                        <td>
+                            <button class="btn ${btnClass}" onclick="toggleBan('${c.usuario}', ${!c.banned})">
+                                ${btnTexto}
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Error al cargar cuentas:', error);
+            }
+        }
+
+        // Banear/Desbanear usuario
+        async function toggleBan(usuario, banned) {
+            const accion = banned ? 'banear' : 'desbanear';
+            if (!confirm(`¿Estás seguro de que quieres ${accion} a ${usuario}?`)) {
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/cuentas/${encodeURIComponent(usuario)}/ban`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ banned })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    alert(data.message);
+                    cargarCuentas();
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error al cambiar estado de ban:', error);
+                alert('Error al cambiar estado de ban.');
+            }
+        }
+
+        // Cargar completaciones pendientes
+        async function cargarCompletaciones() {
+            try {
+                const res = await fetch(`${API_URL}/completaciones`);
+                const completaciones = await res.json();
+                const tbody = document.querySelector('#tablaCompletaciones tbody');
+                tbody.innerHTML = '';
+
+                const pendientes = completaciones.filter(c => c.estado === 'pendiente');
+
+                if (pendientes.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4"><p class="status-message">No hay completaciones pendientes.</p></td></tr>';
+                    return;
+                }
+
+                pendientes.forEach(c => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${c.usuario}</strong></td>
+                        <td>${c.nivel}</td>
+                        <td><a href="${c.prueba}" target="_blank" rel="noopener">Ver prueba</a></td>
+                        <td>
+                            <button class="btn btn-success" onclick="actualizarEstado('${c.id}', 'aprobado')">Aprobar</button>
+                            <button class="btn btn-danger" onclick="actualizarEstado('${c.id}', 'rechazado')">Rechazar</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Error al cargar completaciones:', error);
+            }
+        }
+
+        // Actualizar estado de completación
+        async function actualizarEstado(id, nuevoEstado) {
+            try {
+                const res = await fetch(`${API_URL}/completaciones/${id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ estado: nuevoEstado })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    alert(`Completación ${nuevoEstado} correctamente.`);
+                    cargarCompletaciones();
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error al actualizar completación:', error);
+                alert('Error al actualizar completación.');
+            }
+        }
+
+        // Cargar demons
+        let demonsCache = [];
+        async function cargarDemons() {
+            try {
+                const res = await fetch(`${API_URL}/demons`);
+                demonsCache = await res.json();
+                demonsCache.sort((a, b) => a.posicion - b.posicion);
+                return demonsCache;
+            } catch (error) {
+                console.error('Error al cargar demons:', error);
+                return [];
+            }
+        }
+
+        // Mostrar lista de niveles en sidebar
+        function mostrarListaNiveles(containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            if (demonsCache.length === 0) {
+                container.innerHTML = '<p class="status-message">No hay niveles.</p>';
+                return;
+            }
+
+            demonsCache.forEach(demon => {
+                const item = document.createElement('div');
+                item.className = 'demon-list-item';
+                item.innerHTML = `
+                    <strong>Pos. ${demon.posicion}: ${demon.name}</strong>
+                    ID: ${demon.idNivel}
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Abrir modal
+        function abrirModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Cerrar modal
+        function cerrarModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Agregar demon
+        document.getElementById('formAgregarDemon').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nuevoDemon = {
+                name: document.getElementById('agregarNombre').value.trim(),
+                idNivel: document.getElementById('agregarIdNivel').value.trim(),
+                creador: document.getElementById('agregarCreador').value.trim(),
+                verificador: document.getElementById('agregarVerificador').value.trim(),
+                posicion: parseInt(document.getElementById('agregarPosicion').value),
+                dificultad: document.getElementById('agregarDificultad').value
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/demons`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(nuevoDemon)
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Demon agregado exitosamente');
+                    cerrarModal('modalAgregarDemon');
+                    document.getElementById('formAgregarDemon').reset();
+                    await cargarDemons();
+                    mostrarListaNiveles('listaNivelesAgregar');
+                    mostrarListaNiveles('listaNivelesModificar');
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error al agregar demon:', error);
+                alert('Error al agregar demon.');
+            }
+        });
+
+        // Modificar posición
+        document.getElementById('formModificarPos').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const idNivel = document.getElementById('modificarIdNivel').value.trim();
+            const nuevaPosicion = parseInt(document.getElementById('modificarNuevaPosicion').value);
+
+            try {
+                const res = await fetch(`${API_URL}/demons/${encodeURIComponent(idNivel)}/posicion`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nuevaPosicion })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Posición actualizada correctamente');
+                    cerrarModal('modalModificarPos');
+                    document.getElementById('formModificarPos').reset();
+                    await cargarDemons();
+                    mostrarListaNiveles('listaNivelesAgregar');
+                    mostrarListaNiveles('listaNivelesModificar');
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error al modificar posición:', error);
+                alert('Error al modificar posición.');
+            }
+        });
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', async () => {
+            const usuario = verificarAdmin();
+            if (!usuario) return;
+
+            cargarCuentas();
+            cargarCompletaciones();
+            await cargarDemons();
+
+            // Botones para abrir modales
+            document.getElementById('btnAgregarDemon').addEventListener('click', () => {
+                mostrarListaNiveles('listaNivelesAgregar');
+                abrirModal('modalAgregarDemon');
+            });
+
+            document.getElementById('btnModificarPos').addEventListener('click', () => {
+                mostrarListaNiveles('listaNivelesModificar');
+                abrirModal('modalModificarPos');
+            });
+        });
+    </script>
+</body>
+</html>

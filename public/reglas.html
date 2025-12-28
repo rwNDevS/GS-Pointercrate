@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reglas | GDPS Demonlist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-body: #050505;
+            --bg-card: #111111;
+            --bg-modal: #0d0d0d;
+            --accent: #2196F3;
+            --text-main: #ffffff;
+            --text-dim: #999;
+            --border: #222;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+        }
+
+        .light-mode {
+            --bg-body: #f0f2f5;
+            --bg-card: #ffffff;
+            --bg-modal: #ffffff;
+            --accent: #1976d2;
+            --text-main: #1c1e21;
+            --text-dim: #606770;
+            --border: #ddd;
+            --success: #27ae60;
+            --danger: #c0392b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: 0.3s ease;
+        }
+
+        header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-group { 
+            display: flex; 
+            gap: 12px; 
+            align-items: center; 
+        }
+
+        .btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.7rem 1.4rem;
+            cursor: pointer;
+            font-weight: 700;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: 0.2s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover { 
+            border-color: var(--accent); 
+            color: var(--accent); 
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: 0.3s;
+            z-index: 999;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            font-weight: 400;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.6s ease backwards;
+        }
+
+        .section:nth-child(1) { animation-delay: 0.1s; }
+        .section:nth-child(2) { animation-delay: 0.2s; }
+        .section:nth-child(3) { animation-delay: 0.3s; }
+        .section:nth-child(4) { animation-delay: 0.4s; }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+        }
+
+        .section-intro {
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .subsection-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 2rem 0 1rem 0;
+            color: var(--text-main);
+        }
+
+        .rule-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rule-item {
+            background: rgba(255,255,255,0.03);
+            padding: 1rem 1.2rem;
+            margin-bottom: 0.8rem;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
+            transition: 0.2s;
+        }
+
+        .rule-item:hover {
+            transform: translateX(5px);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .rule-item strong {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .hack-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .hack-item {
+            padding: 0.9rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: 0.2s;
+        }
+
+        .hack-item.allowed {
+            background: rgba(46, 204, 113, 0.1);
+            border-left: 3px solid var(--success);
+            color: var(--success);
+        }
+
+        .hack-item.disallowed {
+            background: rgba(231, 76, 60, 0.1);
+            border-left: 3px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .hack-item:hover {
+            transform: translateX(5px);
+        }
+
+        .points-table {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .points-row {
+            background: rgba(33, 150, 243, 0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid var(--accent);
+            transition: 0.2s;
+        }
+
+        .points-row:hover {
+            transform: translateX(5px);
+            background: rgba(33, 150, 243, 0.15);
+        }
+
+        .points-position {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .points-value {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .warning-box {
+            background: rgba(241, 196, 15, 0.1);
+            border: 2px solid #f1c40f;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .warning-box strong {
+            color: #f1c40f;
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 2rem; }
+            .section { padding: 1.5rem; }
+            .hack-list { grid-template-columns: 1fr; }
+            main { padding: 0 1rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+<header>
+    <div class="nav-group">
+        <div style="font-weight:800;font-size:1.5rem">GDPS <span style="color:var(--accent)">LIST</span></div>
+    </div>
+
+    <div class="nav-group">
+        <a href="lista.html" class="btn">Demonlist</a>
+        <a href="top.html" class="btn">TOP</a>
+        <a href="reglas.html" class="btn" style="background: var(--accent); color: white; border-color: var(--accent);">Reglas</a>
+    </div>
+</header>
+
+<main>
+    <div class="page-header">
+        <h1 class="page-title">📋 Reglas de la Demonlist</h1>
+        <p class="page-subtitle">Lee cuidadosamente las normas antes de enviar tu completación</p>
+    </div>
+
+    <!-- Sección: Verificación -->
+    <section class="section">
+        <h2 class="section-title">
+            <span class="section-icon">✅</span>
+            Reglas de Verificación
+        </h2>
+        <p class="section-intro">
+            Para que tu completación sea válida y aceptada en la Demonlist, debe cumplir con las siguientes directrices:
+        </p>
+
+        <ul class="rule-list">
+            <li class="rule-item">
+                <strong>📹 Evidencia en video:</strong> Es obligatorio presentar una grabación en video de la completación. El video debe ser sin cortes, mostrando el principio y el final del nivel.
+            </li>
+            <li class="rule-item">
+                <strong>🎥 Calidad del video:</strong> La grabación debe tener una calidad razonable (mínimo 720p 30fps) para que el equipo de moderación pueda verificar la jugabilidad sin problemas.
+            </li>
+            <li class="rule-item">
+                <strong>🚫 No Bots:</strong> Se prohíbe el uso de cualquier tipo de bot o macro para completar niveles.
+            </li>
+            <li class="rule-item">
+                <strong>👤 Cuenta y nombre:</strong> Debes usar tu propia cuenta de Geometry Dash. El nombre de usuario en el juego debe coincidir con el que has registrado en la Demonlist.
+            </li>
+            <li class="rule-item">
+                <strong>⏸️ Pausas:</strong> No se permite pausar el juego durante la completación para evitar cualquier sospecha de uso de hacks.
+            </li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>⚠️ Advertencia:</strong>
+            Cualquier intento de fraude resultará en un baneo permanente de la Demonlist. Las completaciones deben ser legítimas y honestas.
+        </div>
+    </section>
+
+    <!-- Sección: Hacks y Mods -->
+    <section class="section">
+        <h2 class="section-title">
+            <span class="section-icon">🛠️</span>
+            Hacks y Mods
+        </h2>
+        <p class="section-intro">
+            El uso de hacks que alteren la jugabilidad de manera injusta está estrictamente prohibido. A continuación se detallan los hacks permitidos y no permitidos:
+        </p>
+
+        <h3 class="subsection-title">✅ Hacks permitidos</h3>
+        <div class="hack-list">
+            <div class="hack-item allowed">✓ Cheat Indicator</div>
+            <div class="hack-item allowed">✓ Click Between Frames</div>
+            <div class="hack-item allowed">✓ TPS Bypass</div>
+            <div class="hack-item allowed">✓ FPS Bypass (+240 FPS)</div>
+            <div class="hack-item allowed">✓ Show Hitboxes on Death</div>
+            <div class="hack-item allowed">✓ Instant Practice Mode</div>
+        </div>
+
+        <h3 class="subsection-title">❌ Hacks no permitidos</h3>
+        <div class="hack-list">
+            <div class="hack-item disallowed">✗ Noclip</div>
+            <div class="hack-item disallowed">✗ Speedhack</div>
+            <div class="hack-item disallowed">✗ MacroBot</div>
+            <div class="hack-item disallowed">✗ Hitbox Multiplier</div>
+            <div class="hack-item disallowed">✗ No Spikes</div>
+            <div class="hack-item disallowed">✗ Show Hitboxes (durante juego)</div>
+            <div class="hack-item disallowed">✗ Coin Tracker</div>
+        </div>
+    </section>
+
+    <!-- Sección: Sistema de Puntos -->
+    <section class="section">
+        <h2 class="section-title">
+            <span class="section-icon">🏆</span>
+            Sistema de Puntos Progresivo
+        </h2>
+        <p class="section-intro">
+            La Demonlist utiliza un sistema de puntos progresivo para clasificar a los jugadores. Cada completación de un demonio en la lista principal te otorgará puntos basados en la posición de ese nivel.
+        </p>
+
+        <div class="points-table">
+            <div class="points-row">
+                <span class="points-position">#1 (Top 1)</span>
+                <span class="points-value">100 puntos</span>
+            </div>
+            <div class="points-row">
+                <span class="points-position">#15 (Top 15)</span>
+                <span class="points-value">~50 puntos</span>
+            </div>
+            <div class="points-row">
+                <span class="points-position">#30 (Top 30)</span>
+                <span class="points-value">1 punto</span>
+            </div>
+            <div class="points-row" style="opacity: 0.6;">
+                <span class="points-position">Legacy List (31+)</span>
+                <span class="points-value" style="color: var(--text-dim);">0 puntos</span>
+            </div>
+        </div>
+
+        <p class="section-intro" style="margin-top: 1.5rem;">
+            Los puntos se calculan de forma decreciente: cuanto más alto sea el ranking del nivel, más puntos recibirás. Solo los niveles del Top 30 otorgan puntos para el ranking.
+        </p>
+    </section>
+
+    <!-- Botón de volver -->
+    <div style="text-align: center; margin: 3rem 0;">
+        <a href="demonlist.html" class="btn" style="padding: 1rem 3rem; font-size: 1rem; background: var(--accent); color: white; border-color: var(--accent);">
+            ← Volver a la Demonlist
+        </a>
+    </div>
+</main>
+
+<script>
+function toggleTheme() {
+    document.body.classList.toggle('light-mode');
+    localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+}
+
+// Cargar tema guardado
+if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light-mode');
+}
+</script>
+
+</body>
+</html>

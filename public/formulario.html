@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Enviar Completación | GDPS Demonlist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-body: #050505;
+            --bg-card: #111111;
+            --bg-modal: #0d0d0d;
+            --accent: #2196F3;
+            --text-main: #ffffff;
+            --text-dim: #999;
+            --border: #222;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+        }
+
+        .light-mode {
+            --bg-body: #f0f2f5;
+            --bg-card: #ffffff;
+            --bg-modal: #ffffff;
+            --accent: #1976d2;
+            --text-main: #1c1e21;
+            --text-dim: #606770;
+            --border: #ddd;
+            --success: #27ae60;
+            --danger: #c0392b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: 0.3s ease;
+            animation: fadeIn 0.5s ease;
+            min-height: 100vh;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-group { 
+            display: flex; 
+            gap: 12px; 
+            align-items: center; 
+        }
+
+        .btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.7rem 1.4rem;
+            cursor: pointer;
+            font-weight: 700;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: 0.2s;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover { 
+            border-color: var(--accent); 
+            color: var(--accent); 
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: 0.3s;
+            z-index: 999;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        main {
+            max-width: 600px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            font-weight: 400;
+        }
+
+        .form-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 0.6rem;
+            color: var(--text-main);
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.2s;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255,255,255,0.05);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .form-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 2.5rem;
+        }
+
+        .form-select option {
+            background: var(--bg-card);
+            color: var(--text-main);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1.2rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            filter: brightness(1.2);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .alert {
+            padding: 1.2rem;
+            border-radius: 6px;
+            margin-top: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            animation: slideDown 0.4s ease;
+        }
+
+        .alert-success {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .info-box {
+            background: rgba(33, 150, 243, 0.05);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-box-title {
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-box-text {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 2rem; }
+            main { padding: 0 1rem; margin: 2rem auto; }
+            .form-card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+<header>
+    <div class="nav-group">
+        <div style="font-weight:800;font-size:1.5rem">GDPS <span style="color:var(--accent)">LIST</span></div>
+    </div>
+
+    <div class="nav-group">
+        <a href="lista.html" class="btn">← Volver a la lista</a>
+        <a href="completados.html" class="btn">Mis Runs</a>
+    </div>
+</header>
+
+<main>
+    <div class="page-header">
+        <h1 class="page-title">📤 Enviar Completación</h1>
+        <p class="page-subtitle" id="userSubtitle">Cargando...</p>
+    </div>
+
+    <div class="form-card">
+        <div class="info-box">
+            <div class="info-box-title">
+                <span>ℹ️</span>
+                Importante
+            </div>
+            <div class="info-box-text">
+                Tu completación será revisada por un administrador antes de ser aprobada. 
+                Asegúrate de proporcionar un link válido de YouTube o Google Drive.
+            </div>
+        </div>
+
+        <form id="completacionForm">
+            <div class="form-group">
+                <label class="form-label" for="nivel">🎮 Nivel completado</label>
+                <select id="nivel" class="form-select" required>
+                    <option value="" disabled selected>Cargando niveles...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="prueba">🎥 Link de prueba</label>
+                <input 
+                    type="text" 
+                    id="prueba" 
+                    class="form-input" 
+                    placeholder="https://youtube.com/watch?v=..." 
+                    required 
+                />
+            </div>
+
+            <button type="submit" class="btn-submit">
+                ✓ Enviar Completación
+            </button>
+        </form>
+
+        <div id="mensaje"></div>
+    </div>
+</main>
+
+<script>
+    const API_URL = 'http://localhost:8040/api';
+    const usuario = JSON.parse(localStorage.getItem('usuarioLogeado'));
+    
+    if (!usuario || (usuario.rol !== 'admin' && usuario.rol !== 'user')) {
+        alert('⚠️ Debes iniciar sesión para enviar completaciones');
+        window.location.href = 'index.html';
+    }
+
+    // Actualizar subtítulo con nombre de usuario
+    document.getElementById('userSubtitle').textContent = `Enviando como ${usuario.usuario}`;
+
+    // Cargar demons en el select
+    async function cargarNiveles() {
+        try {
+            const res = await fetch(`${API_URL}/demons`);
+            const demons = await res.json();
+            const select = document.getElementById('nivel');
+
+            select.innerHTML = '<option value="" disabled selected>Selecciona un nivel...</option>';
+
+            // Ordenar por posición
+            demons.sort((a, b) => a.posicion - b.posicion);
+
+            demons.forEach(demon => {
+                const option = document.createElement('option');
+                option.value = demon.name;
+                option.textContent = `#${demon.posicion} - ${demon.name}`;
+                select.appendChild(option);
+            });
+        } catch (err) {
+            console.error('Error al cargar demons:', err);
+            select.innerHTML = '<option value="" disabled selected>Error al cargar niveles</option>';
+        }
+    }
+
+    cargarNiveles();
+
+    document.getElementById('completacionForm').addEventListener('submit', async e => {
+        e.preventDefault();
+
+        const nivel = document.getElementById('nivel').value;
+        const prueba = document.getElementById('prueba').value.trim();
+
+        if (!nivel) {
+            return mostrarMensaje('⚠️ Por favor, selecciona un nivel.', false);
+        }
+
+        if (!prueba.startsWith('http')) {
+            return mostrarMensaje('⚠️ El link debe comenzar con http o https', false);
+        }
+
+        const data = {
+            usuario: usuario.usuario,
+            nivel,
+            prueba,
+            estado: 'pendiente'
+        };
+
+        // Deshabilitar botón mientras se envía
+        const submitBtn = document.querySelector('.btn-submit');
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Enviando...';
+
+        try {
+            const res = await fetch(`${API_URL}/completaciones`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (!res.ok) throw new Error('Error al enviar completación');
+
+            mostrarMensaje('✓ ¡Completación enviada exitosamente! Espera la aprobación de un admin.', true);
+            document.getElementById('completacionForm').reset();
+            
+            // Redirigir a "Mis Runs" después de 2 segundos
+            setTimeout(() => {
+                window.location.href = 'completados.html';
+            }, 2000);
+
+        } catch (err) {
+            console.error(err);
+            mostrarMensaje('✗ Hubo un error al enviar. Intenta más tarde.', false);
+            submitBtn.disabled = false;
+            submitBtn.textContent = '✓ Enviar Completación';
+        }
+    });
+
+    function mostrarMensaje(msg, ok) {
+        const mensaje = document.getElementById('mensaje');
+        mensaje.textContent = msg;
+        mensaje.className = ok ? 'alert alert-success' : 'alert alert-error';
+        
+        // Auto-ocultar mensaje de error después de 5 segundos
+        if (!ok) {
+            setTimeout(() => {
+                mensaje.textContent = '';
+                mensaje.className = '';
+            }, 5000);
+        }
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('light-mode');
+        localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+    }
+
+    // Cargar tema guardado
+    if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+    }
+</script>
+
+</body>
+</html>

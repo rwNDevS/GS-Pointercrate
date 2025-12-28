@@ -1,0 +1,74 @@
+[
+  {
+    "usuario": "root",
+    "contraseña": "M7#x9Pz!Vq2@Lf$Rt8&Uw",
+    "rol": "admin"
+  },
+  {
+    "usuario": "rw9",
+    "contraseña": "cacaide20",
+    "rol": "admin"
+  },
+  {
+    "usuario": "Iván Fóng",
+    "contraseña": "123xxx456",
+    "rol": "user"
+  },
+  {
+    "usuario": "Sweatgd",
+    "contraseña": "vivi098",
+    "rol": "user"
+  },
+  {
+    "usuario": "rw9s",
+    "contraseña": "cacaide20",
+    "rol": "user",
+    "banned": false
+  },
+  {
+    "usuario": "Holasoypkpi",
+    "contraseña": "111111",
+    "rol": "user"
+  },
+  {
+    "usuario": "zhapkiel",
+    "contraseña": "jose16",
+    "rol": "user"
+  },
+  {
+    "usuario": "kidoloser",
+    "contraseña": "20507237",
+    "rol": "user"
+  },
+  {
+    "usuario": "AuguXD (M44)",
+    "contraseña": "zxKckk8s8jrj",
+    "rol": "user",
+    "banned": false
+  },
+  {
+    "usuario": "Zen",
+    "contraseña": "Andres141111",
+    "rol": "user"
+  },
+  {
+    "usuario": "Rankmon",
+    "contraseña": "32186219",
+    "rol": "admin"
+  },
+  {
+    "usuario": "Ju4nGD",
+    "contraseña": "JuanDomingo2475",
+    "rol": "user"
+  },
+  {
+    "usuario": "MacacoChucrut",
+    "contraseña": "Inicio2009",
+    "rol": "user"
+  },
+  {
+    "usuario": "Space",
+    "contraseña": "PassSegura575655",
+    "rol": "admin"
+  }
+]

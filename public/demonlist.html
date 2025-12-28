@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GDPS Demonlist - Extreme Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-body: #050505;
+            --bg-card: #111111;
+            --bg-modal: #0d0d0d;
+            --accent: #2196F3;
+            --text-main: #ffffff;
+            --text-dim: #999;
+            --border: #222;
+        }
+
+        .light-mode {
+            --bg-body: #f0f2f5;
+            --bg-card: #ffffff;
+            --bg-modal: #ffffff;
+            --accent: #1976d2;
+            --text-main: #1c1e21;
+            --text-dim: #606770;
+            --border: #ddd;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            transition: 0.3s ease;
+        }
+
+        header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-group { display: flex; gap: 12px; align-items: center; }
+
+        .btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.7rem 1.4rem;
+            cursor: pointer;
+            font-weight: 700;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: 0.2s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover { border-color: var(--accent); color: var(--accent); }
+        .btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+        .btn-admin {
+            background: #f1c40f;
+            color: #000;
+            border-color: #f1c40f;
+        }
+        .btn-admin:hover {
+            background: #f39c12;
+            color: #000;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 3rem auto;
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 2.5rem;
+            padding: 0 1rem;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .demon-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            animation: fadeInUp 0.4s ease backwards;
+            transition: 0.2s;
+        }
+
+        .demon-card:hover {
+            transform: translateX(10px);
+            border-left: 5px solid var(--accent);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .rank { font-size: 2.2rem; font-weight: 800; min-width: 90px; }
+        .info { flex-grow: 1; }
+        .title { font-size: 1.6rem; font-weight: 800; color: var(--accent); }
+
+        .diff-icon {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .separator {
+            font-size: 1.5rem;
+            font-weight: 800;
+            padding: 1rem 0;
+            border-bottom: 3px solid var(--accent);
+            margin: 2.5rem 0 1.5rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--bg-modal);
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            border-radius: 12px;
+            border: 1px solid var(--accent);
+            padding: 2.5rem;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header { display: flex; gap: 30px; margin-bottom: 2rem; }
+
+        .data-box {
+            background: rgba(255,255,255,0.03);
+            padding: 1.2rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .record-list, .history-list { list-style: none; padding: 0; }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .hidden { display: none !important; }
+
+        /* ========== ESTILOS AGREGADOS PARA EL MODAL DE DETALLES ========== */
+        .modal-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-subtitle {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.5rem;
+        }
+
+        .points-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 1rem 0;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .history-item {
+            background: rgba(255,255,255,0.05);
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .completador-item {
+            background: rgba(33, 150, 243, 0.1);
+            padding: 1rem 1.2rem;
+            margin-bottom: 0.8rem;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .completador-nombre {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+
+        .completador-details {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        .completador-puntos {
+            background: var(--accent);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        .modal-show {
+            display: flex !important;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .position-change {
+            font-weight: 700;
+            margin-right: 1rem;
+        }
+
+        .date-text {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .completador-left {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+<header>
+    <div class="nav-group">
+        <div style="font-weight:800;font-size:1.5rem">GDPS <span style="color:var(--accent)">LIST</span></div>
+        <button class="btn active" id="btnNormal" onclick="changeView('normal')">Main & Extended</button>
+        <button class="btn" id="btnLegacy" onclick="changeView('legacy')">Legacy</button>
+    </div>
+
+    <div class="nav-group">
+        <a href="top.html" class="btn">TOP</a>
+        <a href="reglas.html" class="btn">Reglas</a>
+        <a href="formulario.html" id="btnEnviarRun" class="btn hidden">Enviar Run</a>
+        <a href="completados.html" id="btnMisRuns" class="btn hidden">Mis Runs</a>
+
+        <span id="userDisp">Invitado</span>
+        <a href="index.html" id="btnLogin" class="btn">Login</a>
+        <a href="admin.html" id="btnAdmin" class="btn btn-admin hidden">Panel</a>
+        <button id="btnLogout" class="btn hidden" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<main>
+    <section id="renderContainer"></section>
+    <aside>
+        <div style="background:var(--bg-card);padding:2rem;border-radius:8px">
+            <h3>Demonlist Stats</h3>
+            <div id="sideStats"></div>
+        </div>
+    </aside>
+</main>
+
+<!-- ========== MODAL AGREGADO PARA DETALLES DEL NIVEL ========== -->
+<div id="detailModal" class="modal" onclick="closeDetailModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <span class="close-modal" onclick="closeDetailModal()">&times;</span>
+        <div id="modalDetailContent">
+            <div class="loading-spinner">Cargando datos...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+const API = 'http://localhost:8040/api';
+let demons = [];
+let currentView = 'normal';
+
+async function init() {
+    const res = await fetch(`${API}/demons`);
+    demons = await res.json();
+    render();
+    updateStats();
+    checkAuth();
+}
+
+function render() {
+    const c = document.getElementById('renderContainer');
+    c.innerHTML = '';
+
+    const list = currentView === 'legacy'
+        ? demons.filter(d => d.posicion > 30)
+        : demons.filter(d => d.posicion <= 30);
+
+    list.sort((a,b)=>a.posicion-b.posicion)
+        .forEach((d,i)=>c.appendChild(createCard(d, i)));
+}
+
+function createCard(d, i) {
+    const card = document.createElement('div');
+    card.className = 'demon-card';
+    card.onclick = () => openDetails(d);
+    card.innerHTML = `
+        <div class="rank">#${d.posicion}</div>
+        <div class="info">
+            <div class="title">${d.name}</div>
+            <div style="color:var(--text-dim)">Publicado por ${d.creador}</div>
+        </div>
+        <img src="${d.dificultad}.png" class="diff-icon">
+    `;
+    return card;
+}
+
+// ========== FUNCIONES AGREGADAS PARA EL MODAL DE DETALLES ==========
+
+async function openDetails(demon) {
+    const modal = document.getElementById('detailModal');
+    const content = document.getElementById('modalDetailContent');
+    
+    // Mostrar modal con loading
+    modal.classList.add('modal-show');
+    content.innerHTML = '<div class="loading-spinner">Cargando datos del nivel...</div>';
+    
+    try {
+        // Obtener datos del backend
+        const [historialRes, completacionesRes] = await Promise.all([
+            fetch(`${API}/demons/${demon.idNivel}/historial`),
+            fetch(`${API}/completaciones`)
+        ]);
+        
+        const historial = await historialRes.json();
+        const todasCompletaciones = await completacionesRes.json();
+        
+        // Filtrar completaciones aprobadas para este nivel
+        const completadores = todasCompletaciones.filter(
+            c => c.nivel === demon.name && c.estado === 'aprobado'
+        );
+        
+        // Calcular puntos
+        const puntos = calcularPuntos(demon.posicion);
+        
+        // Renderizar contenido del modal
+        content.innerHTML = `
+            <div class="modal-title">${demon.name}</div>
+            
+            <div class="data-box">
+                <strong>Creador:</strong> ${demon.creador}<br>
+                <strong>Verificador:</strong> ${demon.verificador || 'No especificado'}<br>
+                <strong>Posición actual:</strong> #${demon.posicion}
+            </div>
+            
+            <div class="data-box">
+                <strong>Puntos al completar:</strong>
+                <div class="points-badge">🏆 ${puntos} puntos</div>
+            </div>
+            
+            <h3 class="modal-subtitle">📊 Historial de Posiciones</h3>
+            <div id="historialContainer"></div>
+            
+            <h3 class="modal-subtitle">👥 Personas que lo han completado (${completadores.length})</h3>
+            <div id="completadoresContainer"></div>
+        `;
+        
+        // Renderizar historial
+        renderHistorial(historial);
+        
+        // Renderizar completadores
+        renderCompletadores(completadores);
+        
+    } catch (error) {
+        console.error('Error cargando detalles:', error);
+        content.innerHTML = `
+            <div class="modal-title">Error</div>
+            <div class="data-box" style="border-left-color: #e74c3c;">
+                <p>No se pudieron cargar los detalles del nivel. Por favor, intenta de nuevo.</p>
+            </div>
+        `;
+    }
+}
+
+function renderHistorial(historial) {
+    const container = document.getElementById('historialContainer');
+    
+    if (!historial || historial.length === 0) {
+        container.innerHTML = '<div class="no-data">No hay historial de cambios de posición</div>';
+        return;
+    }
+    
+    // Ordenar por fecha (más reciente primero)
+    const historialOrdenado = [...historial].reverse();
+    
+    let html = '<div class="history-list">';
+    historialOrdenado.forEach((item, index) => {
+        const fecha = new Date(item.fecha).toLocaleDateString('es-CO', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        html += `
+            <div class="history-item">
+                <span class="position-change">#${item.posicion}</span>
+                <span class="date-text">${fecha}</span>
+            </div>
+        `;
+    });
+    html += '</div>';
+    
+    container.innerHTML = html;
+}
+
+function renderCompletadores(completadores) {
+    const container = document.getElementById('completadoresContainer');
+    
+    if (!completadores || completadores.length === 0) {
+        container.innerHTML = '<div class="no-data">Aún nadie ha completado este nivel, Se el primero!</div>';
+        return;
+    }
+    
+    let html = '<div class="record-list">';
+    
+    // Ordenar por posición al completar (más baja primero)
+    const completadoresOrdenados = [...completadores].sort((a, b) => {
+        const posA = a.posicionAlCompletar || 999;
+        const posB = b.posicionAlCompletar || 999;
+        return posA - posB;
+    });
+    
+    completadoresOrdenados.forEach((c, index) => {
+        const posicionTexto = c.posicionAlCompletar 
+            ? `#${c.posicionAlCompletar}` 
+            : 'Posición desconocida';
+        
+        const puntosGanados = c.posicionAlCompletar 
+            ? calcularPuntos(c.posicionAlCompletar) 
+            : 0;
+        
+        html += `
+            <div class="completador-item">
+                <div class="completador-left">
+                    <div class="completador-nombre">
+                        ${index + 1}. ${c.usuario}
+                    </div>
+                    <div class="completador-details">
+                        Completado en ${posicionTexto}
+                        ${c.prueba ? ` • <a href="${c.prueba}" target="_blank" style="color: var(--accent)">Ver prueba</a>` : ''}
+                    </div>
+                </div>
+                ${puntosGanados > 0 ? `<span class="completador-puntos">+${puntosGanados} pts</span>` : ''}
+            </div>
+        `;
+    });
+    html += '</div>';
+    
+    container.innerHTML = html;
+}
+
+function calcularPuntos(posicion) {
+    if (posicion > 30 || posicion < 1) {
+        return 0;
+    }
+    
+    const maxPoints = 100;
+    const minPoints = 1;
+    const decay = (maxPoints - minPoints) / 29;
+    const points = maxPoints - (posicion - 1) * decay;
+    return Math.max(minPoints, Math.round(points));
+}
+
+function closeDetailModal(event) {
+    const modal = document.getElementById('detailModal');
+    if (event) {
+        // Solo cerrar si se hace clic en el fondo o en la X
+        if (event.target === modal || event.target.classList.contains('close-modal')) {
+            modal.classList.remove('modal-show');
+        }
+    } else {
+        // Cerrar directamente
+        modal.classList.remove('modal-show');
+    }
+}
+
+// Cerrar modal con tecla ESC
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeDetailModal();
+    }
+});
+
+// ========== FIN DE FUNCIONES AGREGADAS ==========
+
+function checkAuth() {
+    const user = JSON.parse(localStorage.getItem('usuarioLogeado'));
+    if (!user) return;
+
+    document.getElementById('userDisp').textContent = user.usuario;
+    document.getElementById('btnLogin').classList.add('hidden');
+    document.getElementById('btnLogout').classList.remove('hidden');
+    document.getElementById('btnEnviarRun').classList.remove('hidden');
+    document.getElementById('btnMisRuns').classList.remove('hidden');
+
+    if (user.rol === 'admin')
+        document.getElementById('btnAdmin').classList.remove('hidden');
+}
+
+function logout() {
+    localStorage.removeItem('usuarioLogeado');
+    location.reload();
+}
+
+function changeView(v) {
+    currentView = v;
+    render();
+    updateViewButtons();
+}
+
+function updateViewButtons() {
+    const btnNormal = document.getElementById('btnNormal');
+    const btnLegacy = document.getElementById('btnLegacy');
+    
+    if (currentView === 'legacy') {
+        btnNormal.classList.remove('active');
+        btnLegacy.classList.add('active');
+    } else {
+        btnLegacy.classList.remove('active');
+        btnNormal.classList.add('active');
+    }
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('light-mode');
+}
+
+function updateStats() {
+    document.getElementById('sideStats').innerHTML =
+        `Total niveles: ${demons.length}<br>Main: 15<br>Extended: 15`;
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
