@@ -19,97 +19,129 @@
             --shadow-dark: rgba(0, 0, 0, 0.7);
         }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg-color);
             color: var(--text-color);
             min-height: 100vh;
             max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
+            margin: 1rem auto;
+            padding: 0 1rem;
             line-height: 1.6;
         }
 
         .header-container {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             background: var(--surface-color);
-            padding: 1.5rem;
+            padding: 1.5rem 1rem;
             border-radius: 12px;
             box-shadow: 0 4px 15px var(--shadow-dark);
         }
         
         .header-container h1 {
             color: var(--primary-color);
-            font-size: 2.5rem;
+            font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
+            word-wrap: break-word;
         }
 
         .header-container p {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: #ccc;
+            line-height: 1.5;
         }
 
-        /* --- Tabla de Completaciones --- */
+        /* Contenedor de tabla/cards */
+        .table-container {
+            width: 100%;
+        }
+
+        /* MOBILE-FIRST: Cards en móvil */
         table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 10px;
+            border-collapse: collapse;
         }
 
-        thead th {
-            background: var(--surface-color);
-            color: var(--text-color);
-            font-weight: 700;
-            padding: 1rem;
-            text-align: center;
-            font-size: 0.95rem;
-            border-bottom: 2px solid var(--primary-color);
+        thead {
+            display: none;
+        }
+
+        tbody {
+            display: block;
         }
 
         tbody tr {
+            display: block;
             background: var(--surface-color);
             border-radius: 8px;
-            transition: background-color 0.2s ease, transform 0.2s ease;
-            box-shadow: 0 2px 8px var(--shadow-dark);
-        }
-
-        tbody tr:hover {
-            background: var(--border-color);
-            transform: translateY(-2px);
-        }
-
-        td {
+            margin-bottom: 1rem;
             padding: 1rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--text-color);
-            vertical-align: middle;
+            box-shadow: 0 2px 8px var(--shadow-dark);
+            border: 1px solid var(--border-color);
         }
 
-        td a {
+        tbody td {
+            display: block;
+            text-align: left;
+            padding: 0.6rem 0;
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        tbody td::before {
+            content: attr(data-label);
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        tbody td a {
             color: var(--primary-color);
             text-decoration: none;
             font-weight: 600;
-            transition: color 0.2s ease;
+            word-break: break-all;
         }
         
-        td a:hover {
+        tbody td a:hover {
             color: #fff;
             text-decoration: underline;
         }
 
-        /* Botones */
+        /* Botones en móvil */
+        .actions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-top: 1rem;
+        }
+
         .btn {
-            margin: 0 0.25rem;
-            padding: 0.6rem 1.2rem;
+            width: 100%;
+            padding: 1rem;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 700;
             color: white;
             transition: transform 0.2s ease, filter 0.2s ease;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
         .aprobar {
@@ -125,12 +157,123 @@
             transform: translateY(-1px);
         }
 
+        .btn:active {
+            transform: translateY(0);
+        }
+
         /* Mensajes de estado */
         .status-message {
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: #888;
-            margin-top: 3rem;
+            padding: 2rem 1rem;
+            background: var(--surface-color);
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .empty-state {
+            display: block;
+            width: 100%;
+        }
+
+        /* TABLET Y DESKTOP (768px+) */
+        @media (min-width: 768px) {
+            body {
+                margin: 2rem auto;
+                padding: 0 1.5rem;
+            }
+
+            .header-container {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .header-container h1 {
+                font-size: 2.5rem;
+            }
+
+            .header-container p {
+                font-size: 1rem;
+            }
+
+            /* Mostrar tabla tradicional */
+            table {
+                border-collapse: separate;
+                border-spacing: 0 10px;
+            }
+
+            thead {
+                display: table-header-group;
+            }
+
+            thead th {
+                background: var(--surface-color);
+                color: var(--text-color);
+                font-weight: 700;
+                padding: 1rem;
+                text-align: center;
+                font-size: 0.95rem;
+                border-bottom: 2px solid var(--primary-color);
+            }
+
+            tbody {
+                display: table-row-group;
+            }
+
+            tbody tr {
+                display: table-row;
+                transition: background-color 0.2s ease, transform 0.2s ease;
+                margin-bottom: 0;
+                padding: 0;
+            }
+
+            tbody tr:hover {
+                background: var(--border-color);
+                transform: translateY(-2px);
+            }
+
+            tbody td {
+                display: table-cell;
+                padding: 1rem;
+                text-align: center;
+                vertical-align: middle;
+            }
+
+            tbody td::before {
+                display: none;
+            }
+
+            .actions-container {
+                display: flex;
+                flex-direction: row;
+                gap: 0.5rem;
+                margin-top: 0;
+                justify-content: center;
+            }
+
+            .btn {
+                width: auto;
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+                min-height: auto;
+            }
+
+            .status-message {
+                font-size: 1.2rem;
+                padding: 3rem;
+            }
+        }
+
+        /* DESKTOP GRANDE (1024px+) */
+        @media (min-width: 1024px) {
+            .header-container h1 {
+                font-size: 3rem;
+            }
+
+            .header-container p {
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
@@ -141,23 +284,25 @@
     <p>Revisa y gestiona todas las completaciones pendientes enviadas por los usuarios. 🧐</p>
 </div>
 
-<table id="tablaCompletaciones">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Usuario</th>
-            <th>Nivel</th>
-            <th>Prueba</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="table-container">
+    <table id="tablaCompletaciones">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Nivel</th>
+                <th>Prueba</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
         </tbody>
-</table>
+    </table>
+</div>
 
 <script>
-    const API_URL = 'https://pointcrate.purriau.com';
+    const API_URL = 'https://pointcrate.purriau.com/api';
 
     async function cargarCompletaciones() {
         try {
@@ -169,23 +314,29 @@
             const pendientes = data.filter(c => c.estado === 'pendiente');
 
             if (pendientes.length === 0) {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td colspan="6"><p class="status-message">No hay completaciones pendientes por revisar. 🎉</p></td>`;
-                tbody.appendChild(tr);
+                tbody.innerHTML = `
+                    <tr class="empty-state">
+                        <td colspan="6">
+                            <p class="status-message">No hay completaciones pendientes por revisar. 🎉</p>
+                        </td>
+                    </tr>
+                `;
                 return;
             }
 
             pendientes.forEach(c => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${c.id}</td>
-                    <td>${c.usuario}</td>
-                    <td>${c.nivel}</td>
-                    <td><a href="${c.prueba}" target="_blank" rel="noopener">Ver prueba</a></td>
-                    <td>${c.estado}</td>
-                    <td>
-                        <button class="btn aprobar" onclick="actualizarEstado(${c.id}, 'aprobado')">Aprobar</button>
-                        <button class="btn rechazar" onclick="actualizarEstado(${c.id}, 'rechazado')">Rechazar</button>
+                    <td data-label="ID">${c.id}</td>
+                    <td data-label="Usuario">${c.usuario}</td>
+                    <td data-label="Nivel">${c.nivel}</td>
+                    <td data-label="Prueba"><a href="${c.prueba}" target="_blank" rel="noopener">Ver prueba</a></td>
+                    <td data-label="Estado">${c.estado}</td>
+                    <td data-label="Acciones">
+                        <div class="actions-container">
+                            <button class="btn aprobar" onclick="actualizarEstado(${c.id}, 'aprobado')">✓ Aprobar</button>
+                            <button class="btn rechazar" onclick="actualizarEstado(${c.id}, 'rechazado')">✗ Rechazar</button>
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -193,7 +344,13 @@
         } catch (error) {
             console.error(error);
             const tbody = document.querySelector('#tablaCompletaciones tbody');
-            tbody.innerHTML = `<tr><td colspan="6"><p class="status-message">Error al cargar las completaciones.</p></td></tr>`;
+            tbody.innerHTML = `
+                <tr class="empty-state">
+                    <td colspan="6">
+                        <p class="status-message">Error al cargar las completaciones.</p>
+                    </td>
+                </tr>
+            `;
         }
     }
 
@@ -208,7 +365,7 @@
             const data = await res.json();
             if (res.ok) {
                 alert(`Completación ${id} ha sido ${nuevoEstado}.`);
-                cargarCompletaciones(); // Refresca la lista
+                cargarCompletaciones();
             } else {
                 alert(`No se pudo actualizar la completación: ${data.message || 'Error desconocido'}`);
             }
@@ -218,10 +375,8 @@
         }
     }
 
-    // Carga inicial al cargar la página
     cargarCompletaciones();
 </script>
 
 </body>
-
 </html>
