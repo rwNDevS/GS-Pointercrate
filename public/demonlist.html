@@ -343,7 +343,6 @@
 <script>
 const API_BASE = 'https://gs-pointercrate.onrender.com';
 const API = `${API_BASE}/api`;
-    //aksdalsd
 let demons = [];
 let currentView = 'normal';
 
@@ -377,7 +376,7 @@ function createCard(d, i) {
             <div class="title">${d.name}</div>
             <div style="color:var(--text-dim)">Publicado por ${d.creador}</div>
         </div>
-        <img src="${d.dificultad}.png" class="diff-icon">
+        <img src="${API_BASE}/${d.dificultad}.png" class="diff-icon">
     `;
     return card;
 }
