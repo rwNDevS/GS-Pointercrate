@@ -55,36 +55,48 @@
         header {
             background: var(--bg-card);
             border-bottom: 1px solid var(--border);
-            padding: 1rem 5%;
+            padding: 1rem 3%;
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 1000;
+            gap: 0.8rem;
         }
 
         .nav-group { 
             display: flex; 
-            gap: 12px; 
-            align-items: center; 
+            gap: 8px; 
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 1.2rem;
+            white-space: nowrap;
         }
 
         .btn {
             background: none;
             border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 0.7rem 1.4rem;
+            padding: 0.6rem 1rem;
             cursor: pointer;
             font-weight: 700;
             border-radius: 4px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-decoration: none;
             transition: 0.2s;
             text-transform: uppercase;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
+            white-space: nowrap;
+            min-height: 44px;
+            justify-content: center;
         }
 
         .btn:hover { 
@@ -94,14 +106,14 @@
 
         .theme-toggle {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: var(--accent);
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             cursor: pointer;
             border: none;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
@@ -115,27 +127,29 @@
 
         main {
             max-width: 1000px;
-            margin: 3rem auto;
-            padding: 0 2rem;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
 
         .page-header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             animation: fadeInDown 0.6s ease;
         }
 
         .page-title {
-            font-size: 3rem;
+            font-size: 2rem;
             font-weight: 800;
             color: var(--accent);
             margin-bottom: 0.5rem;
+            word-wrap: break-word;
         }
 
         .page-subtitle {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--text-dim);
             font-weight: 400;
+            word-wrap: break-word;
         }
 
         /* ========== ALERTA DE BANEO ========== */
@@ -143,19 +157,19 @@
             background: linear-gradient(135deg, rgba(231, 76, 60, 0.2), rgba(192, 57, 43, 0.2));
             border: 2px solid var(--danger);
             border-radius: 8px;
-            padding: 2rem;
-            margin-bottom: 2rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
             text-align: center;
             animation: shake 0.5s ease;
         }
 
         .ban-alert-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
         }
 
         .ban-alert-title {
-            font-size: 1.8rem;
+            font-size: 1.3rem;
             font-weight: 800;
             color: var(--danger);
             margin-bottom: 0.5rem;
@@ -163,7 +177,8 @@
 
         .ban-alert-message {
             color: var(--text-dim);
-            font-size: 1.1rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
 
         @keyframes shake {
@@ -175,14 +190,15 @@
         /* ========== LISTA DE COMPLETACIONES ========== */
         .completaciones-grid {
             display: grid;
-            gap: 1.5rem;
+            grid-template-columns: 1fr;
+            gap: 1rem;
         }
 
         .completacion-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 1.5rem;
+            padding: 1.2rem;
             transition: 0.2s;
             animation: fadeInUp 0.5s ease backwards;
             position: relative;
@@ -208,29 +224,32 @@
         }
 
         .completacion-card:hover {
-            transform: translateX(10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
 
         .completacion-header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 0.8rem;
             margin-bottom: 1rem;
         }
 
         .completacion-nivel {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 800;
             color: var(--accent);
+            word-break: break-word;
         }
 
         .completacion-estado {
-            padding: 0.4rem 1rem;
+            padding: 0.5rem 1rem;
             border-radius: 4px;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
+            text-align: center;
+            align-self: flex-start;
         }
 
         .completacion-estado.pendiente {
@@ -259,6 +278,8 @@
             text-decoration: none;
             font-weight: 600;
             transition: 0.2s;
+            font-size: 0.9rem;
+            word-break: break-all;
         }
 
         .completacion-link:hover {
@@ -268,28 +289,51 @@
 
         .empty-state {
             text-align: center;
-            padding: 4rem 2rem;
+            padding: 2rem 1rem;
             background: var(--bg-card);
             border-radius: 8px;
             border: 1px solid var(--border);
         }
 
         .empty-state-icon {
-            font-size: 4rem;
+            font-size: 3rem;
             margin-bottom: 1rem;
             opacity: 0.5;
         }
 
         .empty-state-text {
-            font-size: 1.3rem;
+            font-size: 1rem;
             color: var(--text-dim);
+            line-height: 1.6;
         }
 
         .loading {
             text-align: center;
-            padding: 3rem;
-            font-size: 1.2rem;
+            padding: 2rem 1rem;
+            font-size: 1rem;
             color: var(--text-dim);
+        }
+
+        .stats-box {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding: 1.2rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .stats-box strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .stat-item {
+            display: block;
+            margin: 0.3rem 0;
         }
 
         @keyframes fadeInDown {
@@ -304,25 +348,178 @@
 
         .hidden { display: none !important; }
 
-        @media (max-width: 768px) {
-            .page-title { font-size: 2rem; }
-            main { padding: 0 1rem; }
-            .completacion-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+        /* TABLETS Y SUPERIORES (768px+) */
+        @media (min-width: 768px) {
+            header {
+                padding: 1rem 5%;
+            }
+
+            .logo-text {
+                font-size: 1.5rem;
+            }
+
+            .btn {
+                padding: 0.7rem 1.4rem;
+                font-size: 0.8rem;
+                gap: 0.5rem;
+            }
+
+            .nav-group {
+                gap: 12px;
+            }
+
+            main {
+                margin: 3rem auto;
+                padding: 0 2rem;
+            }
+
+            .page-title {
+                font-size: 3rem;
+            }
+
+            .page-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .page-header {
+                margin-bottom: 3rem;
+            }
+
+            .ban-alert {
+                padding: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .ban-alert-icon {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+            }
+
+            .ban-alert-title {
+                font-size: 1.8rem;
+            }
+
+            .ban-alert-message {
+                font-size: 1.1rem;
+            }
+
+            .completaciones-grid {
+                grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .completacion-card {
+                padding: 1.5rem;
+            }
+
+            .completacion-card:hover {
+                transform: translateX(10px);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            }
+
+            .completacion-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .completacion-nivel {
+                font-size: 1.5rem;
+            }
+
+            .completacion-estado {
+                font-size: 0.85rem;
+            }
+
+            .completacion-link {
+                font-size: 1rem;
+            }
+
+            .empty-state {
+                padding: 4rem 2rem;
+            }
+
+            .empty-state-icon {
+                font-size: 4rem;
+            }
+
+            .empty-state-text {
+                font-size: 1.3rem;
+            }
+
+            .loading {
+                padding: 3rem;
+                font-size: 1.2rem;
+            }
+
+            .stats-box {
+                padding: 1.5rem;
+                margin-top: 2rem;
+                font-size: 1rem;
+            }
+
+            .stat-item {
+                display: inline;
+            }
+
+            .stat-item:not(:last-child)::after {
+                content: ' • ';
+            }
+
+            .theme-toggle {
+                width: 60px;
+                height: 60px;
+                bottom: 30px;
+                right: 30px;
+                font-size: 1.5rem;
+            }
+        }
+
+        /* PANTALLAS MUY PEQUEÑAS (menos de 360px) */
+        @media (max-width: 359px) {
+            .btn {
+                font-size: 0.65rem;
+                padding: 0.5rem 0.7rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .completacion-card {
+                padding: 1rem;
+            }
+
+            .completacion-nivel {
+                font-size: 1.1rem;
+            }
+
+            .ban-alert {
+                padding: 1rem;
+            }
+
+            .ban-alert-title {
+                font-size: 1.1rem;
+            }
+
+            .ban-alert-message {
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema">🌓</button>
 
 <header>
     <div class="nav-group">
-        <div style="font-weight:800;font-size:1.5rem">GDPS <span style="color:var(--accent)">LIST</span></div>
+        <div class="logo-text">GDPS <span style="color:var(--accent)">LIST</span></div>
     </div>
 
     <div class="nav-group">
-        <a href="demonlist.html" class="btn">← Volver a la lista</a>
+        <a href="demonlist.html" class="btn">← Volver</a>
         <a href="formulario.html" class="btn">Enviar Run</a>
     </div>
 </header>
@@ -350,7 +547,7 @@
 </main>
 
 <script>
-const API = 'https://pointcrate.purriau.com';
+const API = 'https://pointcrate.purriau.com/api';
 
 // Verificar que el usuario esté logeado
 const usuario = JSON.parse(localStorage.getItem('usuarioLogeado'));
@@ -437,7 +634,7 @@ async function cargarMisCompletaciones() {
                     </span>
                 </div>
                 <div>
-                    <a href="${comp.prueba}" target="_blank" class="completacion-link">
+                    <a href="${comp.prueba}" target="_blank" rel="noopener" class="completacion-link">
                         🎥 Ver prueba →
                     </a>
                 </div>
@@ -453,12 +650,12 @@ async function cargarMisCompletaciones() {
         const rechazadas = misCompletaciones.filter(c => c.estado === 'rechazado').length;
 
         const stats = document.createElement('div');
-        stats.style.cssText = 'text-align: center; margin-top: 2rem; padding: 1.5rem; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border);';
+        stats.className = 'stats-box';
         stats.innerHTML = `
-            <strong>Estadísticas:</strong> 
-            <span style="color: var(--success)">✓ ${aprobadas} aprobadas</span> • 
-            <span style="color: var(--warning)">⏳ ${pendientes} pendientes</span> • 
-            <span style="color: var(--danger)">✗ ${rechazadas} rechazadas</span>
+            <strong>Estadísticas:</strong>
+            <span class="stat-item" style="color: var(--success)">✓ ${aprobadas} aprobadas</span>
+            <span class="stat-item" style="color: var(--warning)">⏳ ${pendientes} pendientes</span>
+            <span class="stat-item" style="color: var(--danger)">✗ ${rechazadas} rechazadas</span>
         `;
         lista.appendChild(stats);
 
@@ -492,5 +689,3 @@ cargarMisCompletaciones();
 
 </body>
 </html>
-
-
