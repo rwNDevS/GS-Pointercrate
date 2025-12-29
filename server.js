@@ -5,14 +5,12 @@ const fs = require('fs');
 const cors = require('cors');
 const path = require('path');
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.resolve("./public")));
 
 // Cambia esta línea - usa el puerto que Render asigna o el que tú definas localmente
 const PORT = process.env.PORT || 8040;
-
 const demonsFile = './demons.json';
 const cuentasFile = './cuentas.json';
 const completacionesFile = './completaciones.json';
@@ -93,32 +91,27 @@ app.post('/api/demons', (req, res) => {
         console.error('POST /api/demons - Error: Datos incompletos.');
         return res.status(400).json({ error: 'Datos incompletos del demon' });
     }
-
     const demons = leerArchivo(demonsFile);
     if (demons.some(d => d.idNivel === nuevoDemon.idNivel)) {
         console.error(`POST /api/demons - Error: El demonio con idNivel ${nuevoDemon.idNivel} ya existe.`);
         return res.status(409).json({ error: 'El demonio con este ID de nivel ya existe' });
     }
-
     demons.forEach(demon => {
         if (demon.posicion >= nuevoDemon.posicion) {
             demon.posicion++;
             registrarCambioPosicion(demon, demon.posicion);
         }
     });
-
     nuevoDemon.historialPosiciones = [{
         posicion: nuevoDemon.posicion,
         fecha: new Date().toISOString()
     }];
     demons.push(nuevoDemon);
     demons.sort((a, b) => a.posicion - b.posicion);
-
     if (!escribirArchivo(demonsFile, demons)) {
         console.error('POST /api/demons - Error al guardar en el archivo.');
         return res.status(500).json({ error: 'Error guardando demonio' });
     }
-
     console.log('POST /api/demons - Demon agregado exitosamente.');
     res.json({ success: true, message: 'Demon agregado exitosamente' });
 });
@@ -128,29 +121,24 @@ app.patch('/api/demons/:idNivel/posicion', (req, res) => {
     const idNivel = req.params.idNivel;
     const { nuevaPosicion } = req.body;
     console.log(`PATCH /api/demons/${idNivel}/posicion - Solicitado para mover a la posición ${nuevaPosicion}.`);
-
     if (typeof nuevaPosicion !== 'number' || nuevaPosicion <= 0) {
         console.error(`PATCH /api/demons/${idNivel}/posicion - Error: Posición inválida.`);
         return res.status(400).json({ error: 'La nuevaPosicion debe ser un número entero positivo' });
     }
-
     const demons = leerArchivo(demonsFile);
     const demonIndex = demons.findIndex(d => d.idNivel === idNivel);
     if (demonIndex === -1) {
         console.warn(`PATCH /api/demons/${idNivel}/posicion - Demon no encontrado.`);
         return res.status(404).json({ error: 'Demon no encontrado' });
     }
-
     const demonActualizado = demons[demonIndex];
     const posicionAnterior = demonActualizado.posicion;
     if (posicionAnterior === nuevaPosicion) {
         console.log(`PATCH /api/demons/${idNivel}/posicion - La posición no ha cambiado.`);
         return res.json({ success: true, message: 'La posición no ha cambiado' });
     }
-
     demonActualizado.posicion = nuevaPosicion;
     registrarCambioPosicion(demonActualizado, nuevaPosicion);
-
     demons.forEach(demon => {
         if (demon.idNivel === idNivel) return;
         if (posicionAnterior < nuevaPosicion) {
@@ -165,14 +153,11 @@ app.patch('/api/demons/:idNivel/posicion', (req, res) => {
             }
         }
     });
-
     demons.sort((a, b) => a.posicion - b.posicion);
-
     if (!escribirArchivo(demonsFile, demons)) {
         console.error('PATCH /api/demons/posicion - Error al guardar en el archivo.');
         return res.status(500).json({ error: 'Error al actualizar la posición' });
     }
-
     console.log(`PATCH /api/demons/${idNivel}/posicion - Posición actualizada correctamente.`);
     res.json({ success: true, message: 'Posición actualizada correctamente' });
 });
@@ -182,25 +167,21 @@ app.patch('/api/demons/:idNivel', (req, res) => {
     const idNivel = req.params.idNivel;
     const { name, creador, verificador, dificultad } = req.body;
     console.log(`PATCH /api/demons/${idNivel} - Solicitado para editar demon.`);
-
     const demons = leerArchivo(demonsFile);
     const demonIndex = demons.findIndex(d => d.idNivel === idNivel);
     if (demonIndex === -1) {
         console.warn(`PATCH /api/demons/${idNivel} - Demon no encontrado.`);
         return res.status(404).json({ error: 'Demon no encontrado' });
     }
-
     const demon = demons[demonIndex];
     if (name) demon.name = name;
     if (creador) demon.creador = creador;
     if (verificador) demon.verificador = verificador;
     if (dificultad) demon.dificultad = dificultad;
-
     if (!escribirArchivo(demonsFile, demons)) {
         console.error('PATCH /api/demons - Error al guardar en el archivo.');
         return res.status(500).json({ error: 'Error al actualizar demonio' });
     }
-
     console.log(`PATCH /api/demons/${idNivel} - Demon actualizado correctamente.`);
     res.json({ success: true, message: 'Demon actualizado correctamente', demon });
 });
@@ -214,22 +195,18 @@ app.delete('/api/demons/:idNivel', (req, res) => {
         console.warn(`DELETE /api/demons/${idNivel} - Demon no encontrado.`);
         return res.status(404).json({ error: 'Demon no encontrado' });
     }
-
     const posicionEliminada = eliminado.posicion;
     demons = demons.filter(d => d.idNivel !== idNivel);
-
     demons.forEach(demon => {
         if (demon.posicion > posicionEliminada) {
             demon.posicion--;
             registrarCambioPosicion(demon, demon.posicion);
         }
     });
-
     if (!escribirArchivo(demonsFile, demons)) {
         console.error('DELETE /api/demons/ - Error al guardar en el archivo.');
         return res.status(500).json({ error: 'Error al eliminar demonio' });
     }
-
     console.log(`DELETE /api/demons/${idNivel} - Demon eliminado exitosamente.`);
     res.json({ success: true });
 });
@@ -242,10 +219,8 @@ app.post("/api/login", (req, res) => {
         console.error('POST /api/login - Error: Datos incompletos.');
         return res.status(400).json({ error: 'Datos incompletos de cuenta.' });
     }
-
     const accounts = leerArchivo(cuentasFile);
     const account = accounts.find(c => c.usuario === username && c.contraseña === password);
-
     if (account) {
         // Verificar si la cuenta está baneada
         if (account.banned) {
@@ -267,19 +242,16 @@ app.post('/api/cuentas', (req, res) => {
         console.error('POST /api/cuentas - Error: Datos incompletos.');
         return res.status(400).json({ error: 'Datos incompletos de cuenta' });
     }
-
     const cuentas = leerArchivo(cuentasFile);
     if (cuentas.find(c => c.usuario === usuario)) {
         console.warn(`POST /api/cuentas - Error: El usuario ${usuario} ya existe.`);
         return res.status(409).json({ success: false, message: 'Usuario ya existe' });
     }
-
     cuentas.push({ usuario, contraseña, rol, banned: false });
     if (!escribirArchivo(cuentasFile, cuentas)) {
         console.error('POST /api/cuentas - Error al guardar en el archivo.');
         return res.status(500).json({ error: 'Error guardando cuenta' });
     }
-
     console.log(`POST /api/cuentas - Cuenta para ${usuario} creada exitosamente.`);
     res.status(201).json({ success: true });
 });
@@ -302,26 +274,21 @@ app.patch('/api/cuentas/:usuario/ban', (req, res) => {
     const usuario = req.params.usuario;
     const { banned } = req.body;
     console.log(`PATCH /api/cuentas/${usuario}/ban - Solicitado cambiar estado ban a: ${banned}.`);
-
     if (typeof banned !== 'boolean') {
         console.error(`PATCH /api/cuentas/${usuario}/ban - Error: banned debe ser boolean.`);
         return res.status(400).json({ error: 'El campo banned debe ser true o false' });
     }
-
     const cuentas = leerArchivo(cuentasFile);
     const cuentaIndex = cuentas.findIndex(c => c.usuario === usuario);
     if (cuentaIndex === -1) {
         console.warn(`PATCH /api/cuentas/${usuario}/ban - Usuario no encontrado.`);
         return res.status(404).json({ error: 'Usuario no encontrado' });
     }
-
     cuentas[cuentaIndex].banned = banned;
-
     if (!escribirArchivo(cuentasFile, cuentas)) {
         console.error('PATCH /api/cuentas/ban - Error al guardar en el archivo.');
         return res.status(500).json({ error: 'Error al actualizar estado de ban' });
     }
-
     console.log(`PATCH /api/cuentas/${usuario}/ban - Estado actualizado correctamente.`);
     res.json({ success: true, message: `Usuario ${banned ? 'baneado' : 'desbaneado'} correctamente` });
 });
@@ -340,7 +307,6 @@ app.post('/api/completaciones', (req, res) => {
         console.error('POST /api/completaciones - Error: Datos incompletos.');
         return res.status(400).json({ error: 'Datos incompletos en completación' });
     }
-
     const completaciones = leerArchivo(completacionesFile);
     const id = Date.now().toString();
     completaciones.push({ ...nueva, estado: 'pendiente', id });
@@ -348,7 +314,6 @@ app.post('/api/completaciones', (req, res) => {
         console.error('POST /api/completaciones - Error al guardar en el archivo.');
         return res.status(500).json({ error: 'Error guardando completación' });
     }
-
     console.log('POST /api/completaciones - Completación agregada exitosamente.');
     res.json({ success: true });
 });
@@ -357,19 +322,16 @@ app.patch('/api/completaciones/:id', (req, res) => {
     const id = req.params.id;
     const { estado } = req.body;
     console.log(`PATCH /api/completaciones/${id} - Solicitud de actualización a estado: ${estado}.`);
-
     if (!['aprobado', 'rechazado'].includes(estado)) {
         console.error(`PATCH /api/completaciones/${id} - Error: Estado inválido.`);
         return res.status(400).json({ error: 'Estado inválido' });
     }
-
     const completaciones = leerArchivo(completacionesFile);
     const index = completaciones.findIndex(c => c.id === id);
     if (index === -1) {
         console.warn(`PATCH /api/completaciones/${id} - Completación no encontrada.`);
         return res.status(404).json({ error: 'Completación no encontrada' });
     }
-
     if (estado === 'aprobado' && completaciones[index].estado !== 'aprobado') {
         const demons = leerArchivo(demonsFile);
         const demonAprobado = demons.find(d => d.name === completaciones[index].nivel);
@@ -378,14 +340,36 @@ app.patch('/api/completaciones/:id', (req, res) => {
         }
     }
     completaciones[index].estado = estado;
-
     if (!escribirArchivo(completacionesFile, completaciones)) {
         console.error(`PATCH /api/completaciones/${id} - Error al guardar en el archivo.`);
         return res.status(500).json({ error: 'No se pudo actualizar la completación' });
     }
-
     console.log(`PATCH /api/completaciones/${id} - Completación actualizada a estado: ${estado}.`);
     res.json({ success: true });
+});
+
+// NUEVA RUTA: Invalidar una completación aprobada
+app.patch('/api/completaciones/:id/invalidar', (req, res) => {
+    const id = req.params.id;
+    console.log(`PATCH /api/completaciones/${id}/invalidar - Solicitado para invalidar completación.`);
+    
+    const completaciones = leerArchivo(completacionesFile);
+    const index = completaciones.findIndex(c => c.id === id);
+    
+    if (index === -1) {
+        console.warn(`PATCH /api/completaciones/${id}/invalidar - Completación no encontrada.`);
+        return res.status(404).json({ error: 'Completación no encontrada' });
+    }
+    
+    completaciones[index].estado = 'invalidado';
+    
+    if (!escribirArchivo(completacionesFile, completaciones)) {
+        console.error(`PATCH /api/completaciones/${id}/invalidar - Error al guardar en el archivo.`);
+        return res.status(500).json({ error: 'No se pudo invalidar la completación' });
+    }
+    
+    console.log(`PATCH /api/completaciones/${id}/invalidar - Completación invalidada exitosamente.`);
+    res.json({ success: true, message: 'Completación invalidada correctamente' });
 });
 
 // --- RUTA PARA EL RANKING TOP ---
@@ -397,7 +381,6 @@ app.get('/api/top', (req, res) => {
     demons.forEach(d => {
         demonMap[d.name] = d;
     });
-
     const usuarios = {};
     completaciones.forEach(c => {
         if (c.estado !== 'aprobado') return;
@@ -413,15 +396,13 @@ app.get('/api/top', (req, res) => {
         usuarios[c.usuario].puntos += puntos;
         usuarios[c.usuario].completaciones++;
     });
-
     const ranking = Object.entries(usuarios)
         .map(([usuario, data]) => ({ usuario, ...data }))
         .sort((a, b) => b.puntos - a.puntos || b.completaciones - a.completaciones);
-
     res.json(ranking);
 });
 
 // Al final, cambia esta línea también:
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Servidor activo en puerto ${PORT}`);
+    console.log(`Servidor activo en puerto ${PORT}`);
 });
