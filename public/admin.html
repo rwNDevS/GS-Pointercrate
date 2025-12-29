@@ -1026,6 +1026,289 @@
                 abrirModal('modalModificarPos');
             });
         });
-    </script>
+    
+        // ============================================
+        // NUEVAS FUNCIONALIDADES AGREGADAS
+        // ============================================
+
+        // Función para eliminar un nivel
+        async function eliminarNivel(idNivel, nombreNivel) {
+            if (!confirm(`¿Estás seguro de eliminar el nivel "${nombreNivel}"?\n\nEsto también eliminará todas las completaciones asociadas.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/demons/${idNivel}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Nivel eliminado exitosamente');
+                    cargarDemonios();
+                } else {
+                    alert('Error al eliminar nivel: ' + (data.error || 'Error desconocido'));
+                }
+            } catch (error) {
+                console.error('Error eliminando nivel:', error);
+                alert('Error al eliminar nivel');
+            }
+        }
+
+        // Función para abrir modal de edición de nivel
+        function abrirModalEditarNivel(demon) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            `;
+
+            modal.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 10px; max-width: 500px; width: 90%;">
+                    <h3 style="margin-top: 0; color: #333;">Editar Nivel: ${demon.name}</h3>
+                    <form id="formEditarNivel">
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #666;">Nombre del nivel:</label>
+                            <input type="text" id="editName" value="${demon.name}" 
+                                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #666;">Creador:</label>
+                            <input type="text" id="editCreador" value="${demon.creador || ''}" 
+                                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #666;">Verificador:</label>
+                            <input type="text" id="editVerificador" value="${demon.verificador || ''}" 
+                                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #666;">ID del nivel:</label>
+                            <input type="text" id="editIdNivel" value="${demon.idNivel}" 
+                                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 5px; color: #666;">Dificultad:</label>
+                            <select id="editDificultad" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                                <option value="Easy Demon" ${demon.dificultad === 'Easy Demon' ? 'selected' : ''}>Easy Demon</option>
+                                <option value="Medium Demon" ${demon.dificultad === 'Medium Demon' ? 'selected' : ''}>Medium Demon</option>
+                                <option value="Hard Demon" ${demon.dificultad === 'Hard Demon' ? 'selected' : ''}>Hard Demon</option>
+                                <option value="Insane Demon" ${demon.dificultad === 'Insane Demon' ? 'selected' : ''}>Insane Demon</option>
+                                <option value="Extreme Demon" ${demon.dificultad === 'Extreme Demon' ? 'selected' : ''}>Extreme Demon</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                            <button type="button" onclick="this.closest('div').parentElement.parentElement.remove()" 
+                                    style="padding: 10px 20px; background: #666; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                Cancelar
+                            </button>
+                            <button type="submit" 
+                                    style="padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            document.getElementById('formEditarNivel').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await guardarEdicionNivel(demon.idNivel, modal);
+            });
+        }
+
+        // Función para guardar la edición del nivel
+        async function guardarEdicionNivel(idNivelOriginal, modal) {
+            const datosActualizados = {
+                name: document.getElementById('editName').value,
+                creador: document.getElementById('editCreador').value,
+                verificador: document.getElementById('editVerificador').value,
+                idNivel: document.getElementById('editIdNivel').value,
+                dificultad: document.getElementById('editDificultad').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/api/demons/${idNivelOriginal}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datosActualizados)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Nivel actualizado exitosamente');
+                    modal.remove();
+                    cargarDemonios();
+                } else {
+                    alert('Error al actualizar nivel: ' + (data.error || 'Error desconocido'));
+                }
+            } catch (error) {
+                console.error('Error actualizando nivel:', error);
+                alert('Error al actualizar nivel');
+            }
+        }
+
+        // Función para invalidar una completación
+        async function invalidarCompletacion(id, usuario, nivel) {
+            if (!confirm(`¿Estás seguro de invalidar la completación de "${nivel}" por ${usuario}?\n\nEsto cambiará su estado a "invalidado".`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/completaciones/${id}/invalidar`, {
+                    method: 'PATCH'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Completación invalidada exitosamente');
+                    cargarCompletaciones();
+                } else {
+                    alert('Error al invalidar completación: ' + (data.error || 'Error desconocido'));
+                }
+            } catch (error) {
+                console.error('Error invalidando completación:', error);
+                alert('Error al invalidar completación');
+            }
+        }
+
+        // Modificar la función cargarDemonios para agregar botones de editar y eliminar
+        const cargarDemoniosOriginal = cargarDemonios;
+        cargarDemonios = async function() {
+            await cargarDemoniosOriginal();
+
+            // Agregar botones de editar y eliminar a cada fila
+            const tbody = document.querySelector('#tablaDemonios tbody');
+            if (tbody) {
+                const rows = tbody.querySelectorAll('tr');
+                rows.forEach((row, index) => {
+                    const demon = demoniosGlobal[index];
+                    if (!demon) return;
+
+                    // Verificar si ya tiene los botones
+                    if (row.querySelector('.btn-editar-nivel')) return;
+
+                    // Crear celda de acciones si no existe
+                    let celdaAcciones = row.cells[row.cells.length - 1];
+                    if (!celdaAcciones.querySelector('.btn-editar-nivel')) {
+                        const btnEditar = document.createElement('button');
+                        btnEditar.textContent = '✏️ Editar';
+                        btnEditar.className = 'btn-editar-nivel';
+                        btnEditar.style.cssText = 'margin-right: 5px; padding: 5px 10px; background: #2196F3; color: white; border: none; border-radius: 3px; cursor: pointer;';
+                        btnEditar.onclick = () => abrirModalEditarNivel(demon);
+
+                        const btnEliminar = document.createElement('button');
+                        btnEliminar.textContent = '🗑️ Eliminar';
+                        btnEliminar.className = 'btn-eliminar-nivel';
+                        btnEliminar.style.cssText = 'padding: 5px 10px; background: #f44336; color: white; border: none; border-radius: 3px; cursor: pointer;';
+                        btnEliminar.onclick = () => eliminarNivel(demon.idNivel, demon.name);
+
+                        celdaAcciones.insertBefore(btnEditar, celdaAcciones.firstChild);
+                        celdaAcciones.insertBefore(btnEliminar, btnEditar.nextSibling);
+                    }
+                });
+            }
+        };
+
+        // Variable global para almacenar demonios
+        let demoniosGlobal = [];
+
+        // Interceptar la carga de demonios para guardarlos globalmente
+        const fetchOriginal = window.fetch;
+        window.fetch = function(...args) {
+            return fetchOriginal(...args).then(response => {
+                if (args[0].includes('/api/demons') && !args[0].includes('historial')) {
+                    return response.clone().json().then(data => {
+                        if (Array.isArray(data)) {
+                            demoniosGlobal = data;
+                        }
+                        return new Response(JSON.stringify(data), {
+                            status: response.status,
+                            statusText: response.statusText,
+                            headers: response.headers
+                        });
+                    });
+                }
+                return response;
+            });
+        };
+
+        // Modificar la función cargarCompletaciones para agregar botón de invalidar
+        const cargarCompletacionesOriginal = cargarCompletaciones;
+        cargarCompletaciones = async function() {
+            await cargarCompletacionesOriginal();
+
+            // Agregar botones de invalidar a completaciones aprobadas
+            const tbody = document.querySelector('#tablaCompletaciones tbody');
+            if (tbody) {
+                const rows = tbody.querySelectorAll('tr');
+                rows.forEach(row => {
+                    const estadoCell = row.cells[3];
+                    if (estadoCell && estadoCell.textContent.trim() === 'aprobado') {
+                        // Verificar si ya tiene el botón
+                        if (row.querySelector('.btn-invalidar')) return;
+
+                        const celdaAcciones = row.cells[row.cells.length - 1];
+                        const btnInvalidar = document.createElement('button');
+                        btnInvalidar.textContent = '❌ Invalidar';
+                        btnInvalidar.className = 'btn-invalidar';
+                        btnInvalidar.style.cssText = 'margin-left: 5px; padding: 5px 10px; background: #ff9800; color: white; border: none; border-radius: 3px; cursor: pointer;';
+
+                        // Obtener datos de la fila
+                        const completacionId = row.getAttribute('data-id') || row.cells[0].textContent;
+                        const usuario = row.cells[1].textContent;
+                        const nivel = row.cells[2].textContent;
+
+                        btnInvalidar.onclick = () => invalidarCompletacion(completacionId, usuario, nivel);
+                        celdaAcciones.appendChild(btnInvalidar);
+                    }
+                });
+            }
+        };
+
+        // Asegurar que los IDs de completaciones estén disponibles
+        const cargarCompletacionesConIds = async function() {
+            try {
+                const response = await fetchOriginal(`${API_URL}/api/completaciones`);
+                const completaciones = await response.json();
+
+                const tbody = document.querySelector('#tablaCompletaciones tbody');
+                if (tbody && completaciones) {
+                    const rows = tbody.querySelectorAll('tr');
+                    rows.forEach((row, index) => {
+                        if (completaciones[index]) {
+                            row.setAttribute('data-id', completaciones[index].id);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error cargando completaciones con IDs:', error);
+            }
+        };
+
+        // Ejecutar al cargar completaciones
+        const intervalCompletaciones = setInterval(() => {
+            const tbody = document.querySelector('#tablaCompletaciones tbody');
+            if (tbody && tbody.children.length > 0) {
+                cargarCompletacionesConIds();
+                clearInterval(intervalCompletaciones);
+            }
+        }, 500);
+
+        console.log('✅ Nuevas funcionalidades de edición, eliminación e invalidación cargadas');
+</script>
 </body>
 </html>
