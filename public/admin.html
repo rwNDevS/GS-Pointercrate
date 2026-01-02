@@ -212,14 +212,12 @@
             vertical-align: middle;
         }
 
-        /* Mejora para los botones en tabla (Desktop) */
         td .btn {
             white-space: nowrap;
             min-width: 100px;
             display: inline-block;
         }
 
-        /* Estilos específicos para la tabla de completaciones */
         #tablaCompletaciones td:last-child {
             white-space: nowrap;
         }
@@ -230,7 +228,6 @@
             margin: 0.15rem;
         }
 
-        /* Enlaces en tablas */
         td a {
             color: var(--accent);
             text-decoration: none;
@@ -276,7 +273,6 @@
             border-left: 3px solid var(--accent);
         }
 
-        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -339,12 +335,31 @@
             border-radius: 6px;
             border-left: 3px solid var(--accent);
             font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .demon-list-item:hover {
+            background: rgba(33, 150, 243, 0.1);
+            transform: translateX(5px);
         }
 
         .demon-list-item strong {
             color: var(--accent);
             display: block;
             margin-bottom: 0.25rem;
+        }
+
+        .demon-list-item .actions {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .demon-list-item .btn {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.7rem;
+            margin: 0;
         }
 
         .modal-header {
@@ -415,7 +430,6 @@
             background-color: rgba(255,255,255,0.08);
         }
 
-        /* RESPONSIVE MÓVIL */
         @media (max-width: 1024px) {
             .modal-wrapper {
                 flex-direction: column;
@@ -483,7 +497,6 @@
                 right: 20px;
             }
 
-            /* Tabla responsive */
             table {
                 display: block;
                 overflow-x: auto;
@@ -550,7 +563,6 @@
                 font-size: 1rem;
             }
 
-            /* Tabla más compacta en móviles pequeños */
             thead th {
                 padding: 0.5rem 0.3rem;
                 font-size: 0.7rem;
@@ -579,7 +591,6 @@
             }
         }
 
-        /* Scroll personalizado */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -653,9 +664,11 @@
                     <button class="btn" onclick="window.location.href='demonlist.html'">Ver Lista Completa</button>
                     <button class="btn btn-success" id="btnAgregarDemon">Agregar Demon</button>
                     <button class="btn btn-warning" id="btnModificarPos">Modificar Posición</button>
+                    <button class="btn" id="btnEditarDemon">Editar Información</button>
+                    <button class="btn btn-danger" id="btnEliminarDemon">Eliminar Demon</button>
                 </div>
                 <p class="info-text">
-                    Agrega, elimina o modifica la posición de los demonios directamente desde aquí.
+                    Agrega, elimina, edita o modifica la posición de los demonios directamente desde aquí.
                 </p>
             </div>
         </div>
@@ -738,14 +751,95 @@
         </div>
     </div>
 
+    <!-- Modal Editar Demon -->
+    <div id="modalEditarDemon" class="modal">
+        <div class="modal-wrapper">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>✏️ Editar Información</h2>
+                    <button class="close-modal" onclick="cerrarModal('modalEditarDemon')">&times;</button>
+                </div>
+                <form id="formEditarDemon">
+                    <div class="form-group">
+                        <label>ID del Nivel (no se puede cambiar)</label>
+                        <input type="text" id="editarIdNivel" readonly style="opacity: 0.6;">
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre del Nivel *</label>
+                        <input type="text" id="editarNombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Creador *</label>
+                        <input type="text" id="editarCreador" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Verificador *</label>
+                        <input type="text" id="editarVerificador" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Dificultad *</label>
+                        <select id="editarDificultad" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="Extreme Demon">Extreme Demon</option>
+                            <option value="Insane Demon">Insane Demon</option>
+                            <option value="Hard Demon">Hard Demon</option>
+                            <option value="Medium Demon">Medium Demon</option>
+                            <option value="Easy Demon">Easy Demon</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 1rem;">Guardar Cambios</button>
+                </form>
+            </div>
+            <div class="modal-sidebar">
+                <h3>📋 Selecciona un Nivel</h3>
+                <div id="listaNivelesEditar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Eliminar Demon -->
+    <div id="modalEliminarDemon" class="modal">
+        <div class="modal-wrapper">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>🗑️ Eliminar Demon</h2>
+                    <button class="close-modal" onclick="cerrarModal('modalEliminarDemon')">&times;</button>
+                </div>
+                <form id="formEliminarDemon">
+                    <div class="form-group">
+                        <label>ID del Nivel a eliminar *</label>
+                        <input type="text" id="eliminarIdNivel" required placeholder="Ej: 12345678">
+                    </div>
+                    <div style="background: rgba(255, 107, 107, 0.1); padding: 1rem; border-radius: 6px; border-left: 3px solid var(--danger); margin-bottom: 1rem;">
+                        <strong style="color: var(--danger);">⚠️ Advertencia:</strong>
+                        <p style="margin-top: 0.5rem; font-size: 0.85rem;">Esta acción eliminará permanentemente el nivel y no se puede deshacer.</p>
+                    </div>
+                    <button type="submit" class="btn btn-danger" style="width: 100%; margin-top: 1rem;">Confirmar Eliminación</button>
+                </form>
+            </div>
+            <div class="modal-sidebar">
+                <h3>📋 Lista de Niveles</h3>
+                <div id="listaNivelesEliminar"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const API_URL = 'https://pointcrate.purriau.com/api';
+        const API_URL = 'http://localhost:8040/api';
+
+        // Mapeo de dificultades a rutas de imágenes
+        const difficultyImages = {
+            'Easy Demon': '/easy.png',
+            'Medium Demon': '/medium.png',
+            'Hard Demon': '/hard.png',
+            'Insane Demon': '/insane.png',
+            'Extreme Demon': '/extreme.png'
+        };
 
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
         }
 
-        // Verificar que el usuario sea admin
         function verificarAdmin() {
             const user = localStorage.getItem('usuarioLogeado');
             if (!user) {
@@ -762,7 +856,6 @@
             return usuario;
         }
 
-        // Cargar cuentas
         async function cargarCuentas() {
             try {
                 const res = await fetch(`${API_URL}/cuentas`);
@@ -799,7 +892,6 @@
             }
         }
 
-        // Banear/Desbanear usuario
         async function toggleBan(usuario, banned) {
             const accion = banned ? 'banear' : 'desbanear';
             if (!confirm(`¿Estás seguro de que quieres ${accion} a ${usuario}?`)) {
@@ -826,7 +918,6 @@
             }
         }
 
-        // Cargar completaciones pendientes
         async function cargarCompletaciones() {
             try {
                 const res = await fetch(`${API_URL}/completaciones`);
@@ -859,7 +950,6 @@
             }
         }
 
-        // Actualizar estado de completación
         async function actualizarEstado(id, nuevoEstado) {
             try {
                 const res = await fetch(`${API_URL}/completaciones/${id}`, {
@@ -881,7 +971,6 @@
             }
         }
 
-        // Cargar demons
         let demonsCache = [];
         async function cargarDemons() {
             try {
@@ -895,8 +984,7 @@
             }
         }
 
-        // Mostrar lista de niveles en sidebar
-        function mostrarListaNiveles(containerId) {
+        function mostrarListaNiveles(containerId, modoEditar = false, modoEliminar = false) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
 
@@ -908,29 +996,50 @@
             demonsCache.forEach(demon => {
                 const item = document.createElement('div');
                 item.className = 'demon-list-item';
-                item.innerHTML = `
+
+                // Obtener la imagen de dificultad correcta
+                const imgSrc = difficultyImages[demon.dificultad] || '/extreme.png';
+
+                let contenido = `
                     <strong>Pos. ${demon.posicion}: ${demon.name}</strong>
-                    ID: ${demon.idNivel}
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                        <img src="${imgSrc}" alt="${demon.dificultad}" style="width: 20px; height: 20px;" onerror="this.style.display='none'">
+                        <span style="font-size: 0.8rem;">${demon.dificultad}</span>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.25rem;">ID: ${demon.idNivel}</div>
                 `;
+
+                if (modoEditar) {
+                    contenido += `
+                        <div class="actions">
+                            <button class="btn btn-warning" onclick="cargarDemonParaEditar('${demon.idNivel}')">Editar</button>
+                        </div>
+                    `;
+                } else if (modoEliminar) {
+                    contenido += `
+                        <div class="actions">
+                            <button class="btn btn-danger" onclick="document.getElementById('eliminarIdNivel').value='${demon.idNivel}'">Seleccionar</button>
+                        </div>
+                    `;
+                }
+
+                item.innerHTML = contenido;
                 container.appendChild(item);
             });
         }
 
-        // Abrir modal
         function abrirModal(modalId) {
             const modal = document.getElementById(modalId);
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        // Cerrar modal
         function cerrarModal(modalId) {
             const modal = document.getElementById(modalId);
             modal.classList.remove('active');
             document.body.style.overflow = '';
         }
 
-        // Cerrar modal al hacer clic fuera
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) {
                 event.target.classList.remove('active');
@@ -938,7 +1047,6 @@
             }
         }
 
-        // Agregar demon
         document.getElementById('formAgregarDemon').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -966,6 +1074,8 @@
                     await cargarDemons();
                     mostrarListaNiveles('listaNivelesAgregar');
                     mostrarListaNiveles('listaNivelesModificar');
+                    mostrarListaNiveles('listaNivelesEditar', true);
+                    mostrarListaNiveles('listaNivelesEliminar', false, true);
                 } else {
                     alert(`Error: ${data.error}`);
                 }
@@ -975,7 +1085,6 @@
             }
         });
 
-        // Modificar posición
         document.getElementById('formModificarPos').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -997,6 +1106,8 @@
                     await cargarDemons();
                     mostrarListaNiveles('listaNivelesAgregar');
                     mostrarListaNiveles('listaNivelesModificar');
+                    mostrarListaNiveles('listaNivelesEditar', true);
+                    mostrarListaNiveles('listaNivelesEliminar', false, true);
                 } else {
                     alert(`Error: ${data.error}`);
                 }
@@ -1006,7 +1117,95 @@
             }
         });
 
-        // Inicialización
+        function cargarDemonParaEditar(idNivel) {
+            const demon = demonsCache.find(d => d.idNivel === idNivel);
+            if (!demon) {
+                alert('Demon no encontrado');
+                return;
+            }
+
+            document.getElementById('editarIdNivel').value = demon.idNivel;
+            document.getElementById('editarNombre').value = demon.name;
+            document.getElementById('editarCreador').value = demon.creador;
+            document.getElementById('editarVerificador').value = demon.verificador;
+            document.getElementById('editarDificultad').value = demon.dificultad;
+        }
+
+        document.getElementById('formEditarDemon').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const idNivel = document.getElementById('editarIdNivel').value.trim();
+            const datosActualizados = {
+                name: document.getElementById('editarNombre').value.trim(),
+                creador: document.getElementById('editarCreador').value.trim(),
+                verificador: document.getElementById('editarVerificador').value.trim(),
+                dificultad: document.getElementById('editarDificultad').value
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/demons/${encodeURIComponent(idNivel)}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datosActualizados)
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Demon actualizado correctamente');
+                    cerrarModal('modalEditarDemon');
+                    document.getElementById('formEditarDemon').reset();
+                    await cargarDemons();
+                    mostrarListaNiveles('listaNivelesAgregar');
+                    mostrarListaNiveles('listaNivelesModificar');
+                    mostrarListaNiveles('listaNivelesEditar', true);
+                    mostrarListaNiveles('listaNivelesEliminar', false, true);
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error al editar demon:', error);
+                alert('Error al editar demon.');
+            }
+        });
+
+        document.getElementById('formEliminarDemon').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const idNivel = document.getElementById('eliminarIdNivel').value.trim();
+
+            const demon = demonsCache.find(d => d.idNivel === idNivel);
+            const confirmText = demon 
+                ? `¿Estás seguro de eliminar "${demon.name}" (Pos. ${demon.posicion})?\n\nEsta acción no se puede deshacer.`
+                : `¿Estás seguro de eliminar el nivel con ID ${idNivel}?\n\nEsta acción no se puede deshacer.`;
+
+            if (!confirm(confirmText)) {
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/demons/${encodeURIComponent(idNivel)}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Demon eliminado exitosamente');
+                    cerrarModal('modalEliminarDemon');
+                    document.getElementById('formEliminarDemon').reset();
+                    await cargarDemons();
+                    mostrarListaNiveles('listaNivelesAgregar');
+                    mostrarListaNiveles('listaNivelesModificar');
+                    mostrarListaNiveles('listaNivelesEditar', true);
+                    mostrarListaNiveles('listaNivelesEliminar', false, true);
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error al eliminar demon:', error);
+                alert('Error al eliminar demon.');
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', async () => {
             const usuario = verificarAdmin();
             if (!usuario) return;
@@ -1015,7 +1214,6 @@
             cargarCompletaciones();
             await cargarDemons();
 
-            // Botones para abrir modales
             document.getElementById('btnAgregarDemon').addEventListener('click', () => {
                 mostrarListaNiveles('listaNivelesAgregar');
                 abrirModal('modalAgregarDemon');
@@ -1025,290 +1223,17 @@
                 mostrarListaNiveles('listaNivelesModificar');
                 abrirModal('modalModificarPos');
             });
+
+            document.getElementById('btnEditarDemon').addEventListener('click', () => {
+                mostrarListaNiveles('listaNivelesEditar', true);
+                abrirModal('modalEditarDemon');
+            });
+
+            document.getElementById('btnEliminarDemon').addEventListener('click', () => {
+                mostrarListaNiveles('listaNivelesEliminar', false, true);
+                abrirModal('modalEliminarDemon');
+            });
         });
-    
-        // ============================================
-        // NUEVAS FUNCIONALIDADES AGREGADAS
-        // ============================================
-
-        // Función para eliminar un nivel
-        async function eliminarNivel(idNivel, nombreNivel) {
-            if (!confirm(`¿Estás seguro de eliminar el nivel "${nombreNivel}"?\n\nEsto también eliminará todas las completaciones asociadas.`)) {
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_URL}/api/demons/${idNivel}`, {
-                    method: 'DELETE'
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    alert('Nivel eliminado exitosamente');
-                    cargarDemonios();
-                } else {
-                    alert('Error al eliminar nivel: ' + (data.error || 'Error desconocido'));
-                }
-            } catch (error) {
-                console.error('Error eliminando nivel:', error);
-                alert('Error al eliminar nivel');
-            }
-        }
-
-        // Función para abrir modal de edición de nivel
-        function abrirModalEditarNivel(demon) {
-            const modal = document.createElement('div');
-            modal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.8);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 10000;
-            `;
-
-            modal.innerHTML = `
-                <div style="background: white; padding: 30px; border-radius: 10px; max-width: 500px; width: 90%;">
-                    <h3 style="margin-top: 0; color: #333;">Editar Nivel: ${demon.name}</h3>
-                    <form id="formEditarNivel">
-                        <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 5px; color: #666;">Nombre del nivel:</label>
-                            <input type="text" id="editName" value="${demon.name}" 
-                                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 5px; color: #666;">Creador:</label>
-                            <input type="text" id="editCreador" value="${demon.creador || ''}" 
-                                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 5px; color: #666;">Verificador:</label>
-                            <input type="text" id="editVerificador" value="${demon.verificador || ''}" 
-                                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 5px; color: #666;">ID del nivel:</label>
-                            <input type="text" id="editIdNivel" value="${demon.idNivel}" 
-                                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                        </div>
-                        <div style="margin-bottom: 20px;">
-                            <label style="display: block; margin-bottom: 5px; color: #666;">Dificultad:</label>
-                            <select id="editDificultad" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                                <option value="Easy Demon" ${demon.dificultad === 'Easy Demon' ? 'selected' : ''}>Easy Demon</option>
-                                <option value="Medium Demon" ${demon.dificultad === 'Medium Demon' ? 'selected' : ''}>Medium Demon</option>
-                                <option value="Hard Demon" ${demon.dificultad === 'Hard Demon' ? 'selected' : ''}>Hard Demon</option>
-                                <option value="Insane Demon" ${demon.dificultad === 'Insane Demon' ? 'selected' : ''}>Insane Demon</option>
-                                <option value="Extreme Demon" ${demon.dificultad === 'Extreme Demon' ? 'selected' : ''}>Extreme Demon</option>
-                            </select>
-                        </div>
-                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                            <button type="button" onclick="this.closest('div').parentElement.parentElement.remove()" 
-                                    style="padding: 10px 20px; background: #666; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                Cancelar
-                            </button>
-                            <button type="submit" 
-                                    style="padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                Guardar Cambios
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            `;
-
-            document.body.appendChild(modal);
-
-            document.getElementById('formEditarNivel').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                await guardarEdicionNivel(demon.idNivel, modal);
-            });
-        }
-
-        // Función para guardar la edición del nivel
-        async function guardarEdicionNivel(idNivelOriginal, modal) {
-            const datosActualizados = {
-                name: document.getElementById('editName').value,
-                creador: document.getElementById('editCreador').value,
-                verificador: document.getElementById('editVerificador').value,
-                idNivel: document.getElementById('editIdNivel').value,
-                dificultad: document.getElementById('editDificultad').value
-            };
-
-            try {
-                const response = await fetch(`${API_URL}/api/demons/${idNivelOriginal}`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datosActualizados)
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    alert('Nivel actualizado exitosamente');
-                    modal.remove();
-                    cargarDemonios();
-                } else {
-                    alert('Error al actualizar nivel: ' + (data.error || 'Error desconocido'));
-                }
-            } catch (error) {
-                console.error('Error actualizando nivel:', error);
-                alert('Error al actualizar nivel');
-            }
-        }
-
-        // Función para invalidar una completación
-        async function invalidarCompletacion(id, usuario, nivel) {
-            if (!confirm(`¿Estás seguro de invalidar la completación de "${nivel}" por ${usuario}?\n\nEsto cambiará su estado a "invalidado".`)) {
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_URL}/api/completaciones/${id}/invalidar`, {
-                    method: 'PATCH'
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    alert('Completación invalidada exitosamente');
-                    cargarCompletaciones();
-                } else {
-                    alert('Error al invalidar completación: ' + (data.error || 'Error desconocido'));
-                }
-            } catch (error) {
-                console.error('Error invalidando completación:', error);
-                alert('Error al invalidar completación');
-            }
-        }
-
-        // Modificar la función cargarDemonios para agregar botones de editar y eliminar
-        const cargarDemoniosOriginal = cargarDemonios;
-        cargarDemonios = async function() {
-            await cargarDemoniosOriginal();
-
-            // Agregar botones de editar y eliminar a cada fila
-            const tbody = document.querySelector('#tablaDemonios tbody');
-            if (tbody) {
-                const rows = tbody.querySelectorAll('tr');
-                rows.forEach((row, index) => {
-                    const demon = demoniosGlobal[index];
-                    if (!demon) return;
-
-                    // Verificar si ya tiene los botones
-                    if (row.querySelector('.btn-editar-nivel')) return;
-
-                    // Crear celda de acciones si no existe
-                    let celdaAcciones = row.cells[row.cells.length - 1];
-                    if (!celdaAcciones.querySelector('.btn-editar-nivel')) {
-                        const btnEditar = document.createElement('button');
-                        btnEditar.textContent = '✏️ Editar';
-                        btnEditar.className = 'btn-editar-nivel';
-                        btnEditar.style.cssText = 'margin-right: 5px; padding: 5px 10px; background: #2196F3; color: white; border: none; border-radius: 3px; cursor: pointer;';
-                        btnEditar.onclick = () => abrirModalEditarNivel(demon);
-
-                        const btnEliminar = document.createElement('button');
-                        btnEliminar.textContent = '🗑️ Eliminar';
-                        btnEliminar.className = 'btn-eliminar-nivel';
-                        btnEliminar.style.cssText = 'padding: 5px 10px; background: #f44336; color: white; border: none; border-radius: 3px; cursor: pointer;';
-                        btnEliminar.onclick = () => eliminarNivel(demon.idNivel, demon.name);
-
-                        celdaAcciones.insertBefore(btnEditar, celdaAcciones.firstChild);
-                        celdaAcciones.insertBefore(btnEliminar, btnEditar.nextSibling);
-                    }
-                });
-            }
-        };
-
-        // Variable global para almacenar demonios
-        let demoniosGlobal = [];
-
-        // Interceptar la carga de demonios para guardarlos globalmente
-        const fetchOriginal = window.fetch;
-        window.fetch = function(...args) {
-            return fetchOriginal(...args).then(response => {
-                if (args[0].includes('/api/demons') && !args[0].includes('historial')) {
-                    return response.clone().json().then(data => {
-                        if (Array.isArray(data)) {
-                            demoniosGlobal = data;
-                        }
-                        return new Response(JSON.stringify(data), {
-                            status: response.status,
-                            statusText: response.statusText,
-                            headers: response.headers
-                        });
-                    });
-                }
-                return response;
-            });
-        };
-
-        // Modificar la función cargarCompletaciones para agregar botón de invalidar
-        const cargarCompletacionesOriginal = cargarCompletaciones;
-        cargarCompletaciones = async function() {
-            await cargarCompletacionesOriginal();
-
-            // Agregar botones de invalidar a completaciones aprobadas
-            const tbody = document.querySelector('#tablaCompletaciones tbody');
-            if (tbody) {
-                const rows = tbody.querySelectorAll('tr');
-                rows.forEach(row => {
-                    const estadoCell = row.cells[3];
-                    if (estadoCell && estadoCell.textContent.trim() === 'aprobado') {
-                        // Verificar si ya tiene el botón
-                        if (row.querySelector('.btn-invalidar')) return;
-
-                        const celdaAcciones = row.cells[row.cells.length - 1];
-                        const btnInvalidar = document.createElement('button');
-                        btnInvalidar.textContent = '❌ Invalidar';
-                        btnInvalidar.className = 'btn-invalidar';
-                        btnInvalidar.style.cssText = 'margin-left: 5px; padding: 5px 10px; background: #ff9800; color: white; border: none; border-radius: 3px; cursor: pointer;';
-
-                        // Obtener datos de la fila
-                        const completacionId = row.getAttribute('data-id') || row.cells[0].textContent;
-                        const usuario = row.cells[1].textContent;
-                        const nivel = row.cells[2].textContent;
-
-                        btnInvalidar.onclick = () => invalidarCompletacion(completacionId, usuario, nivel);
-                        celdaAcciones.appendChild(btnInvalidar);
-                    }
-                });
-            }
-        };
-
-        // Asegurar que los IDs de completaciones estén disponibles
-        const cargarCompletacionesConIds = async function() {
-            try {
-                const response = await fetchOriginal(`${API_URL}/api/completaciones`);
-                const completaciones = await response.json();
-
-                const tbody = document.querySelector('#tablaCompletaciones tbody');
-                if (tbody && completaciones) {
-                    const rows = tbody.querySelectorAll('tr');
-                    rows.forEach((row, index) => {
-                        if (completaciones[index]) {
-                            row.setAttribute('data-id', completaciones[index].id);
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error('Error cargando completaciones con IDs:', error);
-            }
-        };
-
-        // Ejecutar al cargar completaciones
-        const intervalCompletaciones = setInterval(() => {
-            const tbody = document.querySelector('#tablaCompletaciones tbody');
-            if (tbody && tbody.children.length > 0) {
-                cargarCompletacionesConIds();
-                clearInterval(intervalCompletaciones);
-            }
-        }, 500);
-
-        console.log('✅ Nuevas funcionalidades de edición, eliminación e invalidación cargadas');
-</script>
+    </script>
 </body>
 </html>
