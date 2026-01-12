@@ -14,6 +14,7 @@ const PORT = process.env.PORT || 8040;
 const demonsFile = './demons.json';
 const cuentasFile = './cuentas.json';
 const completacionesFile = './completaciones.json';
+const tagsFile = './tags.json';
 
 // --- Funciones Auxiliares ---
 function leerArchivo(filePath) {
@@ -400,6 +401,178 @@ app.get('/api/top', (req, res) => {
         .map(([usuario, data]) => ({ usuario, ...data }))
         .sort((a, b) => b.puntos - a.puntos || b.completaciones - a.completaciones);
     res.json(ranking);
+});
+
+// --- Rutas Tags ---
+
+// Obtener todos los tags
+app.get('/api/tags', (req, res) => {
+    console.log('GET /api/tags - Solicitado.');
+    const tags = leerArchivo(tagsFile);
+    res.json(tags);
+});
+
+// Crear un nuevo tag
+app.post('/api/tags', (req, res) => {
+    const { nombre, color } = req.body;
+    console.log('POST /api/tags - Solicitado para crear tag:', nombre);
+    
+    if (!nombre || !color) {
+        console.error('POST /api/tags - Error: Datos incompletos.');
+        return res.status(400).json({ error: 'Nombre y color son requeridos' });
+    }
+    
+    const tags = leerArchivo(tagsFile);
+    
+    // Verificar si ya existe un tag con ese nombre
+    if (tags.some(t => t.nombre.toLowerCase() === nombre.toLowerCase())) {
+        console.error(`POST /api/tags - Error: El tag ${nombre} ya existe.`);
+        return res.status(409).json({ error: 'Ya existe un tag con ese nombre' });
+    }
+    
+    const nuevoTag = {
+        id: Date.now().toString(),
+        nombre,
+        color
+    };
+    
+    tags.push(nuevoTag);
+    
+    if (!escribirArchivo(tagsFile, tags)) {
+        console.error('POST /api/tags - Error al guardar en el archivo.');
+        return res.status(500).json({ error: 'Error guardando tag' });
+    }
+    
+    console.log('POST /api/tags - Tag creado exitosamente.');
+    res.json({ success: true, tag: nuevoTag });
+});
+
+// Editar un tag existente
+app.patch('/api/tags/:id', (req, res) => {
+    const tagId = req.params.id;
+    const { nombre, color } = req.body;
+    console.log(`PATCH /api/tags/${tagId} - Solicitado para editar tag.`);
+    
+    const tags = leerArchivo(tagsFile);
+    const tagIndex = tags.findIndex(t => t.id === tagId);
+    
+    if (tagIndex === -1) {
+        console.warn(`PATCH /api/tags/${tagId} - Tag no encontrado.`);
+        return res.status(404).json({ error: 'Tag no encontrado' });
+    }
+    
+    if (nombre) tags[tagIndex].nombre = nombre;
+    if (color) tags[tagIndex].color = color;
+    
+    if (!escribirArchivo(tagsFile, tags)) {
+        console.error('PATCH /api/tags - Error al guardar en el archivo.');
+        return res.status(500).json({ error: 'Error al actualizar tag' });
+    }
+    
+    console.log(`PATCH /api/tags/${tagId} - Tag actualizado correctamente.`);
+    res.json({ success: true, message: 'Tag actualizado correctamente', tag: tags[tagIndex] });
+});
+
+// Eliminar un tag
+app.delete('/api/tags/:id', (req, res) => {
+    const tagId = req.params.id;
+    console.log(`DELETE /api/tags/${tagId} - Solicitado.`);
+    
+    let tags = leerArchivo(tagsFile);
+    const tagExiste = tags.some(t => t.id === tagId);
+    
+    if (!tagExiste) {
+        console.warn(`DELETE /api/tags/${tagId} - Tag no encontrado.`);
+        return res.status(404).json({ error: 'Tag no encontrado' });
+    }
+    
+    tags = tags.filter(t => t.id !== tagId);
+    
+    // Eliminar el tag de todos los demons que lo tengan
+    const demons = leerArchivo(demonsFile);
+    demons.forEach(demon => {
+        if (demon.tags && Array.isArray(demon.tags)) {
+            demon.tags = demon.tags.filter(t => t !== tagId);
+        }
+    });
+    escribirArchivo(demonsFile, demons);
+    
+    if (!escribirArchivo(tagsFile, tags)) {
+        console.error('DELETE /api/tags - Error al guardar en el archivo.');
+        return res.status(500).json({ error: 'Error al eliminar tag' });
+    }
+    
+    console.log(`DELETE /api/tags/${tagId} - Tag eliminado exitosamente.`);
+    res.json({ success: true, message: 'Tag eliminado correctamente' });
+});
+
+// Asignar tag a un demon
+app.post('/api/demons/:idNivel/tags/:tagId', (req, res) => {
+    const { idNivel, tagId } = req.params;
+    console.log(`POST /api/demons/${idNivel}/tags/${tagId} - Solicitado asignar tag.`);
+    
+    const demons = leerArchivo(demonsFile);
+    const tags = leerArchivo(tagsFile);
+    
+    const demonIndex = demons.findIndex(d => d.idNivel === idNivel);
+    if (demonIndex === -1) {
+        console.warn(`POST /api/demons/${idNivel}/tags - Demon no encontrado.`);
+        return res.status(404).json({ error: 'Demon no encontrado' });
+    }
+    
+    const tagExiste = tags.some(t => t.id === tagId);
+    if (!tagExiste) {
+        console.warn(`POST /api/demons/${idNivel}/tags/${tagId} - Tag no encontrado.`);
+        return res.status(404).json({ error: 'Tag no encontrado' });
+    }
+    
+    if (!demons[demonIndex].tags) {
+        demons[demonIndex].tags = [];
+    }
+    
+    if (demons[demonIndex].tags.includes(tagId)) {
+        console.warn(`POST /api/demons/${idNivel}/tags/${tagId} - El demon ya tiene este tag.`);
+        return res.status(409).json({ error: 'El demon ya tiene este tag asignado' });
+    }
+    
+    demons[demonIndex].tags.push(tagId);
+    
+    if (!escribirArchivo(demonsFile, demons)) {
+        console.error('POST /api/demons/tags - Error al guardar en el archivo.');
+        return res.status(500).json({ error: 'Error al asignar tag' });
+    }
+    
+    console.log(`POST /api/demons/${idNivel}/tags/${tagId} - Tag asignado exitosamente.`);
+    res.json({ success: true, message: 'Tag asignado correctamente' });
+});
+
+// Desasignar tag de un demon
+app.delete('/api/demons/:idNivel/tags/:tagId', (req, res) => {
+    const { idNivel, tagId } = req.params;
+    console.log(`DELETE /api/demons/${idNivel}/tags/${tagId} - Solicitado desasignar tag.`);
+    
+    const demons = leerArchivo(demonsFile);
+    const demonIndex = demons.findIndex(d => d.idNivel === idNivel);
+    
+    if (demonIndex === -1) {
+        console.warn(`DELETE /api/demons/${idNivel}/tags - Demon no encontrado.`);
+        return res.status(404).json({ error: 'Demon no encontrado' });
+    }
+    
+    if (!demons[demonIndex].tags || !demons[demonIndex].tags.includes(tagId)) {
+        console.warn(`DELETE /api/demons/${idNivel}/tags/${tagId} - El demon no tiene este tag.`);
+        return res.status(404).json({ error: 'El demon no tiene este tag asignado' });
+    }
+    
+    demons[demonIndex].tags = demons[demonIndex].tags.filter(t => t !== tagId);
+    
+    if (!escribirArchivo(demonsFile, demons)) {
+        console.error('DELETE /api/demons/tags - Error al guardar en el archivo.');
+        return res.status(500).json({ error: 'Error al desasignar tag' });
+    }
+    
+    console.log(`DELETE /api/demons/${idNivel}/tags/${tagId} - Tag desasignado exitosamente.`);
+    res.json({ success: true, message: 'Tag desasignado correctamente' });
 });
 
 // Al final, cambia esta línea también:
