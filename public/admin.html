@@ -430,6 +430,35 @@
             background-color: rgba(255,255,255,0.08);
         }
 
+        /* NUEVO: Estilos para tags */
+        .tag-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin: 0.25rem;
+            color: white;
+        }
+
+        .tag-item {
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: rgba(255,255,255,0.02);
+            border-radius: 6px;
+            border-left: 3px solid;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tag-item:hover {
+            background: rgba(33, 150, 243, 0.1);
+            transform: translateX(5px);
+        }
+
         @media (max-width: 1024px) {
             .modal-wrapper {
                 flex-direction: column;
@@ -671,6 +700,22 @@
                     Agrega, elimina, edita o modifica la posición de los demonios directamente desde aquí.
                 </p>
             </div>
+
+            <!-- NUEVO: Sección de Gestión de Tags -->
+            <div class="admin-card">
+                <h2>🏷️ Gestión de Tags</h2>
+                <div class="actions-group">
+                    <button class="btn btn-success" id="btnCrearTag">Crear Tag</button>
+                    <button class="btn btn-warning" id="btnEditarTag">Editar Tag</button>
+                    <button class="btn btn-danger" id="btnEliminarTag">Eliminar Tag</button>
+                    <button class="btn" id="btnAsignarTag">Asignar Tag</button>
+                    <button class="btn" id="btnDesasignarTag">Desasignar Tag</button>
+                </div>
+                <p class="info-text">
+                    Crea, edita, elimina y asigna tags a los niveles de la demonlist.
+                </p>
+                <div id="listaTags" style="margin-top: 1rem;"></div>
+            </div>
         </div>
     </div>
 
@@ -820,6 +865,143 @@
             <div class="modal-sidebar">
                 <h3>📋 Lista de Niveles</h3>
                 <div id="listaNivelesEliminar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NUEVO: Modal Crear Tag -->
+    <div id="modalCrearTag" class="modal">
+        <div class="modal-content" style="max-width: 500px; margin: 2rem auto;">
+            <div class="modal-header">
+                <h2>➕ Crear Tag</h2>
+                <button class="close-modal" onclick="cerrarModal('modalCrearTag')">&times;</button>
+            </div>
+            <form id="formCrearTag">
+                <div class="form-group">
+                    <label>Nombre del Tag *</label>
+                    <input type="text" id="crearTagNombre" required placeholder="Ej: Destacado">
+                </div>
+                <div class="form-group">
+                    <label>Color (Hex) *</label>
+                    <input type="color" id="crearTagColor" required value="#2196F3">
+                </div>
+                <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 1rem;">Crear Tag</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- NUEVO: Modal Editar Tag -->
+    <div id="modalEditarTag" class="modal">
+        <div class="modal-wrapper">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>✏️ Editar Tag</h2>
+                    <button class="close-modal" onclick="cerrarModal('modalEditarTag')">&times;</button>
+                </div>
+                <form id="formEditarTag">
+                    <div class="form-group">
+                        <label>ID del Tag (no se puede cambiar)</label>
+                        <input type="text" id="editarTagId" readonly style="opacity: 0.6;">
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre del Tag *</label>
+                        <input type="text" id="editarTagNombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Color (Hex) *</label>
+                        <input type="color" id="editarTagColor" required>
+                    </div>
+                    <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 1rem;">Guardar Cambios</button>
+                </form>
+            </div>
+            <div class="modal-sidebar">
+                <h3>🏷️ Selecciona un Tag</h3>
+                <div id="listaTagsEditar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NUEVO: Modal Eliminar Tag -->
+    <div id="modalEliminarTag" class="modal">
+        <div class="modal-wrapper">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>🗑️ Eliminar Tag</h2>
+                    <button class="close-modal" onclick="cerrarModal('modalEliminarTag')">&times;</button>
+                </div>
+                <form id="formEliminarTag">
+                    <div class="form-group">
+                        <label>ID del Tag a eliminar *</label>
+                        <input type="text" id="eliminarTagId" required readonly style="opacity: 0.6;">
+                    </div>
+                    <div style="background: rgba(255, 107, 107, 0.1); padding: 1rem; border-radius: 6px; border-left: 3px solid var(--danger); margin-bottom: 1rem;">
+                        <strong style="color: var(--danger);">⚠️ Advertencia:</strong>
+                        <p style="margin-top: 0.5rem; font-size: 0.85rem;">Esta acción eliminará el tag y lo quitará de todos los niveles que lo tengan.</p>
+                    </div>
+                    <button type="submit" class="btn btn-danger" style="width: 100%; margin-top: 1rem;">Confirmar Eliminación</button>
+                </form>
+            </div>
+            <div class="modal-sidebar">
+                <h3>🏷️ Selecciona un Tag</h3>
+                <div id="listaTagsEliminar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NUEVO: Modal Asignar Tag -->
+    <div id="modalAsignarTag" class="modal">
+        <div class="modal-wrapper">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>🔗 Asignar Tag</h2>
+                    <button class="close-modal" onclick="cerrarModal('modalAsignarTag')">&times;</button>
+                </div>
+                <form id="formAsignarTag">
+                    <div class="form-group">
+                        <label>ID del Nivel *</label>
+                        <input type="text" id="asignarTagIdNivel" required placeholder="Ej: 12345678">
+                    </div>
+                    <div class="form-group">
+                        <label>Selecciona un Tag *</label>
+                        <select id="asignarTagId" required>
+                            <option value="">Seleccionar...</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 1rem;">Asignar Tag</button>
+                </form>
+            </div>
+            <div class="modal-sidebar">
+                <h3>📋 Lista de Niveles</h3>
+                <div id="listaNivelesAsignarTag"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NUEVO: Modal Desasignar Tag -->
+    <div id="modalDesasignarTag" class="modal">
+        <div class="modal-wrapper">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>🔓 Desasignar Tag</h2>
+                    <button class="close-modal" onclick="cerrarModal('modalDesasignarTag')">&times;</button>
+                </div>
+                <form id="formDesasignarTag">
+                    <div class="form-group">
+                        <label>ID del Nivel *</label>
+                        <input type="text" id="desasignarTagIdNivel" required placeholder="Ej: 12345678">
+                    </div>
+                    <div class="form-group">
+                        <label>Selecciona un Tag *</label>
+                        <select id="desasignarTagId" required>
+                            <option value="">Seleccionar...</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-danger" style="width: 100%; margin-top: 1rem;">Desasignar Tag</button>
+                </form>
+            </div>
+            <div class="modal-sidebar">
+                <h3>📋 Lista de Niveles</h3>
+                <div id="listaNivelesDesasignarTag"></div>
             </div>
         </div>
     </div>
@@ -1206,6 +1388,255 @@
             }
         });
 
+        // NUEVO: Funciones para Tags
+        let tagsCache = [];
+        
+        async function cargarTags() {
+            try {
+                const res = await fetch(`${API_URL}/tags`);
+                tagsCache = await res.json();
+                mostrarListaTags();
+                return tagsCache;
+            } catch (error) {
+                console.error('Error al cargar tags:', error);
+                return [];
+            }
+        }
+
+        function mostrarListaTags() {
+            const container = document.getElementById('listaTags');
+            container.innerHTML = '';
+
+            if (tagsCache.length === 0) {
+                container.innerHTML = '<p class="status-message">No hay tags creados.</p>';
+                return;
+            }
+
+            tagsCache.forEach(tag => {
+                const item = document.createElement('div');
+                item.className = 'tag-item';
+                item.style.borderColor = tag.color;
+                item.innerHTML = `
+                    <div>
+                        <span class="tag-badge" style="background-color: ${tag.color};">${tag.nombre}</span>
+                        <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.25rem;">ID: ${tag.id}</div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function mostrarListaTagsEnModal(containerId, modoEditar = false, modoEliminar = false) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            if (tagsCache.length === 0) {
+                container.innerHTML = '<p class="status-message">No hay tags.</p>';
+                return;
+            }
+
+            tagsCache.forEach(tag => {
+                const item = document.createElement('div');
+                item.className = 'tag-item';
+                item.style.borderColor = tag.color;
+
+                let contenido = `
+                    <div>
+                        <span class="tag-badge" style="background-color: ${tag.color};">${tag.nombre}</span>
+                        <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.25rem;">ID: ${tag.id}</div>
+                    </div>
+                `;
+
+                if (modoEditar) {
+                    contenido += `
+                        <div class="actions">
+                            <button class="btn btn-warning" onclick="cargarTagParaEditar('${tag.id}')">Editar</button>
+                        </div>
+                    `;
+                } else if (modoEliminar) {
+                    contenido += `
+                        <div class="actions">
+                            <button class="btn btn-danger" onclick="document.getElementById('eliminarTagId').value='${tag.id}'">Seleccionar</button>
+                        </div>
+                    `;
+                }
+
+                item.innerHTML = contenido;
+                container.appendChild(item);
+            });
+        }
+
+        function cargarTagsEnSelect(selectId) {
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="">Seleccionar...</option>';
+            
+            tagsCache.forEach(tag => {
+                const option = document.createElement('option');
+                option.value = tag.id;
+                option.textContent = tag.nombre;
+                option.style.backgroundColor = tag.color;
+                option.style.color = 'white';
+                select.appendChild(option);
+            });
+        }
+
+        function cargarTagParaEditar(tagId) {
+            const tag = tagsCache.find(t => t.id === tagId);
+            if (!tag) {
+                alert('Tag no encontrado');
+                return;
+            }
+
+            document.getElementById('editarTagId').value = tag.id;
+            document.getElementById('editarTagNombre').value = tag.nombre;
+            document.getElementById('editarTagColor').value = tag.color;
+        }
+
+        // NUEVO: Event Listeners para Tags
+        document.getElementById('formCrearTag').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nuevoTag = {
+                nombre: document.getElementById('crearTagNombre').value.trim(),
+                color: document.getElementById('crearTagColor').value
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/tags`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(nuevoTag)
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Tag creado exitosamente');
+                    cerrarModal('modalCrearTag');
+                    document.getElementById('formCrearTag').reset();
+                    await cargarTags();
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error al crear tag:', error);
+                alert('Error al crear tag.');
+            }
+        });
+
+        document.getElementById('formEditarTag').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const tagId = document.getElementById('editarTagId').value;
+            const datosActualizados = {
+                nombre: document.getElementById('editarTagNombre').value.trim(),
+                color: document.getElementById('editarTagColor').value
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/tags/${encodeURIComponent(tagId)}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datosActualizados)
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Tag actualizado correctamente');
+                    cerrarModal('modalEditarTag');
+                    document.getElementById('formEditarTag').reset();
+                    await cargarTags();
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error al editar tag:', error);
+                alert('Error al editar tag.');
+            }
+        });
+
+        document.getElementById('formEliminarTag').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const tagId = document.getElementById('eliminarTagId').value;
+            const tag = tagsCache.find(t => t.id === tagId);
+            const confirmText = tag 
+                ? `¿Estás seguro de eliminar el tag "${tag.nombre}"?\n\nSe quitará de todos los niveles que lo tengan.`
+                : `¿Estás seguro de eliminar este tag?`;
+
+            if (!confirm(confirmText)) {
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/tags/${encodeURIComponent(tagId)}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Tag eliminado exitosamente');
+                    cerrarModal('modalEliminarTag');
+                    document.getElementById('formEliminarTag').reset();
+                    await cargarTags();
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error al eliminar tag:', error);
+                alert('Error al eliminar tag.');
+            }
+        });
+
+        document.getElementById('formAsignarTag').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const idNivel = document.getElementById('asignarTagIdNivel').value.trim();
+            const tagId = document.getElementById('asignarTagId').value;
+
+            try {
+                const res = await fetch(`${API_URL}/demons/${encodeURIComponent(idNivel)}/tags/${encodeURIComponent(tagId)}`, {
+                    method: 'POST'
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Tag asignado correctamente');
+                    cerrarModal('modalAsignarTag');
+                    document.getElementById('formAsignarTag').reset();
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error al asignar tag:', error);
+                alert('Error al asignar tag.');
+            }
+        });
+
+        document.getElementById('formDesasignarTag').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const idNivel = document.getElementById('desasignarTagIdNivel').value.trim();
+            const tagId = document.getElementById('desasignarTagId').value;
+
+            try {
+                const res = await fetch(`${API_URL}/demons/${encodeURIComponent(idNivel)}/tags/${encodeURIComponent(tagId)}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Tag desasignado correctamente');
+                    cerrarModal('modalDesasignarTag');
+                    document.getElementById('formDesasignarTag').reset();
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error al desasignar tag:', error);
+                alert('Error al desasignar tag.');
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', async () => {
             const usuario = verificarAdmin();
             if (!usuario) return;
@@ -1213,6 +1644,7 @@
             cargarCuentas();
             cargarCompletaciones();
             await cargarDemons();
+            await cargarTags();
 
             document.getElementById('btnAgregarDemon').addEventListener('click', () => {
                 mostrarListaNiveles('listaNivelesAgregar');
@@ -1232,6 +1664,33 @@
             document.getElementById('btnEliminarDemon').addEventListener('click', () => {
                 mostrarListaNiveles('listaNivelesEliminar', false, true);
                 abrirModal('modalEliminarDemon');
+            });
+
+            // NUEVO: Event listeners para botones de tags
+            document.getElementById('btnCrearTag').addEventListener('click', () => {
+                abrirModal('modalCrearTag');
+            });
+
+            document.getElementById('btnEditarTag').addEventListener('click', () => {
+                mostrarListaTagsEnModal('listaTagsEditar', true);
+                abrirModal('modalEditarTag');
+            });
+
+            document.getElementById('btnEliminarTag').addEventListener('click', () => {
+                mostrarListaTagsEnModal('listaTagsEliminar', false, true);
+                abrirModal('modalEliminarTag');
+            });
+
+            document.getElementById('btnAsignarTag').addEventListener('click', () => {
+                mostrarListaNiveles('listaNivelesAsignarTag');
+                cargarTagsEnSelect('asignarTagId');
+                abrirModal('modalAsignarTag');
+            });
+
+            document.getElementById('btnDesasignarTag').addEventListener('click', () => {
+                mostrarListaNiveles('listaNivelesDesasignarTag');
+                cargarTagsEnSelect('desasignarTagId');
+                abrirModal('modalDesasignarTag');
             });
         });
     </script>
