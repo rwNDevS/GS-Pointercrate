@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mis Completaciones | GDPS Demonlist</title>
+    <title>Mi Perfil | GDPS Demonlist</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
     <style>
@@ -104,6 +104,27 @@
             color: var(--accent); 
         }
 
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: var(--text-main);
+            color: var(--bg-body);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
         .theme-toggle {
             position: fixed;
             bottom: 20px;
@@ -126,30 +147,251 @@
         }
 
         main {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
 
-        .page-header {
-            text-align: center;
+        /* ========== PERFIL DE USUARIO ========== */
+        .profile-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
             margin-bottom: 2rem;
             animation: fadeInDown 0.6s ease;
         }
 
-        .page-title {
-            font-size: 2rem;
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent);
+            background: var(--bg-modal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            flex: 1;
+            width: 100%;
+        }
+
+        .profile-username {
+            font-size: 1.8rem;
             font-weight: 800;
             color: var(--accent);
             margin-bottom: 0.5rem;
+            word-break: break-word;
+        }
+
+        .profile-role {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .profile-description {
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 1rem;
             word-wrap: break-word;
         }
 
-        .page-subtitle {
-            font-size: 1rem;
+        .profile-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        /* ========== TABS ========== */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .tab {
+            padding: 0.8rem 1.2rem;
+            background: none;
+            border: none;
             color: var(--text-dim);
-            font-weight: 400;
-            word-wrap: break-word;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            text-transform: uppercase;
+        }
+
+        .tab:hover {
+            color: var(--accent);
+        }
+
+        .tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ========== ESTADÍSTICAS ========== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.2rem;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* ========== SECCIÓN DESPLEGABLE ========== */
+        .expandable-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .expandable-header {
+            padding: 1rem 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+            user-select: none;
+        }
+
+        .expandable-header:hover {
+            background: rgba(33, 150, 243, 0.1);
+        }
+
+        .expandable-title {
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .expandable-count {
+            background: var(--accent);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .expandable-arrow {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .expandable-section.open .expandable-arrow {
+            transform: rotate(180deg);
+        }
+
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .expandable-section.open .expandable-content {
+            max-height: 1000px;
+        }
+
+        .expandable-list {
+            padding: 0 1.2rem 1.2rem 1.2rem;
+        }
+
+        .expandable-item {
+            padding: 0.8rem;
+            background: var(--bg-body);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .expandable-item-name {
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .expandable-item-pos {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 0.85rem;
         }
 
         /* ========== ALERTA DE BANEO ========== */
@@ -223,6 +465,10 @@
             background: var(--danger);
         }
 
+        .completacion-card.invalidado::before {
+            background: var(--text-dim);
+        }
+
         .completacion-card:hover {
             transform: translateX(5px);
             box-shadow: 0 5px 20px rgba(0,0,0,0.5);
@@ -270,6 +516,12 @@
             border: 1px solid var(--danger);
         }
 
+        .completacion-estado.invalidado {
+            background: rgba(153, 153, 153, 0.2);
+            color: var(--text-dim);
+            border: 1px solid var(--text-dim);
+        }
+
         .completacion-link {
             display: inline-flex;
             align-items: center;
@@ -314,27 +566,100 @@
             color: var(--text-dim);
         }
 
-        .stats-box {
-            text-align: center;
-            margin-top: 1.5rem;
-            padding: 1.2rem;
-            background: var(--bg-card);
-            border-radius: 8px;
+        /* ========== MODALES ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-modal);
             border: 1px solid var(--border);
-            font-size: 0.9rem;
-            line-height: 1.8;
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            animation: slideDown 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
-        .stats-box strong {
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-label {
             display: block;
+            font-weight: 700;
+            font-size: 0.85rem;
             margin-bottom: 0.5rem;
-            font-size: 1rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
         }
 
-        .stat-item {
-            display: block;
-            margin: 0.3rem 0;
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--bg-body);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-main);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            transition: 0.2s;
         }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .form-actions .btn {
+            flex: 1;
+            justify-content: center;
+            min-width: 120px;
+        }
+
+        .hidden { display: none !important; }
 
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-20px); }
@@ -345,8 +670,6 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .hidden { display: none !important; }
 
         /* TABLETS Y SUPERIORES (768px+) */
         @media (min-width: 768px) {
@@ -373,16 +696,24 @@
                 padding: 0 2rem;
             }
 
-            .page-title {
-                font-size: 3rem;
+            .profile-header {
+                flex-direction: row;
+                text-align: left;
+                align-items: flex-start;
             }
 
-            .page-subtitle {
-                font-size: 1.1rem;
+            .profile-avatar {
+                width: 150px;
+                height: 150px;
+                font-size: 4rem;
             }
 
-            .page-header {
-                margin-bottom: 3rem;
+            .profile-username {
+                font-size: 2.5rem;
+            }
+
+            .profile-actions {
+                justify-content: flex-start;
             }
 
             .ban-alert {
@@ -452,26 +783,25 @@
                 font-size: 1.2rem;
             }
 
-            .stats-box {
-                padding: 1.5rem;
-                margin-top: 2rem;
-                font-size: 1rem;
-            }
-
-            .stat-item {
-                display: inline;
-            }
-
-            .stat-item:not(:last-child)::after {
-                content: ' • ';
-            }
-
             .theme-toggle {
                 width: 60px;
                 height: 60px;
                 bottom: 30px;
                 right: 30px;
                 font-size: 1.5rem;
+            }
+
+            .tabs {
+                gap: 1rem;
+            }
+
+            .tab {
+                padding: 1rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .modal-content {
+                padding: 2.5rem;
             }
         }
 
@@ -482,7 +812,7 @@
                 padding: 0.5rem 0.7rem;
             }
 
-            .page-title {
+            .profile-username {
                 font-size: 1.5rem;
             }
 
@@ -505,6 +835,12 @@
             .ban-alert-message {
                 font-size: 0.85rem;
             }
+
+            .profile-avatar {
+                width: 100px;
+                height: 100px;
+                font-size: 2.5rem;
+            }
         }
     </style>
 </head>
@@ -525,12 +861,7 @@
 </header>
 
 <main>
-    <div class="page-header">
-        <h1 class="page-title">📝 Mis Completaciones</h1>
-        <p class="page-subtitle" id="userSubtitle">Cargando...</p>
-    </div>
-
-    <!-- ========== ALERTA DE BANEO (OCULTA POR DEFECTO) ========== -->
+    <!-- ========== ALERTA DE BANEO ========== -->
     <div id="banAlert" class="ban-alert hidden">
         <div class="ban-alert-icon">🚫</div>
         <div class="ban-alert-title">Cuenta Suspendida</div>
@@ -540,23 +871,231 @@
         </div>
     </div>
 
-    <!-- ========== LISTA DE COMPLETACIONES ========== -->
-    <div id="lista">
-        <div class="loading">⏳ Cargando tus completaciones...</div>
+    <!-- ========== PERFIL DE USUARIO ========== -->
+    <div class="profile-card">
+        <div class="profile-header">
+            <div class="profile-avatar" id="profileAvatar">
+                👤
+            </div>
+            <div class="profile-info">
+                <h1 class="profile-username" id="profileUsername">Cargando...</h1>
+                <span class="profile-role" id="profileRole">Usuario</span>
+                <p class="profile-description" id="profileDescription">Sin descripción</p>
+                <div class="profile-actions">
+                    <button class="btn btn-primary" onclick="openEditFotoModal()">📷 Cambiar Foto</button>
+                    <button class="btn btn-primary" onclick="openEditDescripcionModal()">✏️ Editar Descripción</button>
+                    <button class="btn btn-danger" onclick="openChangePasswordModal()">🔒 Cambiar Contraseña</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== TABS ========== -->
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('estadisticas')">📊 Estadísticas</button>
+        <button class="tab" onclick="switchTab('completaciones')">🎯 Mis Runs</button>
+        <button class="tab" onclick="switchTab('niveles')">🎮 Mis Niveles</button>
+    </div>
+
+    <!-- ========== TAB: ESTADÍSTICAS ========== -->
+    <div id="tabEstadisticas" class="tab-content active">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="statAprobadas">0</div>
+                <div class="stat-label">✓ Aprobadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statPendientes">0</div>
+                <div class="stat-label">⏳ Pendientes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statRechazadas">0</div>
+                <div class="stat-label">✗ Rechazadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statPuntos">0</div>
+                <div class="stat-label">🏆 Puntos</div>
+            </div>
+        </div>
+
+        <div class="expandable-section" id="hardestSection">
+            <div class="expandable-header" onclick="toggleSection('hardestSection')">
+                <div class="expandable-title">
+                    <span>🔥 Nivel Más Difícil Completado</span>
+                </div>
+                <span class="expandable-arrow">▼</span>
+            </div>
+            <div class="expandable-content">
+                <div class="expandable-list">
+                    <div id="hardestLevel" class="loading">Calculando...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== TAB: COMPLETACIONES ========== -->
+    <div id="tabCompletaciones" class="tab-content">
+        <div id="listaCompletaciones">
+            <div class="loading">⏳ Cargando tus completaciones...</div>
+        </div>
+    </div>
+
+    <!-- ========== TAB: MIS NIVELES ========== -->
+    <div id="tabNiveles" class="tab-content">
+        <div class="expandable-section" id="creadosSection">
+            <div class="expandable-header" onclick="toggleSection('creadosSection')">
+                <div class="expandable-title">
+                    <span>🎨 Niveles Creados</span>
+                    <span class="expandable-count" id="countCreados">0</span>
+                </div>
+                <span class="expandable-arrow">▼</span>
+            </div>
+            <div class="expandable-content">
+                <div class="expandable-list" id="listCreados">
+                    <div class="loading">Cargando...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="expandable-section" id="verificadosSection">
+            <div class="expandable-header" onclick="toggleSection('verificadosSection')">
+                <div class="expandable-title">
+                    <span>✓ Niveles Verificados</span>
+                    <span class="expandable-count" id="countVerificados">0</span>
+                </div>
+                <span class="expandable-arrow">▼</span>
+            </div>
+            <div class="expandable-content">
+                <div class="expandable-list" id="listVerificados">
+                    <div class="loading">Cargando...</div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 
+<!-- ========== MODAL: CAMBIAR FOTO ========== -->
+<div id="modalFoto" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-header">📷 Cambiar Foto de Perfil</h2>
+        <form onsubmit="guardarFoto(event)">
+            <div class="form-group">
+                <label class="form-label">URL de la Imagen</label>
+                <input type="url" id="inputFoto" class="form-input" placeholder="https://ejemplo.com/imagen.jpg" required>
+                <p style="color: var(--text-dim); font-size: 0.8rem; margin-top: 0.5rem;">
+                    Puedes usar servicios como Imgur o Discord para subir tu imagen
+                </p>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn" onclick="closeModal('modalFoto')">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ========== MODAL: EDITAR DESCRIPCIÓN ========== -->
+<div id="modalDescripcion" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-header">✏️ Editar Descripción</h2>
+        <form onsubmit="guardarDescripcion(event)">
+            <div class="form-group">
+                <label class="form-label">Descripción</label>
+                <textarea id="inputDescripcion" class="form-input" maxlength="200" placeholder="Cuéntanos sobre ti..."></textarea>
+                <p style="color: var(--text-dim); font-size: 0.8rem; margin-top: 0.5rem;">
+                    Máximo 200 caracteres
+                </p>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn" onclick="closeModal('modalDescripcion')">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ========== MODAL: CAMBIAR CONTRASEÑA ========== -->
+<div id="modalPassword" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-header">🔒 Cambiar Contraseña</h2>
+        <form onsubmit="cambiarPassword(event)">
+            <div class="form-group">
+                <label class="form-label">Contraseña Actual</label>
+                <input type="password" id="inputPasswordActual" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nueva Contraseña</label>
+                <input type="password" id="inputPasswordNueva" class="form-input" required minlength="6">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Confirmar Nueva Contraseña</label>
+                <input type="password" id="inputPasswordConfirm" class="form-input" required minlength="6">
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn" onclick="closeModal('modalPassword')">Cancelar</button>
+                <button type="submit" class="btn btn-danger">Cambiar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
-const API = 'https://pointcrate.purriau.com/api';
+const API = 'http://localhost:8040/api';
 
 // Verificar que el usuario esté logeado
-const usuario = JSON.parse(localStorage.getItem('usuarioLogeado'));
+let usuario = JSON.parse(localStorage.getItem('usuarioLogeado'));
 if (!usuario) {
-    alert('⚠️ Debes iniciar sesión para ver tus completaciones.');
+    alert('⚠️ Debes iniciar sesión para ver tu perfil.');
     window.location.href = 'index.html';
 }
 
-// ========== FUNCIÓN AGREGADA: VERIFICAR SI ESTÁ BANEADO ==========
+let perfilCompleto = null;
+let misCompletaciones = [];
+let todosDemons = [];
+
+// ========== INICIALIZACIÓN ========== 
+async function inicializar() {
+    await cargarPerfil();
+    await verificarBan();
+    await cargarDemons();
+    await cargarMisCompletaciones();
+    await cargarEstadisticas();
+    await cargarNivelesCreados();
+    await cargarNivelesVerificados();
+}
+
+// ========== CARGAR PERFIL ========== 
+async function cargarPerfil() {
+    try {
+        const res = await fetch(`${API}/cuentas/${usuario.usuario}/perfil`);
+        if (!res.ok) throw new Error('Error al cargar perfil');
+        
+        perfilCompleto = await res.json();
+        
+        // Actualizar UI
+        document.getElementById('profileUsername').textContent = perfilCompleto.usuario;
+        document.getElementById('profileRole').textContent = perfilCompleto.rol.toUpperCase();
+        
+        // Foto de perfil
+        const avatarDiv = document.getElementById('profileAvatar');
+        if (perfilCompleto.fotoPerfil) {
+            avatarDiv.innerHTML = `<img src="${perfilCompleto.fotoPerfil}" alt="Foto de perfil" onerror="this.parentElement.innerHTML='👤'">`;
+        }
+        
+        // Descripción
+        const descDiv = document.getElementById('profileDescription');
+        if (perfilCompleto.descripcion && perfilCompleto.descripcion.trim()) {
+            descDiv.textContent = perfilCompleto.descripcion;
+        } else {
+            descDiv.textContent = 'Sin descripción';
+            descDiv.style.fontStyle = 'italic';
+        }
+    } catch (error) {
+        console.error('Error cargando perfil:', error);
+    }
+}
+
+// ========== VERIFICAR BAN ========== 
 async function verificarBan() {
     try {
         const res = await fetch(`${API}/cuentas`);
@@ -566,7 +1105,6 @@ async function verificarBan() {
         const miCuenta = cuentas.find(c => c.usuario === usuario.usuario);
         
         if (miCuenta && miCuenta.banned) {
-            // Mostrar alerta de baneo
             document.getElementById('banAlert').classList.remove('hidden');
             return true;
         }
@@ -577,23 +1115,27 @@ async function verificarBan() {
     }
 }
 
+// ========== CARGAR DEMONS ========== 
+async function cargarDemons() {
+    try {
+        const res = await fetch(`${API}/demons`);
+        if (!res.ok) throw new Error('Error al cargar demons');
+        todosDemons = await res.json();
+    } catch (error) {
+        console.error('Error cargando demons:', error);
+    }
+}
+
+// ========== CARGAR COMPLETACIONES ========== 
 async function cargarMisCompletaciones() {
-    const lista = document.getElementById('lista');
+    const lista = document.getElementById('listaCompletaciones');
     
     try {
-        // Verificar estado de ban primero
-        const estaBaneado = await verificarBan();
-        
-        // Actualizar subtítulo con nombre de usuario
-        document.getElementById('userSubtitle').textContent = 
-            `Completaciones de ${usuario.usuario}${estaBaneado ? ' (BANEADO)' : ''}`;
-        
-        // Obtener completaciones
         const res = await fetch(`${API}/completaciones`);
         if (!res.ok) throw new Error('Error al cargar completaciones');
         
         const todas = await res.json();
-        const misCompletaciones = todas.filter(c => c.usuario === usuario.usuario);
+        misCompletaciones = todas.filter(c => c.usuario === usuario.usuario);
 
         lista.innerHTML = '';
 
@@ -625,12 +1167,18 @@ async function cargarMisCompletaciones() {
             card.className = `completacion-card ${comp.estado}`;
             card.style.animationDelay = `${index * 0.1}s`;
             
+            const estadoEmoji = {
+                'pendiente': '⏳',
+                'aprobado': '✓',
+                'rechazado': '✗',
+                'invalidado': '⊘'
+            }[comp.estado] || '?';
+            
             card.innerHTML = `
                 <div class="completacion-header">
                     <div class="completacion-nivel">${comp.nivel}</div>
                     <span class="completacion-estado ${comp.estado}">
-                        ${comp.estado === 'pendiente' ? '⏳' : comp.estado === 'aprobado' ? '✓' : '✗'} 
-                        ${comp.estado}
+                        ${estadoEmoji} ${comp.estado}
                     </span>
                 </div>
                 <div>
@@ -643,21 +1191,6 @@ async function cargarMisCompletaciones() {
         });
 
         lista.appendChild(grid);
-
-        // Estadísticas rápidas
-        const aprobadas = misCompletaciones.filter(c => c.estado === 'aprobado').length;
-        const pendientes = misCompletaciones.filter(c => c.estado === 'pendiente').length;
-        const rechazadas = misCompletaciones.filter(c => c.estado === 'rechazado').length;
-
-        const stats = document.createElement('div');
-        stats.className = 'stats-box';
-        stats.innerHTML = `
-            <strong>Estadísticas:</strong>
-            <span class="stat-item" style="color: var(--success)">✓ ${aprobadas} aprobadas</span>
-            <span class="stat-item" style="color: var(--warning)">⏳ ${pendientes} pendientes</span>
-            <span class="stat-item" style="color: var(--danger)">✗ ${rechazadas} rechazadas</span>
-        `;
-        lista.appendChild(stats);
 
     } catch (err) {
         console.error('Error al cargar completaciones:', err);
@@ -673,6 +1206,259 @@ async function cargarMisCompletaciones() {
     }
 }
 
+// ========== CARGAR ESTADÍSTICAS ========== 
+async function cargarEstadisticas() {
+    // Contar por estado
+    const aprobadas = misCompletaciones.filter(c => c.estado === 'aprobado').length;
+    const pendientes = misCompletaciones.filter(c => c.estado === 'pendiente').length;
+    const rechazadas = misCompletaciones.filter(c => c.estado === 'rechazado').length;
+    
+    document.getElementById('statAprobadas').textContent = aprobadas;
+    document.getElementById('statPendientes').textContent = pendientes;
+    document.getElementById('statRechazadas').textContent = rechazadas;
+    
+    // Calcular puntos
+    let puntosTotales = 0;
+    misCompletaciones.forEach(c => {
+        if (c.estado === 'aprobado') {
+            const posicion = c.posicionAlCompletar || 999;
+            puntosTotales += calcularPuntos(posicion);
+        }
+    });
+    document.getElementById('statPuntos').textContent = puntosTotales;
+    
+    // Nivel más difícil (menor posición)
+    const aprobadasConPosicion = misCompletaciones
+        .filter(c => c.estado === 'aprobado' && c.posicionAlCompletar)
+        .sort((a, b) => a.posicionAlCompletar - b.posicionAlCompletar);
+    
+    const hardestDiv = document.getElementById('hardestLevel');
+    if (aprobadasConPosicion.length > 0) {
+        const hardest = aprobadasConPosicion[0];
+        hardestDiv.innerHTML = `
+            <div class="expandable-item">
+                <span class="expandable-item-name">${hardest.nivel}</span>
+                <span class="expandable-item-pos">#${hardest.posicionAlCompletar}</span>
+            </div>
+        `;
+    } else {
+        hardestDiv.innerHTML = `
+            <div class="empty-state-text" style="padding: 1rem;">
+                No tienes completaciones aprobadas todavía
+            </div>
+        `;
+    }
+}
+
+// ========== CARGAR NIVELES CREADOS ========== 
+async function cargarNivelesCreados() {
+    const listDiv = document.getElementById('listCreados');
+    const countDiv = document.getElementById('countCreados');
+    
+    const creados = todosDemons.filter(d => 
+        d.creador && d.creador.toLowerCase() === usuario.usuario.toLowerCase()
+    );
+    
+    countDiv.textContent = creados.length;
+    
+    if (creados.length === 0) {
+        listDiv.innerHTML = `
+            <div class="empty-state-text" style="padding: 1rem;">
+                No has creado ningún nivel en la lista
+            </div>
+        `;
+        return;
+    }
+    
+    creados.sort((a, b) => a.posicion - b.posicion);
+    
+    listDiv.innerHTML = '';
+    creados.forEach(demon => {
+        const item = document.createElement('div');
+        item.className = 'expandable-item';
+        item.innerHTML = `
+            <span class="expandable-item-name">${demon.name}</span>
+            <span class="expandable-item-pos">#${demon.posicion}</span>
+        `;
+        listDiv.appendChild(item);
+    });
+}
+
+// ========== CARGAR NIVELES VERIFICADOS ========== 
+async function cargarNivelesVerificados() {
+    const listDiv = document.getElementById('listVerificados');
+    const countDiv = document.getElementById('countVerificados');
+    
+    const verificados = todosDemons.filter(d => 
+        d.verificador && d.verificador.toLowerCase() === usuario.usuario.toLowerCase()
+    );
+    
+    countDiv.textContent = verificados.length;
+    
+    if (verificados.length === 0) {
+        listDiv.innerHTML = `
+            <div class="empty-state-text" style="padding: 1rem;">
+                No has verificado ningún nivel en la lista
+            </div>
+        `;
+        return;
+    }
+    
+    verificados.sort((a, b) => a.posicion - b.posicion);
+    
+    listDiv.innerHTML = '';
+    verificados.forEach(demon => {
+        const item = document.createElement('div');
+        item.className = 'expandable-item';
+        item.innerHTML = `
+            <span class="expandable-item-name">${demon.name}</span>
+            <span class="expandable-item-pos">#${demon.posicion}</span>
+        `;
+        listDiv.appendChild(item);
+    });
+}
+
+// ========== FUNCIÓN DE PUNTOS ========== 
+function calcularPuntos(posicion) {
+    if (posicion > 30 || posicion < 1) return 0;
+    const maxPoints = 100;
+    const minPoints = 1;
+    const decay = (maxPoints - minPoints) / 29;
+    const points = maxPoints - (posicion - 1) * decay;
+    return Math.max(minPoints, Math.round(points));
+}
+
+// ========== TABS ========== 
+function switchTab(tabName) {
+    // Ocultar todos los tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Mostrar tab seleccionado
+    document.getElementById(`tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`).classList.add('active');
+    event.target.classList.add('active');
+}
+
+// ========== SECCIONES EXPANDIBLES ========== 
+function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    section.classList.toggle('open');
+}
+
+// ========== MODALES ========== 
+function openEditFotoModal() {
+    document.getElementById('inputFoto').value = perfilCompleto.fotoPerfil || '';
+    document.getElementById('modalFoto').classList.add('active');
+}
+
+function openEditDescripcionModal() {
+    document.getElementById('inputDescripcion').value = perfilCompleto.descripcion || '';
+    document.getElementById('modalDescripcion').classList.add('active');
+}
+
+function openChangePasswordModal() {
+    document.getElementById('inputPasswordActual').value = '';
+    document.getElementById('inputPasswordNueva').value = '';
+    document.getElementById('inputPasswordConfirm').value = '';
+    document.getElementById('modalPassword').classList.add('active');
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('active');
+}
+
+// ========== GUARDAR FOTO ========== 
+async function guardarFoto(event) {
+    event.preventDefault();
+    const nuevaFoto = document.getElementById('inputFoto').value.trim();
+    
+    try {
+        const res = await fetch(`${API}/cuentas/${usuario.usuario}/foto-perfil`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fotoPerfil: nuevaFoto || null })
+        });
+        
+        if (!res.ok) throw new Error('Error al actualizar foto');
+        
+        alert('✅ Foto de perfil actualizada correctamente');
+        closeModal('modalFoto');
+        await cargarPerfil();
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error al actualizar la foto de perfil');
+    }
+}
+
+// ========== GUARDAR DESCRIPCIÓN ========== 
+async function guardarDescripcion(event) {
+    event.preventDefault();
+    const nuevaDesc = document.getElementById('inputDescripcion').value.trim();
+    
+    try {
+        const res = await fetch(`${API}/cuentas/${usuario.usuario}/descripcion`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ descripcion: nuevaDesc })
+        });
+        
+        if (!res.ok) throw new Error('Error al actualizar descripción');
+        
+        alert('✅ Descripción actualizada correctamente');
+        closeModal('modalDescripcion');
+        await cargarPerfil();
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error al actualizar la descripción');
+    }
+}
+
+// ========== CAMBIAR CONTRASEÑA ========== 
+async function cambiarPassword(event) {
+    event.preventDefault();
+    const actual = document.getElementById('inputPasswordActual').value;
+    const nueva = document.getElementById('inputPasswordNueva').value;
+    const confirmar = document.getElementById('inputPasswordConfirm').value;
+    
+    if (nueva !== confirmar) {
+        alert('❌ Las contraseñas no coinciden');
+        return;
+    }
+    
+    if (nueva.length < 6) {
+        alert('❌ La contraseña debe tener al menos 6 caracteres');
+        return;
+    }
+    
+    try {
+        const res = await fetch(`${API}/cuentas/${usuario.usuario}/contraseña`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                contraseñaActual: actual, 
+                contraseñaNueva: nueva 
+            })
+        });
+        
+        if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.error || 'Error al cambiar contraseña');
+        }
+        
+        alert('✅ Contraseña cambiada correctamente. Por favor, inicia sesión nuevamente.');
+        localStorage.removeItem('usuarioLogeado');
+        window.location.href = 'index.html';
+    } catch (error) {
+        console.error('Error:', error);
+        alert(`❌ ${error.message}`);
+    }
+}
+
+// ========== TEMA ========== 
 function toggleTheme() {
     document.body.classList.toggle('light-mode');
     localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
@@ -683,8 +1469,17 @@ if (localStorage.getItem('theme') === 'light') {
     document.body.classList.add('light-mode');
 }
 
-// Inicializar
-cargarMisCompletaciones();
+// Cerrar modales al hacer clic fuera
+document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+        }
+    });
+});
+
+// ========== INICIALIZAR ========== 
+inicializar();
 </script>
 
 </body>
