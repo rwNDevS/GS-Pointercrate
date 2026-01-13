@@ -17,6 +17,9 @@
             --gold: #FFD700;
             --silver: #C0C0C0;
             --bronze: #CD7F32;
+            --success: #2ecc71;
+            --warning: #f1c40f;
+            --danger: #e74c3c;
         }
 
         .light-mode {
@@ -43,28 +46,27 @@
             transition: 0.3s ease;
         }
 
-        /* HEADER - MOBILE FIRST */
+        /* Header igual a la demonlist */
         header {
             background: var(--bg-card);
             border-bottom: 1px solid var(--border);
-            padding: 1rem 3%;
+            padding: 1rem 5%;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 1000;
-            gap: 0.8rem;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .logo {
             font-weight: 800;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             color: var(--text-main);
             text-decoration: none;
-            width: 100%;
-            text-align: center;
+            margin-right: 20px;
         }
 
         .logo span {
@@ -73,31 +75,25 @@
 
         .nav-group {
             display: flex;
-            gap: 8px;
+            gap: 12px;
             align-items: center;
             flex-wrap: wrap;
-            justify-content: center;
-            width: 100%;
         }
 
         .btn {
             background: none;
             border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 0.6rem 1rem;
+            padding: 0.7rem 1.4rem;
             cursor: pointer;
             font-weight: 700;
             border-radius: 4px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             text-decoration: none;
             transition: 0.2s;
             text-transform: uppercase;
             white-space: nowrap;
             font-family: 'Montserrat', sans-serif;
-            min-height: 44px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .btn:hover {
@@ -107,24 +103,55 @@
 
         .theme-toggle {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: var(--accent);
             border: none;
             color: white;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             cursor: pointer;
             z-index: 5000;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
-        /* MAIN CONTENT - MOBILE FIRST */
+        .reload-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #2ecc71;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 5000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+        }
+
+        .reload-btn:hover {
+            transform: rotate(180deg);
+            filter: brightness(1.2);
+        }
+
+        .reload-btn.spinning {
+            animation: spin 1s linear;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Main content */
         main {
             max-width: 1200px;
-            margin: 1.5rem auto;
+            margin: 3rem auto;
             padding: 0 1rem;
         }
 
@@ -132,25 +159,24 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 2.5rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
 
         .section-title {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 800;
             color: var(--accent);
             border-bottom: 3px solid var(--accent);
             padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             text-transform: uppercase;
-            word-wrap: break-word;
         }
 
-        /* TABLA RESPONSIVE - CARDS EN MÓVIL */
         .ranking-table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
         }
 
         .ranking-table thead {
@@ -167,11 +193,10 @@
             background: rgba(255,255,255,0.02);
             border: 1px solid var(--border);
             border-radius: 8px;
-            display: grid;
-            grid-template-columns: auto 1fr;
-            grid-template-rows: auto auto auto;
-            gap: 0.8rem;
-            padding: 1rem;
+            display: flex;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            gap: 1.5rem;
             transition: all 0.3s ease;
             cursor: pointer;
         }
@@ -179,92 +204,59 @@
         .ranking-table tbody tr:hover {
             background: rgba(255,255,255,0.05);
             border-color: var(--accent);
-            transform: translateX(5px);
+            transform: translateX(10px);
         }
 
         .ranking-table tbody td {
-            font-size: 0.95rem;
+            font-size: 1rem;
             color: var(--text-main);
             padding: 0;
             display: flex;
             align-items: center;
         }
 
-        /* Grid layout para móvil */
-        .ranking-table tbody td:nth-child(1) {
-            grid-row: 1 / 2;
-            grid-column: 1 / 2;
-        }
-
-        .ranking-table tbody td:nth-child(2) {
-            grid-row: 1 / 2;
-            grid-column: 2 / 3;
-            font-weight: 700;
-            font-size: 1.1rem;
-            word-break: break-word;
-        }
-
-        .ranking-table tbody td:nth-child(3) {
-            grid-row: 2 / 3;
-            grid-column: 1 / 2;
-        }
-
-        .ranking-table tbody td:nth-child(4) {
-            grid-row: 2 / 3;
-            grid-column: 2 / 3;
-        }
-
-        .ranking-table tbody td:nth-child(5) {
-            grid-row: 3 / 4;
-            grid-column: 1 / 3;
-        }
-
         .rank-circle {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             font-weight: 800;
-            font-size: 1rem;
+            font-size: 1.2rem;
             color: var(--bg-body);
             background: var(--text-main);
-            min-width: 40px;
+            min-width: 50px;
+        }
+
+        .ranking-table tbody td:nth-child(2) {
+            font-weight: 700;
+            font-size: 1.3rem;
+            flex-grow: 1;
         }
 
         .records-badge, .points-badge {
             background: rgba(33, 150, 243, 0.1);
             color: var(--accent);
-            padding: 0.4rem 0.8rem;
+            padding: 0.5rem 1rem;
             border-radius: 4px;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             white-space: nowrap;
-        }
-
-        .records-badge::before {
-            content: '📊 ';
-        }
-
-        .points-badge::before {
-            content: '⭐ ';
         }
 
         .view-records-btn {
             background: var(--accent);
             border: none;
-            padding: 0.8rem 1.2rem;
+            padding: 0.75rem 1.5rem;
             border-radius: 4px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: white;
             transition: all 0.2s ease;
             text-transform: uppercase;
             font-family: 'Montserrat', sans-serif;
-            width: 100%;
-            min-height: 48px;
         }
 
         .view-records-btn:hover {
@@ -272,15 +264,11 @@
             transform: translateY(-2px);
         }
 
-        .view-records-btn:active {
-            transform: translateY(0);
-        }
-
-        /* TOP 3 STYLES */
+        /* Top 3 styles */
         .ranking-table tbody tr.top-1 {
             border: 2px solid var(--gold);
             background: linear-gradient(90deg, rgba(255,215,0,0.05), var(--bg-card));
-            box-shadow: 0 0 15px rgba(255,215,0,0.2);
+            box-shadow: 0 0 20px rgba(255,215,0,0.2);
         }
 
         .ranking-table tbody tr.top-1 .rank-circle {
@@ -301,7 +289,7 @@
         .ranking-table tbody tr.top-2 {
             border: 2px solid var(--silver);
             background: linear-gradient(90deg, rgba(192,192,192,0.05), var(--bg-card));
-            box-shadow: 0 0 12px rgba(192,192,192,0.2);
+            box-shadow: 0 0 15px rgba(192,192,192,0.2);
         }
 
         .ranking-table tbody tr.top-2 .rank-circle {
@@ -340,16 +328,17 @@
             color: var(--bg-body);
         }
 
-        /* PANEL LATERAL - MOBILE FIRST */
+        /* Panel lateral - EXPANDIDO */
         .details-panel {
             position: fixed;
             top: 0;
-            right: -100%;
-            width: 100%;
+            right: -600px;
+            width: 600px;
             height: 100%;
             background: var(--bg-modal);
+            border-left: 1px solid var(--border);
             box-shadow: -5px 0 25px rgba(0,0,0,0.7);
-            padding: 1.5rem;
+            padding: 0;
             transition: right 0.4s ease;
             z-index: 2000;
             overflow-y: auto;
@@ -360,44 +349,265 @@
         }
 
         .details-panel-header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-modal);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--accent);
+            z-index: 10;
         }
 
         .details-panel-header h3 {
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: var(--accent);
-            word-wrap: break-word;
-            flex: 1;
-            padding-right: 1rem;
         }
 
         .close-btn {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+            background: none;
+            border: none;
             color: var(--text-dim);
-            font-size: 1.8rem;
+            font-size: 2rem;
             cursor: pointer;
             transition: color 0.2s;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
         }
 
         .close-btn:hover {
             color: var(--accent);
-            border-color: var(--accent);
         }
 
+        /* Perfil en panel lateral */
+        .panel-content {
+            padding: 2rem;
+        }
+
+        .profile-mini {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .profile-avatar-mini {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+            background: var(--bg-body);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .profile-avatar-mini img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-info-mini {
+            text-align: center;
+            width: 100%;
+        }
+
+        .profile-username-mini {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            word-break: break-word;
+        }
+
+        .profile-role-mini {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+        }
+
+        .profile-description-mini {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        /* Tabs */
+        .panel-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .panel-tab {
+            padding: 0.8rem 1rem;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .panel-tab:hover {
+            color: var(--accent);
+        }
+
+        .panel-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .panel-tab-content {
+            display: none;
+        }
+
+        .panel-tab-content.active {
+            display: block;
+        }
+
+        /* Estadísticas en panel */
+        .stats-grid-mini {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card-mini {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-value-mini {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label-mini {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Secciones expandibles */
+        .expandable-section-mini {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .expandable-header-mini {
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+            user-select: none;
+        }
+
+        .expandable-header-mini:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .expandable-title-mini {
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .expandable-count-mini {
+            background: var(--accent);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 800;
+        }
+
+        .expandable-arrow-mini {
+            font-size: 1rem;
+            transition: transform 0.3s;
+        }
+
+        .expandable-section-mini.open .expandable-arrow-mini {
+            transform: rotate(180deg);
+        }
+
+        .expandable-content-mini {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .expandable-section-mini.open .expandable-content-mini {
+            max-height: 1000px;
+        }
+
+        .expandable-list-mini {
+            padding: 0 1rem 1rem 1rem;
+        }
+
+        .expandable-item-mini {
+            padding: 0.8rem;
+            background: var(--bg-body);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .expandable-item-name-mini {
+            font-weight: 600;
+            word-break: break-word;
+            font-size: 0.9rem;
+        }
+
+        .expandable-item-pos-mini {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        /* Lista de completaciones */
         .completions-list {
             list-style: none;
             padding: 0;
@@ -411,7 +621,7 @@
             background: rgba(255,255,255,0.02);
             padding: 1rem;
             border-radius: 8px;
-            border-left: 4px solid var(--accent);
+            border-left: 4px solid var(--success);
             transition: all 0.2s ease;
         }
 
@@ -423,8 +633,8 @@
         .demon-info {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            margin-bottom: 1rem;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
         }
 
         .demon-name {
@@ -432,20 +642,18 @@
             font-weight: 700;
             color: var(--accent);
             flex-grow: 1;
-            word-break: break-word;
         }
 
         .difficulty-img {
             height: 35px;
             width: 35px;
             object-fit: contain;
-            flex-shrink: 0;
         }
 
         .stats {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.3rem;
             font-size: 0.85rem;
             color: var(--text-main);
         }
@@ -458,154 +666,144 @@
         .loading-text, .empty-list {
             text-align: center;
             color: var(--text-dim);
-            padding: 1.5rem;
+            padding: 2rem;
             font-style: italic;
             font-size: 0.9rem;
         }
 
-        /* TABLETS Y SUPERIORES (768px+) */
-        @media (min-width: 768px) {
+        /* RESPONSIVE MÓVIL */
+        @media (max-width: 768px) {
             header {
-                padding: 1rem 5%;
-                justify-content: space-between;
-            }
-
-            .logo {
-                font-size: 1.5rem;
-                width: auto;
-                text-align: left;
+                padding: 0.8rem 3%;
+                gap: 8px;
             }
 
             .nav-group {
-                gap: 12px;
-                width: auto;
-                justify-content: flex-start;
+                gap: 6px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+                margin-right: 0;
+                width: 100%;
+                text-align: center;
             }
 
             .btn {
-                padding: 0.7rem 1.4rem;
-                font-size: 0.8rem;
+                padding: 0.5rem 0.8rem;
+                font-size: 0.7rem;
             }
 
             main {
-                margin: 3rem auto;
-                padding: 0 2rem;
+                margin: 1.5rem auto;
+                padding: 0 0.8rem;
             }
 
             .ranking-container {
-                padding: 2.5rem;
-            }
-
-            .section-title {
-                font-size: 1.8rem;
-                margin-bottom: 2rem;
-            }
-
-            /* Tabla tradicional en desktop */
-            .ranking-table tbody tr {
-                display: flex;
-                align-items: center;
-                padding: 1.5rem 2rem;
-                gap: 1.5rem;
-            }
-
-            .ranking-table tbody tr:hover {
-                transform: translateX(10px);
-            }
-
-            .ranking-table tbody td:nth-child(1) {
-                flex: 0 0 auto;
-            }
-
-            .ranking-table tbody td:nth-child(2) {
-                font-size: 1.3rem;
-                flex-grow: 1;
-            }
-
-            .ranking-table tbody td:nth-child(3),
-            .ranking-table tbody td:nth-child(4) {
-                flex: 0 0 auto;
-            }
-
-            .ranking-table tbody td:nth-child(5) {
-                flex: 0 0 auto;
-            }
-
-            .rank-circle {
-                width: 50px;
-                height: 50px;
-                font-size: 1.2rem;
-            }
-
-            .records-badge, .points-badge {
-                padding: 0.5rem 1rem;
-                font-size: 0.9rem;
-            }
-
-            .view-records-btn {
-                padding: 0.75rem 1.5rem;
-                font-size: 0.8rem;
-                width: auto;
-            }
-
-            .theme-toggle {
-                width: 60px;
-                height: 60px;
-                font-size: 1.5rem;
-                bottom: 30px;
-                right: 30px;
-            }
-
-            .details-panel {
-                width: 400px;
-                right: -400px;
-                padding: 2rem;
-            }
-
-            .details-panel-header h3 {
-                font-size: 1.5rem;
-            }
-
-            .close-btn {
-                font-size: 2rem;
-            }
-
-            .completions-list li {
                 padding: 1.5rem;
             }
 
-            .demon-name {
-                font-size: 1.2rem;
+            .section-title {
+                font-size: 1.3rem;
+                margin-bottom: 1.5rem;
             }
 
-            .difficulty-img {
-                height: 40px;
+            .ranking-table tbody tr {
+                padding: 1rem;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .rank-circle {
                 width: 40px;
-            }
-
-            .stats {
-                font-size: 0.9rem;
-            }
-
-            .loading-text, .empty-list {
-                padding: 2rem;
+                height: 40px;
                 font-size: 1rem;
+                min-width: 40px;
+            }
+
+            .ranking-table tbody td:nth-child(2) {
+                font-size: 1.1rem;
+                flex-basis: 100%;
+            }
+
+            .records-badge, .points-badge {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .view-records-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.7rem;
+                margin-top: 0.5rem;
+            }
+
+            .theme-toggle {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .reload-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+                bottom: 80px;
+                right: 20px;
+            }
+
+            .details-panel {
+                width: 100%;
+                right: -100%;
+                padding: 0;
+            }
+
+            .details-panel.open {
+                right: 0;
+            }
+
+            .panel-content {
+                padding: 1.5rem;
+            }
+
+            .profile-avatar-mini {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+
+            .profile-username-mini {
+                font-size: 1.3rem;
+            }
+
+            .stats-grid-mini {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+
+            .stat-card-mini {
+                padding: 0.8rem;
+            }
+
+            .stat-value-mini {
+                font-size: 1.3rem;
             }
         }
 
-        /* PANTALLAS MUY PEQUEÑAS (menos de 360px) */
-        @media (max-width: 359px) {
+        @media (max-width: 480px) {
             .ranking-container {
                 padding: 1rem;
             }
 
             .section-title {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
             }
 
             .ranking-table tbody tr {
                 padding: 0.8rem;
-                gap: 0.6rem;
             }
 
             .rank-circle {
@@ -617,16 +815,6 @@
 
             .ranking-table tbody td:nth-child(2) {
                 font-size: 1rem;
-            }
-
-            .records-badge, .points-badge {
-                padding: 0.3rem 0.6rem;
-                font-size: 0.75rem;
-            }
-
-            .view-records-btn {
-                padding: 0.7rem 1rem;
-                font-size: 0.75rem;
             }
 
             .demon-name {
@@ -641,9 +829,13 @@
             .stats {
                 font-size: 0.8rem;
             }
+
+            .panel-content {
+                padding: 1rem;
+            }
         }
 
-        /* SCROLL PERSONALIZADO */
+        /* Scroll personalizado */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -664,11 +856,12 @@
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema">🌓</button>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    <button class="reload-btn" onclick="recargarDatos()" title="Recargar datos">🔄</button>
 
     <header>
-        <a href="demonlist.html" class="logo">GDPS <span>LIST</span></a>
         <div class="nav-group">
+            <a href="demonlist.html" class="logo">GDPS <span>LIST</span></a>
             <a href="demonlist.html" class="btn">Demonlist</a>
             <a href="top.html" class="btn">Top</a>
             <a href="reglas.html" class="btn">Reglas</a>
@@ -695,21 +888,114 @@
         </div>
     </main>
 
-    <!-- Panel Lateral de Completaciones -->
+    <!-- Panel Lateral con Perfil Completo -->
     <div class="details-panel" id="detailsPanel">
         <div class="details-panel-header">
-            <h3 id="detailsTitle">Completaciones</h3>
-            <button id="closeBtn" class="close-btn" aria-label="Cerrar">&times;</button>
+            <h3 id="detailsTitle">Perfil</h3>
+            <button id="closeBtn" class="close-btn">&times;</button>
         </div>
-        <ul id="completionsList" class="completions-list">
-            <li class="empty-list">Selecciona un jugador para ver sus records.</li>
-        </ul>
+        
+        <div class="panel-content">
+            <!-- Perfil Mini -->
+            <div class="profile-mini">
+                <div class="profile-avatar-mini" id="profileAvatar">👤</div>
+                <div class="profile-info-mini">
+                    <div class="profile-username-mini" id="profileUsername">Usuario</div>
+                    <span class="profile-role-mini" id="profileRole">Jugador</span>
+                    <p class="profile-description-mini" id="profileDescription">Sin descripción</p>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="panel-tabs">
+                <button class="panel-tab active" onclick="switchPanelTab('estadisticas')">📊 Estadísticas</button>
+                <button class="panel-tab" onclick="switchPanelTab('completaciones')">🎯 Records</button>
+                <button class="panel-tab" onclick="switchPanelTab('niveles')">🎮 Niveles</button>
+            </div>
+
+            <!-- Tab: Estadísticas -->
+            <div id="panelTabEstadisticas" class="panel-tab-content active">
+                <div class="stats-grid-mini">
+                    <div class="stat-card-mini">
+                        <div class="stat-value-mini" id="statAprobadas">0</div>
+                        <div class="stat-label-mini">✓ Aprobadas</div>
+                    </div>
+                    <div class="stat-card-mini">
+                        <div class="stat-value-mini" id="statPendientes">0</div>
+                        <div class="stat-label-mini">⏳ Pendientes</div>
+                    </div>
+                    <div class="stat-card-mini">
+                        <div class="stat-value-mini" id="statRechazadas">0</div>
+                        <div class="stat-label-mini">✗ Rechazadas</div>
+                    </div>
+                    <div class="stat-card-mini">
+                        <div class="stat-value-mini" id="statPuntos">0</div>
+                        <div class="stat-label-mini">🏆 Puntos</div>
+                    </div>
+                </div>
+
+                <div class="expandable-section-mini" id="hardestSection">
+                    <div class="expandable-header-mini" onclick="togglePanelSection('hardestSection')">
+                        <div class="expandable-title-mini">
+                            <span>🔥 Nivel Más Difícil</span>
+                        </div>
+                        <span class="expandable-arrow-mini">▼</span>
+                    </div>
+                    <div class="expandable-content-mini">
+                        <div class="expandable-list-mini">
+                            <div id="hardestLevel" class="loading-text">Calculando...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Completaciones -->
+            <div id="panelTabCompletaciones" class="panel-tab-content">
+                <ul id="completionsList" class="completions-list">
+                    <li class="empty-list">Cargando...</li>
+                </ul>
+            </div>
+
+            <!-- Tab: Niveles -->
+            <div id="panelTabNiveles" class="panel-tab-content">
+                <div class="expandable-section-mini" id="creadosSection">
+                    <div class="expandable-header-mini" onclick="togglePanelSection('creadosSection')">
+                        <div class="expandable-title-mini">
+                            <span>🎨 Creados</span>
+                            <span class="expandable-count-mini" id="countCreados">0</span>
+                        </div>
+                        <span class="expandable-arrow-mini">▼</span>
+                    </div>
+                    <div class="expandable-content-mini">
+                        <div class="expandable-list-mini" id="listCreados">
+                            <div class="loading-text">Cargando...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="expandable-section-mini" id="verificadosSection">
+                    <div class="expandable-header-mini" onclick="togglePanelSection('verificadosSection')">
+                        <div class="expandable-title-mini">
+                            <span>✓ Verificados</span>
+                            <span class="expandable-count-mini" id="countVerificados">0</span>
+                        </div>
+                        <span class="expandable-arrow-mini">▼</span>
+                    </div>
+                    <div class="expandable-content-mini">
+                        <div class="expandable-list-mini" id="listVerificados">
+                            <div class="loading-text">Cargando...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
         const API_URL = 'https://pointcrate.purriau.com';
         let allCompletions = [];
         let demonMap = new Map();
+        let currentUserProfile = null;
 
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
@@ -721,13 +1007,23 @@
             document.body.classList.add('light-mode');
         }
 
-        // Mapa de imágenes para las dificultades
+        async function recargarDatos() {
+            const reloadBtn = document.querySelector('.reload-btn');
+            reloadBtn.classList.add('spinning');
+            
+            await cargarDatosIniciales();
+            
+            setTimeout(() => {
+                reloadBtn.classList.remove('spinning');
+            }, 1000);
+        }
+
         const difficultyImages = {
             'Easy Demon': 'public/easy.png',
             'Medium Demon': 'public/medium.png',
-            'Hard': '/hard.png',
-            'Insane': '/insane.png',
-            'Extreme': '/extreme.png',
+            'Hard Demon': 'public/hard.png',
+            'Insane Demon': 'public/insane.png',
+            'Extreme Demon': 'public/extreme.png',
         };
 
         async function cargarDatosIniciales() {
@@ -780,7 +1076,7 @@
                     <td>${user.usuario}</td>
                     <td><span class="records-badge">${user.completaciones}</span></td>
                     <td><span class="points-badge">${user.puntos}</span></td>
-                    <td><button class="view-records-btn" data-username="${user.usuario}">Ver Records</button></td>
+                    <td><button class="view-records-btn" data-username="${user.usuario}">Ver Perfil</button></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -790,16 +1086,116 @@
             });
         }
 
-        function manejarClicViewRecords(event) {
+        async function manejarClicViewRecords(event) {
             event.stopPropagation();
             const username = event.target.dataset.username;
-            const detailsPanel = document.getElementById('detailsPanel');
-            const completionsList = document.getElementById('completionsList');
-            const detailsTitle = document.getElementById('detailsTitle');
+            await cargarPerfilCompleto(username);
+        }
 
-            detailsTitle.textContent = `Completaciones de ${username}`;
-            completionsList.innerHTML = '';
+        async function cargarPerfilCompleto(username) {
+            const detailsPanel = document.getElementById('detailsPanel');
+            const detailsTitle = document.getElementById('detailsTitle');
+            
+            detailsTitle.textContent = `Perfil de ${username}`;
             detailsPanel.classList.add('open');
+
+            // Resetear tabs
+            switchPanelTab('estadisticas');
+
+            // Cargar perfil del usuario
+            try {
+                const res = await fetch(`${API_URL}/api/cuentas/${username}/perfil`);
+                if (res.ok) {
+                    currentUserProfile = await res.json();
+                } else {
+                    // Si no existe perfil completo, usar datos básicos
+                    currentUserProfile = {
+                        usuario: username,
+                        rol: 'usuario',
+                        fotoPerfil: null,
+                        descripcion: ''
+                    };
+                }
+
+                // Actualizar UI del perfil
+                document.getElementById('profileUsername').textContent = currentUserProfile.usuario;
+                document.getElementById('profileRole').textContent = currentUserProfile.rol.toUpperCase();
+                
+                const avatarDiv = document.getElementById('profileAvatar');
+                if (currentUserProfile.fotoPerfil) {
+                    avatarDiv.innerHTML = `<img src="${currentUserProfile.fotoPerfil}" alt="Foto de perfil" onerror="this.parentElement.innerHTML='👤'">`;
+                } else {
+                    avatarDiv.innerHTML = '👤';
+                }
+                
+                const descDiv = document.getElementById('profileDescription');
+                if (currentUserProfile.descripcion && currentUserProfile.descripcion.trim()) {
+                    descDiv.textContent = currentUserProfile.descripcion;
+                    descDiv.style.fontStyle = 'normal';
+                } else {
+                    descDiv.textContent = 'Sin descripción';
+                    descDiv.style.fontStyle = 'italic';
+                }
+
+            } catch (error) {
+                console.error('Error cargando perfil:', error);
+                currentUserProfile = {
+                    usuario: username,
+                    rol: 'usuario',
+                    fotoPerfil: null,
+                    descripcion: ''
+                };
+            }
+
+            // Cargar estadísticas y completaciones
+            await cargarEstadisticasUsuario(username);
+            await cargarCompletacionesUsuario(username);
+            await cargarNivelesUsuario(username);
+        }
+
+        async function cargarEstadisticasUsuario(username) {
+            const userCompletions = allCompletions.filter(c => c.usuario === username);
+            
+            const aprobadas = userCompletions.filter(c => c.estado === 'aprobado').length;
+            const pendientes = userCompletions.filter(c => c.estado === 'pendiente').length;
+            const rechazadas = userCompletions.filter(c => c.estado === 'rechazado').length;
+            
+            document.getElementById('statAprobadas').textContent = aprobadas;
+            document.getElementById('statPendientes').textContent = pendientes;
+            document.getElementById('statRechazadas').textContent = rechazadas;
+            
+            // Calcular puntos
+            let puntosTotales = 0;
+            userCompletions.forEach(c => {
+                if (c.estado === 'aprobado') {
+                    const posicion = c.posicionAlCompletar || 999;
+                    puntosTotales += calcularPuntos(posicion);
+                }
+            });
+            document.getElementById('statPuntos').textContent = puntosTotales;
+            
+            // Nivel más difícil
+            const aprobadasConPosicion = userCompletions
+                .filter(c => c.estado === 'aprobado' && c.posicionAlCompletar)
+                .sort((a, b) => a.posicionAlCompletar - b.posicionAlCompletar);
+            
+            const hardestDiv = document.getElementById('hardestLevel');
+            if (aprobadasConPosicion.length > 0) {
+                const hardest = aprobadasConPosicion[0];
+                hardestDiv.innerHTML = `
+                    <div class="expandable-item-mini">
+                        <span class="expandable-item-name-mini">${hardest.nivel}</span>
+                        <span class="expandable-item-pos-mini">#${hardest.posicionAlCompletar}</span>
+                    </div>
+                `;
+            } else {
+                hardestDiv.innerHTML = `<div class="empty-list">No tiene completaciones aprobadas</div>`;
+            }
+        }
+
+        async function cargarCompletacionesUsuario(username) {
+            const completionsList = document.getElementById('completionsList');
+            completionsList.innerHTML = '';
 
             const userCompletions = allCompletions.filter(c => c.usuario === username && c.estado === 'aprobado');
 
@@ -810,11 +1206,9 @@
 
             userCompletions.forEach(comp => {
                 const demon = demonMap.get(comp.nivel);
-
                 const topAlCompletar = comp.posicionAlCompletar ? `#${comp.posicionAlCompletar}` : 'No disponible';
                 const topActual = demon ? `#${demon.posicion}` : 'N/A';
-                const difficulty = demon ? demon.difficulty : 'Unknown';
-
+                const difficulty = demon ? demon.dificultad : 'Unknown';
                 const difficultyImgSrc = difficultyImages[difficulty] || 'unknown.png';
 
                 const li = document.createElement('li');
@@ -830,6 +1224,82 @@
                 `;
                 completionsList.appendChild(li);
             });
+        }
+
+        async function cargarNivelesUsuario(username) {
+            // Niveles creados
+            const creados = Array.from(demonMap.values()).filter(d => 
+                d.creador && d.creador.toLowerCase() === username.toLowerCase()
+            );
+            
+            document.getElementById('countCreados').textContent = creados.length;
+            const listCreados = document.getElementById('listCreados');
+            
+            if (creados.length === 0) {
+                listCreados.innerHTML = `<div class="empty-list">No ha creado ningún nivel</div>`;
+            } else {
+                creados.sort((a, b) => a.posicion - b.posicion);
+                listCreados.innerHTML = '';
+                creados.forEach(demon => {
+                    const item = document.createElement('div');
+                    item.className = 'expandable-item-mini';
+                    item.innerHTML = `
+                        <span class="expandable-item-name-mini">${demon.name}</span>
+                        <span class="expandable-item-pos-mini">#${demon.posicion}</span>
+                    `;
+                    listCreados.appendChild(item);
+                });
+            }
+            
+            // Niveles verificados
+            const verificados = Array.from(demonMap.values()).filter(d => 
+                d.verificador && d.verificador.toLowerCase() === username.toLowerCase()
+            );
+            
+            document.getElementById('countVerificados').textContent = verificados.length;
+            const listVerificados = document.getElementById('listVerificados');
+            
+            if (verificados.length === 0) {
+                listVerificados.innerHTML = `<div class="empty-list">No ha verificado ningún nivel</div>`;
+            } else {
+                verificados.sort((a, b) => a.posicion - b.posicion);
+                listVerificados.innerHTML = '';
+                verificados.forEach(demon => {
+                    const item = document.createElement('div');
+                    item.className = 'expandable-item-mini';
+                    item.innerHTML = `
+                        <span class="expandable-item-name-mini">${demon.name}</span>
+                        <span class="expandable-item-pos-mini">#${demon.posicion}</span>
+                    `;
+                    listVerificados.appendChild(item);
+                });
+            }
+        }
+
+        function calcularPuntos(posicion) {
+            if (posicion > 30 || posicion < 1) return 0;
+            const maxPoints = 100;
+            const minPoints = 1;
+            const decay = (maxPoints - minPoints) / 29;
+            const points = maxPoints - (posicion - 1) * decay;
+            return Math.max(minPoints, Math.round(points));
+        }
+
+        function switchPanelTab(tabName) {
+            document.querySelectorAll('.panel-tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.panel-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(`panelTab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function togglePanelSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('open');
         }
 
         document.getElementById('closeBtn').addEventListener('click', () => {
