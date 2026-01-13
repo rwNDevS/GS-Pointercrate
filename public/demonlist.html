@@ -6,7 +6,6 @@
     <title>GDPS Demonlist - Extreme Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
-
     <style>
         :root {
             --bg-body: #050505;
@@ -18,7 +17,6 @@
             --border: #222;
         }
 
-
         .light-mode {
             --bg-body: #f0f2f5;
             --bg-card: #ffffff;
@@ -29,7 +27,6 @@
             --border: #ddd;
         }
 
-
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: var(--bg-body);
@@ -37,7 +34,6 @@
             margin: 0;
             transition: 0.3s ease;
         }
-
 
         header {
             background: var(--bg-card);
@@ -52,13 +48,11 @@
             flex-wrap: wrap;
         }
 
-
         .nav-group { 
             display: flex; 
             gap: 12px; 
             align-items: center;
         }
-
 
         .btn {
             background: none;
@@ -75,10 +69,8 @@
             white-space: nowrap;
         }
 
-
         .btn:hover { border-color: var(--accent); color: var(--accent); }
         .btn.active { background: var(--accent); color: white; border-color: var(--accent); }
-
 
         .btn-admin {
             background: #f1c40f;
@@ -90,6 +82,67 @@
             color: #000;
         }
 
+        /* NUEVO: Perfil de usuario clickeable */
+        .user-profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.5rem 1rem;
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .user-profile-btn:hover {
+            background: rgba(33, 150, 243, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent);
+            background: var(--bg-body);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            line-height: 1;
+        }
+
+        .user-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-top: 0.2rem;
+        }
 
         /* Menú hamburguesa */
         .hamburger {
@@ -100,7 +153,6 @@
             padding: 8px;
         }
 
-
         .hamburger span {
             width: 25px;
             height: 3px;
@@ -108,7 +160,6 @@
             border-radius: 3px;
             transition: 0.3s;
         }
-
 
         .mobile-menu {
             display: none;
@@ -125,11 +176,9 @@
             padding: 80px 20px 20px;
         }
 
-
         .mobile-menu.active {
             right: 0;
         }
-
 
         .mobile-overlay {
             display: none;
@@ -142,11 +191,9 @@
             z-index: 9997;
         }
 
-
         .mobile-overlay.active {
             display: block;
         }
-
 
         .mobile-menu-header {
             display: flex;
@@ -161,13 +208,11 @@
             border-bottom: 1px solid var(--border);
         }
 
-
         .mobile-menu-close {
             font-size: 2rem;
             cursor: pointer;
             color: var(--text-main);
         }
-
 
         .mobile-menu .btn,
         .mobile-menu .nav-group {
@@ -177,15 +222,38 @@
             text-align: center;
         }
 
-
-        .mobile-menu #userDisp {
-            display: block;
+        /* NUEVO: Perfil en menú móvil */
+        .mobile-user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             padding: 1rem;
-            font-weight: 700;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 20px;
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-main);
         }
 
+        .mobile-user-profile:hover {
+            background: rgba(33, 150, 243, 0.2);
+        }
+
+        .mobile-user-profile .user-avatar {
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+        }
+
+        .mobile-user-profile .user-info {
+            flex: 1;
+        }
+
+        .mobile-user-profile .user-name {
+            font-size: 1rem;
+        }
 
         main {
             max-width: 1200px;
@@ -196,12 +264,10 @@
             padding: 0 1rem;
         }
 
-
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
 
         .demon-card {
             background: var(--bg-card);
@@ -216,25 +282,21 @@
             transition: 0.2s;
         }
 
-
         .demon-card:hover {
             transform: translateX(10px);
             border-left: 5px solid var(--accent);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-
         .rank { font-size: 2.2rem; font-weight: 800; min-width: 90px; }
         .info { flex-grow: 1; }
         .title { font-size: 1.6rem; font-weight: 800; color: var(--accent); }
-
 
         .diff-icon {
             width: 100px;
             height: 100px;
             object-fit: contain;
         }
-
 
         .separator {
             font-size: 1.5rem;
@@ -243,7 +305,6 @@
             border-bottom: 3px solid var(--accent);
             margin: 2.5rem 0 1.5rem;
         }
-
 
         .modal {
             display: none;
@@ -255,7 +316,6 @@
             align-items: center;
             padding: 1rem;
         }
-
 
         .modal-content {
             background: var(--bg-modal);
@@ -269,9 +329,7 @@
             position: relative;
         }
 
-
         .modal-header { display: flex; gap: 30px; margin-bottom: 2rem; }
-
 
         .data-box {
             background: rgba(255,255,255,0.03);
@@ -281,9 +339,7 @@
             margin-bottom: 1rem;
         }
 
-
         .record-list, .history-list { list-style: none; padding: 0; }
-
 
         .close-modal {
             position: absolute;
@@ -292,7 +348,6 @@
             font-size: 2rem;
             cursor: pointer;
         }
-
 
         .theme-toggle {
             position: fixed;
@@ -310,9 +365,7 @@
             z-index: 999;
         }
 
-
         .hidden { display: none !important; }
-
 
         .modal-title {
             font-size: 2rem;
@@ -320,7 +373,6 @@
             color: var(--accent);
             margin-bottom: 1.5rem;
         }
-
 
         .modal-subtitle {
             font-size: 1.3rem;
@@ -331,7 +383,6 @@
             border-bottom: 2px solid var(--accent);
             padding-bottom: 0.5rem;
         }
-
 
         .points-badge {
             display: inline-block;
@@ -345,7 +396,6 @@
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
 
-
         .history-item {
             background: rgba(255,255,255,0.05);
             padding: 0.8rem 1rem;
@@ -355,7 +405,6 @@
             justify-content: space-between;
             align-items: center;
         }
-
 
         .completador-item {
             background: rgba(33, 150, 243, 0.1);
@@ -370,20 +419,17 @@
             gap: 0.5rem;
         }
 
-
         .completador-nombre {
             font-weight: 700;
             font-size: 1.1rem;
             color: var(--text-main);
         }
 
-
         .completador-details {
             color: var(--text-dim);
             font-size: 0.9rem;
             margin-top: 0.3rem;
         }
-
 
         .completador-puntos {
             background: var(--accent);
@@ -394,14 +440,12 @@
             font-size: 0.9rem;
         }
 
-
         .loading-spinner {
             text-align: center;
             padding: 2rem;
             color: var(--text-dim);
             font-size: 1.1rem;
         }
-
 
         .no-data {
             text-align: center;
@@ -410,37 +454,32 @@
             font-style: italic;
         }
 
-
         .modal-show {
             display: flex !important;
             animation: fadeIn 0.3s ease;
         }
-
 
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
 
-
         .position-change {
             font-weight: 700;
             margin-right: 1rem;
         }
-
 
         .date-text {
             color: var(--text-dim);
             font-size: 0.9rem;
         }
 
-
         .completador-left {
             flex: 1;
             min-width: 200px;
         }
 
-        /* NUEVO: Estilos para tags */
+        /* Estilos para tags */
         .tag-badge {
             display: inline-block;
             padding: 0.3rem 0.8rem;
@@ -471,7 +510,6 @@
             padding: 0.4rem 1rem;
         }
 
-
         /* RESPONSIVE DESIGN - TABLETS */
         @media (max-width: 1024px) {
             main {
@@ -480,27 +518,22 @@
                 margin: 2rem auto;
             }
 
-
             aside {
                 order: -1;
             }
 
-
             .demon-card {
                 padding: 1.2rem 1.5rem;
             }
-
 
             .rank {
                 font-size: 1.8rem;
                 min-width: 70px;
             }
 
-
             .title {
                 font-size: 1.3rem;
             }
-
 
             .diff-icon {
                 width: 80px;
@@ -508,33 +541,27 @@
             }
         }
 
-
         /* RESPONSIVE DESIGN - MÓVILES */
         @media (max-width: 768px) {
             header {
                 padding: 1rem 3%;
             }
 
-
             .logo-text {
                 font-size: 1.2rem !important;
             }
-
 
             .nav-group:not(.logo-group) {
                 display: none;
             }
 
-
             .hamburger {
                 display: flex;
             }
 
-
             .mobile-menu {
                 display: block;
             }
-
 
             main {
                 padding: 0 0.5rem;
@@ -542,33 +569,27 @@
                 gap: 1.5rem;
             }
 
-
             .demon-card {
                 padding: 1rem;
                 flex-wrap: wrap;
             }
 
-
             .demon-card:hover {
                 transform: translateX(5px);
             }
-
 
             .rank {
                 font-size: 1.5rem;
                 min-width: 50px;
             }
 
-
             .title {
                 font-size: 1.1rem;
             }
 
-
             .info {
                 font-size: 0.85rem;
             }
-
 
             .diff-icon {
                 width: 60px;
@@ -576,30 +597,25 @@
                 margin-left: auto;
             }
 
-
             .modal-content {
                 padding: 1.5rem;
                 width: 95%;
                 max-height: 90vh;
             }
 
-
             .modal-title {
                 font-size: 1.5rem;
                 padding-right: 30px;
             }
 
-
             .modal-subtitle {
                 font-size: 1.1rem;
             }
-
 
             .points-badge {
                 font-size: 1.4rem;
                 padding: 0.6rem 1.2rem;
             }
-
 
             .close-modal {
                 top: 15px;
@@ -607,36 +623,30 @@
                 font-size: 1.5rem;
             }
 
-
             .data-box {
                 padding: 1rem;
                 font-size: 0.9rem;
             }
-
 
             .completador-item {
                 flex-direction: column;
                 align-items: flex-start;
             }
 
-
             .completador-left {
                 width: 100%;
                 min-width: unset;
             }
 
-
             .completador-puntos {
                 align-self: flex-end;
             }
-
 
             .history-item {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 0.3rem;
             }
-
 
             .theme-toggle {
                 width: 50px;
@@ -646,12 +656,10 @@
                 font-size: 1.2rem;
             }
 
-
             .btn {
                 padding: 0.6rem 1rem;
                 font-size: 0.75rem;
             }
-
 
             aside > div {
                 padding: 1.5rem !important;
@@ -661,8 +669,26 @@
                 font-size: 0.7rem;
                 padding: 0.25rem 0.6rem;
             }
-        }
 
+            .user-avatar {
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
+            }
+
+            .user-name {
+                font-size: 0.75rem;
+            }
+
+            .user-label {
+                font-size: 0.65rem;
+            }
+
+            .user-profile-btn {
+                padding: 0.4rem 0.8rem;
+                gap: 0.5rem;
+            }
+        }
 
         /* RESPONSIVE DESIGN - MÓVILES PEQUEÑOS */
         @media (max-width: 480px) {
@@ -670,43 +696,35 @@
                 font-size: 1rem !important;
             }
 
-
             .demon-card {
                 padding: 0.8rem;
             }
-
 
             .rank {
                 font-size: 1.3rem;
                 min-width: 45px;
             }
 
-
             .title {
                 font-size: 1rem;
             }
 
-
             .info {
                 font-size: 0.8rem;
             }
-
 
             .diff-icon {
                 width: 50px;
                 height: 50px;
             }
 
-
             .modal-content {
                 padding: 1rem;
             }
 
-
             .completador-nombre {
                 font-size: 1rem;
             }
-
 
             .completador-details {
                 font-size: 0.85rem;
@@ -718,7 +736,6 @@
             }
         }
 
-
         /* Mejoras táctiles para móviles */
         @media (hover: none) and (pointer: coarse) {
             .btn {
@@ -726,11 +743,9 @@
                 min-width: 44px;
             }
 
-
             .demon-card {
                 min-height: 80px;
             }
-
 
             .theme-toggle {
                 min-height: 50px;
@@ -740,16 +755,12 @@
     </style>
 </head>
 
-
 <body>
-
 
 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema">🌓</button>
 
-
 <!-- Overlay para menú móvil -->
 <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
-
 
 <!-- Menú móvil -->
 <div class="mobile-menu" id="mobileMenu">
@@ -758,25 +769,26 @@
         <span class="mobile-menu-close" onclick="toggleMobileMenu()">&times;</span>
     </div>
 
-
-    <span id="userDispMobile" style="display:block;padding:1rem 0;font-weight:700;border-bottom:1px solid var(--border);margin-bottom:15px;">Invitado</span>
-
+    <!-- NUEVO: Perfil en menú móvil -->
+    <a href="completados.html" id="mobileUserProfile" class="mobile-user-profile hidden">
+        <div class="user-avatar" id="mobileUserAvatar">👤</div>
+        <div class="user-info">
+            <div class="user-name" id="mobileUserName">Usuario</div>
+            <div class="user-label">Ver mi perfil</div>
+        </div>
+    </a>
 
     <button class="btn active" id="btnNormalMobile" onclick="changeView('normal'); toggleMobileMenu();">Main & Extended</button>
     <button class="btn" id="btnLegacyMobile" onclick="changeView('legacy'); toggleMobileMenu();">Legacy</button>
 
-
     <a href="top.html" class="btn">TOP</a>
     <a href="reglas.html" class="btn">Reglas</a>
     <a href="formulario.html" id="btnEnviarRunMobile" class="btn hidden">Enviar Run</a>
-    <a href="completados.html" id="btnMisRunsMobile" class="btn hidden">Mis Runs</a>
     <a href="admin.html" id="btnAdminMobile" class="btn btn-admin hidden">Panel Admin</a>
-
 
     <button id="btnLogoutMobile" class="btn hidden" onclick="logout()">Logout</button>
     <a href="index.html" id="btnLoginMobile" class="btn">Login</a>
 </div>
-
 
 <header>
     <div class="nav-group logo-group">
@@ -785,7 +797,6 @@
         <button class="btn" id="btnLegacy" onclick="changeView('legacy')">Legacy</button>
     </div>
 
-
     <!-- Menú hamburguesa -->
     <div class="hamburger" onclick="toggleMobileMenu()" aria-label="Menú">
         <span></span>
@@ -793,21 +804,25 @@
         <span></span>
     </div>
 
-
     <div class="nav-group">
         <a href="top.html" class="btn">TOP</a>
         <a href="reglas.html" class="btn">Reglas</a>
         <a href="formulario.html" id="btnEnviarRun" class="btn hidden">Enviar Run</a>
-        <a href="completados.html" id="btnMisRuns" class="btn hidden">Mis Runs</a>
 
+        <!-- NUEVO: Perfil de usuario clickeable -->
+        <a href="completados.html" id="userProfileBtn" class="user-profile-btn hidden">
+            <div class="user-avatar" id="userAvatar">👤</div>
+            <div class="user-info">
+                <div class="user-name" id="userName">Usuario</div>
+                <div class="user-label">Ver perfil</div>
+            </div>
+        </a>
 
-        <span id="userDisp">Invitado</span>
         <a href="index.html" id="btnLogin" class="btn">Login</a>
         <a href="admin.html" id="btnAdmin" class="btn btn-admin hidden">Panel</a>
         <button id="btnLogout" class="btn hidden" onclick="logout()">Logout</button>
     </div>
 </header>
-
 
 <main>
     <section id="renderContainer"></section>
@@ -819,7 +834,6 @@
     </aside>
 </main>
 
-
 <div id="detailModal" class="modal" onclick="closeDetailModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
         <span class="close-modal" onclick="closeDetailModal()">&times;</span>
@@ -829,17 +843,13 @@
     </div>
 </div>
 
-
 <script>
 const API = 'https://pointcrate.purriau.com/api';
-
 
 function getDifficultyImage(difficulty) {
     if (!difficulty) return '/extreme.png';
 
-
     const normalized = difficulty.toLowerCase().trim();
-
 
     if (normalized.includes('extreme')) {
         return '/extreme.png';
@@ -853,27 +863,21 @@ function getDifficultyImage(difficulty) {
         return '/easy.png';
     }
 
-
     return '/extreme.png';
 }
 
-
 let demons = [];
 let currentView = 'normal';
-let tagsCache = {}; // NUEVO: Cache de tags
-
+let tagsCache = {};
 
 // Toggle menú móvil
 function toggleMobileMenu() {
     const menu = document.getElementById('mobileMenu');
     const overlay = document.getElementById('mobileOverlay');
 
-
     menu.classList.toggle('active');
     overlay.classList.toggle('active');
 
-
-    // Prevenir scroll del body cuando el menú está abierto
     if (menu.classList.contains('active')) {
         document.body.style.overflow = 'hidden';
     } else {
@@ -881,13 +885,12 @@ function toggleMobileMenu() {
     }
 }
 
-// NUEVO: Cargar tags desde la API
+// Cargar tags desde la API
 async function cargarTags() {
     try {
         const res = await fetch(`${API}/tags`);
         const tags = await res.json();
         
-        // Crear un mapa de id -> tag para búsqueda rápida
         tagsCache = {};
         tags.forEach(tag => {
             tagsCache[tag.id] = tag;
@@ -900,7 +903,7 @@ async function cargarTags() {
     }
 }
 
-// NUEVO: Renderizar tags de un demon
+// Renderizar tags de un demon
 function renderTags(demonTags) {
     if (!demonTags || demonTags.length === 0) {
         return '';
@@ -918,7 +921,7 @@ function renderTags(demonTags) {
     return html;
 }
 
-// NUEVO: Renderizar tags para el modal
+// Renderizar tags para el modal
 function renderModalTags(demonTags) {
     if (!demonTags || demonTags.length === 0) {
         return '<div class="no-data">Este nivel no tiene tags asignados</div>';
@@ -936,42 +939,35 @@ function renderModalTags(demonTags) {
     return html;
 }
 
-
 async function init() {
     const res = await fetch(`${API}/demons`);
     demons = await res.json();
-    await cargarTags(); // NUEVO: Cargar tags al iniciar
+    await cargarTags();
     render();
     updateStats();
     checkAuth();
 }
 
-
 function render() {
     const c = document.getElementById('renderContainer');
     c.innerHTML = '';
-
 
     const list = currentView === 'legacy'
         ? demons.filter(d => d.posicion > 30)
         : demons.filter(d => d.posicion <= 30);
 
-
     list.sort((a,b)=>a.posicion-b.posicion)
         .forEach((d,i)=>c.appendChild(createCard(d, i)));
 }
-
 
 function createCard(d, i) {
     const card = document.createElement('div');
     card.className = 'demon-card';
     card.onclick = () => openDetails(d);
 
-
     const imgSrc = getDifficultyImage(d.dificultad);
     const puntos = calcularPuntos(d.posicion);
-    const tagsHtml = renderTags(d.tags); // NUEVO: Renderizar tags
-
+    const tagsHtml = renderTags(d.tags);
 
     card.innerHTML = `
         <div class="rank">#${d.posicion}</div>
@@ -988,15 +984,12 @@ function createCard(d, i) {
     return card;
 }
 
-
 async function openDetails(demon) {
     const modal = document.getElementById('detailModal');
     const content = document.getElementById('modalDetailContent');
 
-
     modal.classList.add('modal-show');
     content.innerHTML = '<div class="loading-spinner">Cargando datos del nivel...</div>';
-
 
     try {
         const [historialRes, completacionesRes] = await Promise.all([
@@ -1004,30 +997,24 @@ async function openDetails(demon) {
             fetch(`${API}/completaciones`)
         ]);
 
-
         const historial = await historialRes.json();
         const todasCompletaciones = await completacionesRes.json();
-
 
         const completadores = todasCompletaciones.filter(
             c => c.nivel === demon.name && c.estado === 'aprobado'
         );
 
-
         const puntos = calcularPuntos(demon.posicion);
-        const modalTagsHtml = renderModalTags(demon.tags); // NUEVO: Renderizar tags en modal
-
+        const modalTagsHtml = renderModalTags(demon.tags);
 
         content.innerHTML = `
             <div class="modal-title">${demon.name}</div>
-
 
             <div class="data-box">
                 <strong>Creador:</strong> ${demon.creador}<br>
                 <strong>Verificador:</strong> ${demon.verificador || 'No especificado'}<br>
                 <strong>Posición actual:</strong> #${demon.posicion}
             </div>
-
 
             <div class="data-box">
                 <strong>Puntos al completar:</strong>
@@ -1037,19 +1024,15 @@ async function openDetails(demon) {
             <h3 class="modal-subtitle">🏷️ Tags</h3>
             ${modalTagsHtml}
 
-
             <h3 class="modal-subtitle">📊 Historial de Posiciones</h3>
             <div id="historialContainer"></div>
-
 
             <h3 class="modal-subtitle">👥 Personas que lo han completado (${completadores.length})</h3>
             <div id="completadoresContainer"></div>
         `;
 
-
         renderHistorial(historial);
         renderCompletadores(completadores);
-
 
     } catch (error) {
         console.error('Error cargando detalles:', error);
@@ -1062,19 +1045,15 @@ async function openDetails(demon) {
     }
 }
 
-
 function renderHistorial(historial) {
     const container = document.getElementById('historialContainer');
-
 
     if (!historial || historial.length === 0) {
         container.innerHTML = '<div class="no-data">No hay historial de cambios de posición</div>';
         return;
     }
 
-
     const historialOrdenado = [...historial].reverse();
-
 
     let html = '<div class="history-list">';
     historialOrdenado.forEach((item, index) => {
@@ -1086,7 +1065,6 @@ function renderHistorial(historial) {
             minute: '2-digit'
         });
 
-
         html += `
             <div class="history-item">
                 <span class="position-change">#${item.posicion}</span>
@@ -1096,23 +1074,18 @@ function renderHistorial(historial) {
     });
     html += '</div>';
 
-
     container.innerHTML = html;
 }
 
-
 function renderCompletadores(completadores) {
     const container = document.getElementById('completadoresContainer');
-
 
     if (!completadores || completadores.length === 0) {
         container.innerHTML = '<div class="no-data">Aún nadie ha completado este nivel, Se el primero!</div>';
         return;
     }
 
-
     let html = '<div class="record-list">';
-
 
     const completadoresOrdenados = [...completadores].sort((a, b) => {
         const posA = a.posicionAlCompletar || 999;
@@ -1120,17 +1093,14 @@ function renderCompletadores(completadores) {
         return posA - posB;
     });
 
-
     completadoresOrdenados.forEach((c, index) => {
         const posicionTexto = c.posicionAlCompletar 
             ? `#${c.posicionAlCompletar}` 
             : 'Posición desconocida';
 
-
         const puntosGanados = c.posicionAlCompletar 
             ? calcularPuntos(c.posicionAlCompletar) 
             : 0;
-
 
         html += `
             <div class="completador-item">
@@ -1149,16 +1119,13 @@ function renderCompletadores(completadores) {
     });
     html += '</div>';
 
-
     container.innerHTML = html;
 }
-
 
 function calcularPuntos(posicion) {
     if (posicion > 30 || posicion < 1) {
         return 0;
     }
-
 
     const maxPoints = 100;
     const minPoints = 1;
@@ -1166,7 +1133,6 @@ function calcularPuntos(posicion) {
     const points = maxPoints - (posicion - 1) * decay;
     return Math.max(minPoints, Math.round(points));
 }
-
 
 function closeDetailModal(event) {
     const modal = document.getElementById('detailModal');
@@ -1179,13 +1145,10 @@ function closeDetailModal(event) {
     }
 }
 
-
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         closeDetailModal();
 
-
-        // Cerrar menú móvil con ESC
         const menu = document.getElementById('mobileMenu');
         if (menu.classList.contains('active')) {
             toggleMobileMenu();
@@ -1193,27 +1156,54 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+// NUEVO: Cargar perfil de usuario
+async function cargarPerfil(usuario) {
+    try {
+        const res = await fetch(`${API}/cuentas/${usuario}/perfil`);
+        if (!res.ok) throw new Error('Error al cargar perfil');
+        
+        const perfil = await res.json();
+        
+        // Actualizar perfil desktop
+        document.getElementById('userName').textContent = perfil.usuario;
+        const avatarDiv = document.getElementById('userAvatar');
+        if (perfil.fotoPerfil) {
+            avatarDiv.innerHTML = `<img src="${perfil.fotoPerfil}" alt="Foto de perfil" onerror="this.innerHTML='👤'">`;
+        } else {
+            avatarDiv.innerHTML = '👤';
+        }
+        
+        // Actualizar perfil móvil
+        document.getElementById('mobileUserName').textContent = perfil.usuario;
+        const mobileAvatarDiv = document.getElementById('mobileUserAvatar');
+        if (perfil.fotoPerfil) {
+            mobileAvatarDiv.innerHTML = `<img src="${perfil.fotoPerfil}" alt="Foto de perfil" onerror="this.innerHTML='👤'">`;
+        } else {
+            mobileAvatarDiv.innerHTML = '👤';
+        }
+    } catch (error) {
+        console.error('Error cargando perfil:', error);
+    }
+}
 
-function checkAuth() {
+async function checkAuth() {
     const user = JSON.parse(localStorage.getItem('usuarioLogeado'));
     if (!user) return;
 
-
     // Desktop
-    document.getElementById('userDisp').textContent = user.usuario;
     document.getElementById('btnLogin').classList.add('hidden');
     document.getElementById('btnLogout').classList.remove('hidden');
     document.getElementById('btnEnviarRun').classList.remove('hidden');
-    document.getElementById('btnMisRuns').classList.remove('hidden');
-
+    document.getElementById('userProfileBtn').classList.remove('hidden');
 
     // Mobile
-    document.getElementById('userDispMobile').textContent = user.usuario;
     document.getElementById('btnLoginMobile').classList.add('hidden');
     document.getElementById('btnLogoutMobile').classList.remove('hidden');
     document.getElementById('btnEnviarRunMobile').classList.remove('hidden');
-    document.getElementById('btnMisRunsMobile').classList.remove('hidden');
+    document.getElementById('mobileUserProfile').classList.remove('hidden');
 
+    // Cargar perfil completo
+    await cargarPerfil(user.usuario);
 
     if (user.rol === 'admin') {
         document.getElementById('btnAdmin').classList.remove('hidden');
@@ -1221,12 +1211,10 @@ function checkAuth() {
     }
 }
 
-
 function logout() {
     localStorage.removeItem('usuarioLogeado');
     location.reload();
 }
-
 
 function changeView(v) {
     currentView = v;
@@ -1234,17 +1222,11 @@ function changeView(v) {
     updateViewButtons();
 }
 
-
 function updateViewButtons() {
-    // Desktop
     const btnNormal = document.getElementById('btnNormal');
     const btnLegacy = document.getElementById('btnLegacy');
-
-
-    // Mobile
     const btnNormalMobile = document.getElementById('btnNormalMobile');
     const btnLegacyMobile = document.getElementById('btnLegacyMobile');
-
 
     if (currentView === 'legacy') {
         btnNormal.classList.remove('active');
@@ -1259,14 +1241,11 @@ function updateViewButtons() {
     }
 }
 
-
 function toggleTheme() {
     document.body.classList.toggle('light-mode');
     localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
 }
 
-
-// Cargar tema guardado
 function loadTheme() {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'light') {
@@ -1274,14 +1253,11 @@ function loadTheme() {
     }
 }
 
-
 function updateStats() {
     document.getElementById('sideStats').innerHTML =
         `Total niveles: ${demons.length}<br>Main: 15<br>Extended: 15`;
 }
 
-
-// Prevenir zoom en doble tap en iOS
 let lastTouchEnd = 0;
 document.addEventListener('touchend', function (event) {
     const now = (new Date()).getTime();
@@ -1291,13 +1267,11 @@ document.addEventListener('touchend', function (event) {
     lastTouchEnd = now;
 }, false);
 
-
 document.addEventListener('DOMContentLoaded', () => {
     loadTheme();
     init();
 });
 </script>
-
 
 </body>
 </html>
