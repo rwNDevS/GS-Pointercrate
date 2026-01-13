@@ -54,48 +54,36 @@
         header {
             background: var(--bg-card);
             border-bottom: 1px solid var(--border);
-            padding: 1rem 3%;
+            padding: 1rem 5%;
             display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 1000;
-            gap: 0.8rem;
         }
 
         .nav-group { 
             display: flex; 
-            gap: 8px; 
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .logo-text {
-            font-weight: 800;
-            font-size: 1.2rem;
-            white-space: nowrap;
+            gap: 12px; 
+            align-items: center; 
         }
 
         .btn {
             background: none;
             border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 0.6rem 1rem;
+            padding: 0.7rem 1.4rem;
             cursor: pointer;
             font-weight: 700;
             border-radius: 4px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             text-decoration: none;
             transition: 0.2s;
             text-transform: uppercase;
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
-            white-space: nowrap;
-            min-height: 44px;
-            justify-content: center;
+            gap: 0.5rem;
         }
 
         .btn:hover { 
@@ -105,14 +93,14 @@
 
         .theme-toggle {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: var(--accent);
             color: white;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             cursor: pointer;
             border: none;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
@@ -126,48 +114,46 @@
 
         main {
             max-width: 600px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            margin: 3rem auto;
+            padding: 0 2rem;
         }
 
         .page-header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
             animation: fadeInDown 0.6s ease;
         }
 
         .page-title {
-            font-size: 2rem;
+            font-size: 3rem;
             font-weight: 800;
             color: var(--accent);
             margin-bottom: 0.5rem;
-            word-wrap: break-word;
         }
 
         .page-subtitle {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--text-dim);
             font-weight: 400;
-            word-wrap: break-word;
         }
 
         .form-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 1.5rem;
+            padding: 2.5rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
             animation: fadeInUp 0.6s ease;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
         }
 
         .form-label {
             display: block;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             margin-bottom: 0.6rem;
             color: var(--text-main);
         }
@@ -183,9 +169,6 @@
             font-size: 1rem;
             font-family: 'Montserrat', sans-serif;
             transition: 0.2s;
-            min-height: 48px;
-            -webkit-appearance: none;
-            -moz-appearance: none;
         }
 
         .form-input:focus,
@@ -194,6 +177,12 @@
             border-color: var(--accent);
             background: rgba(255,255,255,0.05);
             box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .form-input:disabled,
+        .form-select:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .form-select {
@@ -228,34 +217,30 @@
             transition: 0.2s;
             font-family: 'Montserrat', sans-serif;
             margin-top: 1rem;
-            min-height: 52px;
         }
 
-        .btn-submit:hover {
+        .btn-submit:hover:not(:disabled) {
             filter: brightness(1.2);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
         }
 
-        .btn-submit:active {
+        .btn-submit:active:not(:disabled) {
             transform: translateY(0);
         }
 
         .btn-submit:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
         }
 
         .alert {
-            padding: 1rem;
+            padding: 1.2rem;
             border-radius: 6px;
             margin-top: 1.5rem;
             text-align: center;
             font-weight: 600;
             animation: slideDown 0.4s ease;
-            font-size: 0.9rem;
-            line-height: 1.5;
         }
 
         .alert-success {
@@ -274,8 +259,8 @@
             background: rgba(33, 150, 243, 0.05);
             border: 1px solid var(--accent);
             border-radius: 6px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
         }
 
         .info-box-title {
@@ -285,13 +270,47 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 0.95rem;
         }
 
         .info-box-text {
             color: var(--text-dim);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             line-height: 1.6;
+        }
+
+        /* NUEVO: Alerta de baneo */
+        .ban-alert {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.2), rgba(192, 57, 43, 0.2));
+            border: 2px solid var(--danger);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            animation: shake 0.5s ease;
+        }
+
+        .ban-alert-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .ban-alert-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--danger);
+            margin-bottom: 0.8rem;
+        }
+
+        .ban-alert-message {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
         }
 
         @keyframes fadeInDown {
@@ -309,99 +328,27 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Tablets y superiores (768px+) */
-        @media (min-width: 768px) {
-            header {
-                padding: 1rem 5%;
-            }
+        .hidden { display: none !important; }
 
-            .logo-text {
-                font-size: 1.5rem;
+        @media (max-width: 768px) {
+            .page-title { font-size: 2rem; }
+            main { padding: 0 1rem; margin: 2rem auto; }
+            .form-card { padding: 1.5rem; }
+            
+            .ban-alert {
+                padding: 1.5rem;
             }
-
-            .btn {
-                padding: 0.7rem 1.4rem;
-                font-size: 0.8rem;
-                gap: 0.5rem;
+            
+            .ban-alert-icon {
+                font-size: 2.5rem;
             }
-
-            .nav-group {
-                gap: 12px;
+            
+            .ban-alert-title {
+                font-size: 1.3rem;
             }
-
-            main {
-                margin: 3rem auto;
-                padding: 0 2rem;
-            }
-
-            .page-title {
-                font-size: 3rem;
-            }
-
-            .page-subtitle {
-                font-size: 1.1rem;
-            }
-
-            .form-card {
-                padding: 2.5rem;
-            }
-
-            .form-group {
-                margin-bottom: 1.8rem;
-            }
-
-            .form-label {
+            
+            .ban-alert-message {
                 font-size: 0.95rem;
-            }
-
-            .info-box {
-                padding: 1.2rem;
-                margin-bottom: 2rem;
-            }
-
-            .info-box-title {
-                font-size: 1rem;
-            }
-
-            .info-box-text {
-                font-size: 0.9rem;
-            }
-
-            .alert {
-                font-size: 1rem;
-                padding: 1.2rem;
-            }
-
-            .theme-toggle {
-                width: 60px;
-                height: 60px;
-                bottom: 30px;
-                right: 30px;
-                font-size: 1.5rem;
-            }
-
-            .page-header {
-                margin-bottom: 3rem;
-            }
-        }
-
-        /* Pantallas muy pequeñas (menos de 360px) */
-        @media (max-width: 359px) {
-            .btn {
-                font-size: 0.65rem;
-                padding: 0.5rem 0.7rem;
-            }
-
-            .page-title {
-                font-size: 1.5rem;
-            }
-
-            .form-card {
-                padding: 1rem;
-            }
-
-            .info-box-text {
-                font-size: 0.8rem;
             }
         }
     </style>
@@ -409,15 +356,15 @@
 
 <body>
 
-<button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema">🌓</button>
+<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
 
 <header>
     <div class="nav-group">
-        <div class="logo-text">GDPS <span style="color:var(--accent)">LIST</span></div>
+        <div style="font-weight:800;font-size:1.5rem">GDPS <span style="color:var(--accent)">LIST</span></div>
     </div>
 
     <div class="nav-group">
-        <a href="demonlist.html" class="btn">← Volver</a>
+        <a href="demonlist.html" class="btn">← Volver a la lista</a>
         <a href="completados.html" class="btn">Mis Runs</a>
     </div>
 </header>
@@ -428,7 +375,17 @@
         <p class="page-subtitle" id="userSubtitle">Cargando...</p>
     </div>
 
-    <div class="form-card">
+    <!-- NUEVO: Alerta de baneo (oculta por defecto) -->
+    <div id="banAlert" class="ban-alert hidden">
+        <div class="ban-alert-icon">🚫</div>
+        <div class="ban-alert-title">Cuenta Suspendida</div>
+        <div class="ban-alert-message">
+            Tu cuenta ha sido baneada por violar las reglas de la Demonlist.<br>
+            No puedes enviar completaciones. Contacta al administrador para más información.
+        </div>
+    </div>
+
+    <div class="form-card" id="formCard">
         <div class="info-box">
             <div class="info-box-title">
                 <span>ℹ️</span>
@@ -451,7 +408,7 @@
             <div class="form-group">
                 <label class="form-label" for="prueba">🎥 Link de prueba</label>
                 <input 
-                    type="url" 
+                    type="text" 
                     id="prueba" 
                     class="form-input" 
                     placeholder="https://youtube.com/watch?v=..." 
@@ -459,7 +416,7 @@
                 />
             </div>
 
-            <button type="submit" class="btn-submit">
+            <button type="submit" class="btn-submit" id="submitBtn">
                 ✓ Enviar Completación
             </button>
         </form>
@@ -479,6 +436,35 @@
 
     // Actualizar subtítulo con nombre de usuario
     document.getElementById('userSubtitle').textContent = `Enviando como ${usuario.usuario}`;
+
+    // NUEVA FUNCIÓN: Verificar si el usuario está baneado
+    async function verificarBan() {
+        try {
+            const res = await fetch(`${API_URL}/cuentas`);
+            if (!res.ok) throw new Error('Error al obtener cuentas');
+            
+            const cuentas = await res.json();
+            const miCuenta = cuentas.find(c => c.usuario === usuario.usuario);
+            
+            if (miCuenta && miCuenta.banned) {
+                // Usuario baneado - mostrar alerta y deshabilitar formulario
+                document.getElementById('banAlert').classList.remove('hidden');
+                document.getElementById('formCard').style.opacity = '0.5';
+                document.getElementById('formCard').style.pointerEvents = 'none';
+                
+                // Deshabilitar todos los inputs
+                document.getElementById('nivel').disabled = true;
+                document.getElementById('prueba').disabled = true;
+                document.getElementById('submitBtn').disabled = true;
+                
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Error verificando estado de ban:', error);
+            return false;
+        }
+    }
 
     // Cargar demons en el select
     async function cargarNiveles() {
@@ -504,7 +490,19 @@
         }
     }
 
-    cargarNiveles();
+    // NUEVA FUNCIÓN: Inicializar página
+    async function inicializar() {
+        // Verificar ban primero
+        const estaBaneado = await verificarBan();
+        
+        // Solo cargar niveles si no está baneado
+        if (!estaBaneado) {
+            await cargarNiveles();
+        }
+    }
+
+    // Inicializar en lugar de solo cargar niveles
+    inicializar();
 
     document.getElementById('completacionForm').addEventListener('submit', async e => {
         e.preventDefault();
