@@ -42,6 +42,41 @@ function escribirArchivo(filePath, data) {
     }
 }
 
+// NUEVA FUNCIÓN: Normalizar cuenta con valores por defecto
+function normalizarCuenta(cuenta) {
+    return {
+        usuario: cuenta.usuario,
+        contraseña: cuenta.contraseña,
+        rol: cuenta.rol,
+        banned: cuenta.banned || false,
+        fotoPerfil: cuenta.fotoPerfil || null,
+        descripcion: cuenta.descripcion || ''
+    };
+}
+
+// NUEVA FUNCIÓN: Leer cuentas con normalización automática
+function leerCuentasNormalizadas() {
+    const cuentas = leerArchivo(cuentasFile);
+    let necesitaActualizacion = false;
+    
+    const cuentasNormalizadas = cuentas.map(cuenta => {
+        const cuentaNormalizada = normalizarCuenta(cuenta);
+        // Verificar si la cuenta necesitaba normalización
+        if (!cuenta.hasOwnProperty('fotoPerfil') || !cuenta.hasOwnProperty('descripcion')) {
+            necesitaActualizacion = true;
+        }
+        return cuentaNormalizada;
+    });
+    
+    // Si alguna cuenta fue normalizada, guardar el archivo actualizado
+    if (necesitaActualizacion) {
+        escribirArchivo(cuentasFile, cuentasNormalizadas);
+        console.log('Cuentas normalizadas con valores por defecto.');
+    }
+    
+    return cuentasNormalizadas;
+}
+
 function registrarCambioPosicion(demon, nuevaPosicion) {
     if (!demon.historialPosiciones) {
         demon.historialPosiciones = [];
@@ -220,7 +255,7 @@ app.post("/api/login", (req, res) => {
         console.error('POST /api/login - Error: Datos incompletos.');
         return res.status(400).json({ error: 'Datos incompletos de cuenta.' });
     }
-    const accounts = leerArchivo(cuentasFile);
+    const accounts = leerCuentasNormalizadas();
     const account = accounts.find(c => c.usuario === username && c.contraseña === password);
     if (account) {
         // Verificar si la cuenta está baneada
@@ -229,7 +264,12 @@ app.post("/api/login", (req, res) => {
             return res.status(403).json({ error: 'Tu cuenta ha sido suspendida. Contacta al administrador.' });
         }
         console.log(`POST /api/login - Login exitoso para el usuario: ${username}.`);
-        return res.status(200).json({ usuario: account.usuario, rol: account.rol });
+        return res.status(200).json({ 
+            usuario: account.usuario, 
+            rol: account.rol,
+            fotoPerfil: account.fotoPerfil,
+            descripcion: account.descripcion
+        });
     } else {
         console.warn(`POST /api/login - Login fallido para el usuario: ${username}.`);
         return res.status(403).json({ error: 'Usuario o contraseña incorrecto' });
@@ -243,12 +283,19 @@ app.post('/api/cuentas', (req, res) => {
         console.error('POST /api/cuentas - Error: Datos incompletos.');
         return res.status(400).json({ error: 'Datos incompletos de cuenta' });
     }
-    const cuentas = leerArchivo(cuentasFile);
+    const cuentas = leerCuentasNormalizadas();
     if (cuentas.find(c => c.usuario === usuario)) {
         console.warn(`POST /api/cuentas - Error: El usuario ${usuario} ya existe.`);
         return res.status(409).json({ success: false, message: 'Usuario ya existe' });
     }
-    cuentas.push({ usuario, contraseña, rol, banned: false });
+    cuentas.push({ 
+        usuario, 
+        contraseña, 
+        rol, 
+        banned: false,
+        fotoPerfil: null,
+        descripcion: ''
+    });
     if (!escribirArchivo(cuentasFile, cuentas)) {
         console.error('POST /api/cuentas - Error al guardar en el archivo.');
         return res.status(500).json({ error: 'Error guardando cuenta' });
@@ -260,7 +307,7 @@ app.post('/api/cuentas', (req, res) => {
 // NUEVA RUTA: Obtener todas las cuentas (solo admin)
 app.get('/api/cuentas', (req, res) => {
     console.log('GET /api/cuentas - Solicitado.');
-    const cuentas = leerArchivo(cuentasFile);
+    const cuentas = leerCuentasNormalizadas();
     // Ocultar contraseñas
     const cuentasSinPass = cuentas.map(c => ({
         usuario: c.usuario,
@@ -268,6 +315,125 @@ app.get('/api/cuentas', (req, res) => {
         banned: c.banned || false
     }));
     res.json(cuentasSinPass);
+});
+
+// NUEVA RUTA: Obtener perfil de un usuario específico
+app.get('/api/cuentas/:usuario/perfil', (req, res) => {
+    const usuario = req.params.usuario;
+    console.log(`GET /api/cuentas/${usuario}/perfil - Solicitado.`);
+    
+    const cuentas = leerCuentasNormalizadas();
+    const cuenta = cuentas.find(c => c.usuario === usuario);
+    
+    if (!cuenta) {
+        console.warn(`GET /api/cuentas/${usuario}/perfil - Usuario no encontrado.`);
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+    
+    // Devolver información del perfil sin la contraseña
+    res.json({
+        usuario: cuenta.usuario,
+        rol: cuenta.rol,
+        fotoPerfil: cuenta.fotoPerfil,
+        descripcion: cuenta.descripcion,
+        banned: cuenta.banned
+    });
+});
+
+// NUEVA RUTA: Actualizar foto de perfil
+app.patch('/api/cuentas/:usuario/foto-perfil', (req, res) => {
+    const usuario = req.params.usuario;
+    const { fotoPerfil } = req.body;
+    console.log(`PATCH /api/cuentas/${usuario}/foto-perfil - Solicitado actualizar foto de perfil.`);
+    
+    if (fotoPerfil === undefined) {
+        console.error(`PATCH /api/cuentas/${usuario}/foto-perfil - Error: fotoPerfil es requerido.`);
+        return res.status(400).json({ error: 'El campo fotoPerfil es requerido' });
+    }
+    
+    const cuentas = leerCuentasNormalizadas();
+    const cuentaIndex = cuentas.findIndex(c => c.usuario === usuario);
+    
+    if (cuentaIndex === -1) {
+        console.warn(`PATCH /api/cuentas/${usuario}/foto-perfil - Usuario no encontrado.`);
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+    
+    cuentas[cuentaIndex].fotoPerfil = fotoPerfil;
+    
+    if (!escribirArchivo(cuentasFile, cuentas)) {
+        console.error('PATCH /api/cuentas/foto-perfil - Error al guardar en el archivo.');
+        return res.status(500).json({ error: 'Error al actualizar foto de perfil' });
+    }
+    
+    console.log(`PATCH /api/cuentas/${usuario}/foto-perfil - Foto de perfil actualizada correctamente.`);
+    res.json({ success: true, message: 'Foto de perfil actualizada correctamente', fotoPerfil: fotoPerfil });
+});
+
+// NUEVA RUTA: Actualizar descripción
+app.patch('/api/cuentas/:usuario/descripcion', (req, res) => {
+    const usuario = req.params.usuario;
+    const { descripcion } = req.body;
+    console.log(`PATCH /api/cuentas/${usuario}/descripcion - Solicitado actualizar descripción.`);
+    
+    if (descripcion === undefined) {
+        console.error(`PATCH /api/cuentas/${usuario}/descripcion - Error: descripcion es requerida.`);
+        return res.status(400).json({ error: 'El campo descripcion es requerido' });
+    }
+    
+    const cuentas = leerCuentasNormalizadas();
+    const cuentaIndex = cuentas.findIndex(c => c.usuario === usuario);
+    
+    if (cuentaIndex === -1) {
+        console.warn(`PATCH /api/cuentas/${usuario}/descripcion - Usuario no encontrado.`);
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+    
+    cuentas[cuentaIndex].descripcion = descripcion;
+    
+    if (!escribirArchivo(cuentasFile, cuentas)) {
+        console.error('PATCH /api/cuentas/descripcion - Error al guardar en el archivo.');
+        return res.status(500).json({ error: 'Error al actualizar descripción' });
+    }
+    
+    console.log(`PATCH /api/cuentas/${usuario}/descripcion - Descripción actualizada correctamente.`);
+    res.json({ success: true, message: 'Descripción actualizada correctamente', descripcion: descripcion });
+});
+
+// NUEVA RUTA: Cambiar contraseña
+app.patch('/api/cuentas/:usuario/contraseña', (req, res) => {
+    const usuario = req.params.usuario;
+    const { contraseñaActual, contraseñaNueva } = req.body;
+    console.log(`PATCH /api/cuentas/${usuario}/contraseña - Solicitado cambiar contraseña.`);
+    
+    if (!contraseñaActual || !contraseñaNueva) {
+        console.error(`PATCH /api/cuentas/${usuario}/contraseña - Error: Datos incompletos.`);
+        return res.status(400).json({ error: 'Se requieren contraseñaActual y contraseñaNueva' });
+    }
+    
+    const cuentas = leerCuentasNormalizadas();
+    const cuentaIndex = cuentas.findIndex(c => c.usuario === usuario);
+    
+    if (cuentaIndex === -1) {
+        console.warn(`PATCH /api/cuentas/${usuario}/contraseña - Usuario no encontrado.`);
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+    
+    // Verificar que la contraseña actual sea correcta
+    if (cuentas[cuentaIndex].contraseña !== contraseñaActual) {
+        console.warn(`PATCH /api/cuentas/${usuario}/contraseña - Contraseña actual incorrecta.`);
+        return res.status(403).json({ error: 'La contraseña actual es incorrecta' });
+    }
+    
+    cuentas[cuentaIndex].contraseña = contraseñaNueva;
+    
+    if (!escribirArchivo(cuentasFile, cuentas)) {
+        console.error('PATCH /api/cuentas/contraseña - Error al guardar en el archivo.');
+        return res.status(500).json({ error: 'Error al cambiar contraseña' });
+    }
+    
+    console.log(`PATCH /api/cuentas/${usuario}/contraseña - Contraseña cambiada correctamente.`);
+    res.json({ success: true, message: 'Contraseña cambiada correctamente' });
 });
 
 // NUEVA RUTA: Banear/Desbanear usuario
@@ -279,7 +445,7 @@ app.patch('/api/cuentas/:usuario/ban', (req, res) => {
         console.error(`PATCH /api/cuentas/${usuario}/ban - Error: banned debe ser boolean.`);
         return res.status(400).json({ error: 'El campo banned debe ser true o false' });
     }
-    const cuentas = leerArchivo(cuentasFile);
+    const cuentas = leerCuentasNormalizadas();
     const cuentaIndex = cuentas.findIndex(c => c.usuario === usuario);
     if (cuentaIndex === -1) {
         console.warn(`PATCH /api/cuentas/${usuario}/ban - Usuario no encontrado.`);
